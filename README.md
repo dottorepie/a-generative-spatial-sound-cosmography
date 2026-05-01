@@ -28,7 +28,8 @@ drive,
 gain, 
 reverb, 
 panning, 
-rectification stepping scaler limiter
+rectification stepping scaler, 
+limiter
 
 
 -music and localization/// 
