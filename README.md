@@ -9,7 +9,7 @@ musical temprament (perfect numbers octave steps) cosmic timeline glissando,
 panning as viewer scope on installation (quad), 
 tensor oscillators, 
 wavetable, 
-gain, 
+gain
 
 
 -psychoacoustic arguments
@@ -20,7 +20,7 @@ bessel function ripples,
 feedback or buffer band oscillator as fundamental, 
 gain, 
 panning, 
-quad installation as virtual room, 
+quad installation as virtual room
 
 
 -sound technicalities
@@ -28,7 +28,7 @@ drive,
 gain, 
 reverb, 
 panning, 
-rectification stepping scaler limiter, 
+rectification stepping scaler limiter
 
 
 -//music and localization
@@ -38,4 +38,4 @@ amplitude compensation,
 tempo, 
 synced panning to tonal events, 
 randomness, 
-tonal events in wavefunction partials, 
+tonal events in wavefunction partials
