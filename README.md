@@ -4,7 +4,8 @@
 basic synthesis components derived from work on previous repository:
 
 -cosmic sound engine envelope///
-harmonic rectifier logic wavefunction, 
+harmonic rectifier logic wavefunction
+(braiding method am additive synthesis), 
 musical temprament (perfect numbers octave steps) cosmic timeline glissando, 
 panning as viewer scope on installation (quad), 
 tensor oscillators, 
