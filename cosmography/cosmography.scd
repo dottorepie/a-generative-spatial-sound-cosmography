@@ -88,7 +88,7 @@ arg gain=1,drive=0,c=0,az=0,el=0,scale=0,lowend=64,level=100,speaker_size=0.15,r
 
 var expansion,heavy,fundamental,sph_mod,polytope,bessel_ripple,magx,magy,magz,sph;
 var ton1,ton2,ton3,tonal_x,tonal_y,tonal_z,mod_x,mod_y,mod_z,phase_mod_x,phase_mod_y,phase_mod_z;
-var mod_anglex,mod_angley,mod_anglez,m,sph_x,sph_y,sph_z,sph_mag,phasex,phasey,phasez;
+var mod_anglex,mod_angley,mod_anglez,mx,my,mz,sph_x,sph_y,sph_z,sph_mag,phasex,phasey,phasez;
 var freq1,freq2,freq3,amp1,amp2,amp3,feed,control1,control2,control3,sig1,sig2,sig3;
 var oct1,oct2,oct3,oct4,oct5,oct6,oct7,oct8,oct9,g=((1+5.sqrt)/2),s=(1+2.sqrt),pan;
 var step,ph,ph1,ph2,ph3,ph4,ph5,ph6,ph7,ph8,ph9;
@@ -98,13 +98,15 @@ var waveSpeed,waveFreq,dyn1,dyn2,dyn3,dyn4,dyn5,dyn6,dyn7,dyn8,dyn9,timbre;
 
 ph = (2pi-(2pi/s));
 expansion=2.pow(c.lag(0.001)/16256).round(0.00001);
-dyn1=dyn2=dyn3=dyn4=dyn5=dyn6=dyn7=dyn8=dyn9=dyn;
+dyn1=dyn;dyn2=dyn*2;dyn3=dyn*3;dyn4=dyn*4;dyn5=dyn*5;dyn6=dyn*6;dyn7=dyn*7;dyn8=dyn*8;dyn9=dyn*9;
 step=c.lag(0.001).linlin(0,(16256*orange),(16256*orange),0).round(1);
 heavy=2.pow(drive.lag(0.001)/16256).round(0.00001);
 level=level*heavy;
 pan=2.pow(pan_mod.lag(0.001)/16256).round(0.00001);
 fundamental=(fu*(9/8))*expansion;
-m=c.lag(0.001).linlin(0,(16256*orange),0,(12*orange));
+mx=Spherical(c.lag(0.001).linlin(0,(16256*orange),0,(12*orange)),az.lag(0.001),el.lag(0.001)).x;
+my=Spherical(c.lag(0.001).linlin(0,(16256*orange),0,(12*orange)),az.lag(0.001),el.lag(0.001)).y;
+mz=Spherical(c.lag(0.001).linlin(0,(16256*orange),0,(12*orange)),az.lag(0.001),el.lag(0.001)).z;
 sph_mod=2.pow(m/12);
 timbre=c.lag(0.001).linlin(0,(16256*orange),(16256*orange),1).round(1);
 polytope=Spherical(timbre,az.lag(0.001),el.lag(0.001));
@@ -139,16 +141,16 @@ mod_anglez=(LPF.ar((Osc.ar(~wt.bufnum,sph_mod,phase:phase_mod_z,mul:level).abs+
 SinOsc.ar(sph_mod,phase:phase_mod_z)),
 sph_mod*heavy,1)).range(35.264390.degrad,35.264390.degrad.neg);
 
-magx=((Complex(cos(((polytope.theta+mod_anglex).round(0.00001)*m).wrap(pi.neg,pi)),
-cos((((polytope.theta+mod_anglex).round(0.00001)*m)).wrap(pi.neg,pi))).rho/(2.sqrt))*
+magx=((Complex(cos(((polytope.theta+mod_anglex).round(0.00001)*mx).wrap(pi.neg,pi)),
+cos((((polytope.theta+mod_anglex).round(0.00001)*mx)).wrap(pi.neg,pi))).rho/(2.sqrt))*
 (Complex(cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2))),cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)));
 
-magy=((Complex(sin(((polytope.theta+mod_angley).round(0.00001)*m).wrap(pi.neg,pi)),
-sin(((polytope.theta+mod_angley).round(0.00001)*m).wrap(pi.neg,pi))).rho/(2.sqrt))*
+magy=((Complex(sin(((polytope.theta+mod_angley).round(0.00001)*my).wrap(pi.neg,pi)),
+sin(((polytope.theta+mod_angley).round(0.00001)*my).wrap(pi.neg,pi))).rho/(2.sqrt))*
 (Complex(cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2))),cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)));
 
-magz=((Complex(cos(((polytope.phi+mod_anglez).round(0.00001)*m).wrap((pi/2).neg,(pi/2))),
-cos(((polytope.phi).round(0.00001)*m).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)));
+magz=((Complex(cos(((polytope.phi+mod_anglez).round(0.00001)*mz).wrap((pi/2).neg,(pi/2))),
+cos(((polytope.phi).round(0.00001)*mz).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)));
 
 sph_x=(Cartesian(magx,0,0).rho);
 sph_y=(Cartesian(0,magy,0).rho);
@@ -167,6 +169,9 @@ freq3=(fundamenta+SinOsc.ar(bessel_riple,mul:tonal_z))*ton3*tonal_z;
 amp1=expansion.reciprocal*ton1.reciprocal*tonal_x.reciprocal;
 amp2=expansion.reciprocal*ton2.reciprocal*tonal_y.reciprocal;
 amp3=expansion.reciprocal*ton3.reciprocal*tonal_z.reciprocal;
+
+////calculate range of spectrum 2.pow((16256*1)/16256).pow(8)
+
 
 oct9=2.pow(step/16256).round(0.00001)/dyn1;
 oct8=oct9*2.pow(step/16256).round(0.00001)/dyn2;
@@ -188,7 +193,7 @@ ph8=(ph7+ph).wrap(pi.neg,pi).round(0.00001);
 ph9=(ph8+ph).wrap(pi.neg,pi).round(0.00001);
 
 //feed=(SoundIn.ar(0,gain)*qq.sqrt.reciprocal);    ///input
-//feed=(WhiteNoise.ar(gain));    ///noise
+feed=(WhiteNoise.ar(gain));    ///noise
 //feed=PlayBuf.ar(1, ~c1.bufnum, BufRateScale.kr(~c1.bufnum), loop: 1, doneAction:0)*(gain/5);   ////buffer
 
 sig1=(
@@ -353,9 +358,9 @@ Out.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:
 
 2.wait;
 
-		~range=1;
+		~range=2;
 (
-~synth=Synth.new(\synth,[\gain,1,\drive,16266,\c,16256*2,\az,0,\el,0,\scale,0,\lowend,64,\level,56,\orange,~range,\dyn,2.pow(~range-1),
+~synth=Synth.new(\synth,[\gain,1,\drive,16266,\c,16256*2,\az,0,\el,0,\scale,0,\lowend,64,\level,56,\orange,~range,\dyn,2.pow(0),
 \speaker_size,0.15,\room,1,\mix,0.5,\pan_mod,(~tempo*64)*16256.neg,\spread,1,\limit,0.8,\fu,32]).register);
 
 	}); Tdef(\drone).play;
