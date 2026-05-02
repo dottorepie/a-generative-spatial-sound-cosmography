@@ -16,9 +16,9 @@ gain
 -psychoacoustic arguments/// 
 drive, 
 reverb, 
-spetrum band modulation, 
+spectrum band modulation, 
 bessel function ripples, 
-feedback or buffer band oscillator as fundamental, 
+feedback or buffer band oscillator as fundamental additive, 
 gain, 
 panning, 
 quad installation as virtual room
@@ -29,12 +29,12 @@ drive,
 gain, 
 reverb, 
 panning, 
-rectification stepping scaler, 
+rectification/inversiin braid stepping scaler, 
 limiter
 
 
 -music and localization/// 
-melodic, tonal and rhythmic signatures, 
+tensir melodic, tonal and rhythmic signatures, 
 scale, 
 amplitude compensation, 
 tempo, 
