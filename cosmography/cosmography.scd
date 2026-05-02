@@ -24,7 +24,7 @@ s.freqscope;
 s.scope;
 //s.makeWindow;
 s.meter;
-~tempo=0.1;
+~tempo=1;
 TempoClock.default.tempo_(~tempo);
 
 Tdef(\drone, {
@@ -83,7 +83,8 @@ var nn=1.neg;
 (
 SynthDef.new(\synth,{
 
-arg gain=1,drive=0,c=0,az=0,el=0,scale=0,lowend=64,level=100,speaker_size=0.15,room=0.5,mix=0.5,pan_mod=0.01,spread=1,limit=0.8,fu=32;
+arg gain=1,drive=0,c=0,az=0,el=0,scale=0,lowend=64,level=100,speaker_size=0.15,room=0.5,mix=0.5,pan_mod=0.01,spread=1,limit=0.8,fu=32,
+				orange=3,dyn=1;
 
 var expansion,heavy,fundamental,sph_mod,polytope,bessel_ripple,magx,magy,magz,sph;
 var ton1,ton2,ton3,tonal_x,tonal_y,tonal_z,mod_x,mod_y,mod_z,phase_mod_x,phase_mod_y,phase_mod_z;
@@ -97,30 +98,30 @@ var waveSpeed,waveFreq,dyn1,dyn2,dyn3,dyn4,dyn5,dyn6,dyn7,dyn8,dyn9,timbre;
 
 ph = (2pi-(2pi/s));
 expansion=2.pow(c.lag(0.001)/16256).round(0.00001);
-dyn1=dyn2=dyn3=dyn4=dyn5=dyn6=dyn7=dyn8=dyn9=0;
-step1=c.lag(0.001).linlin(0,(16256*9),(16256*9),0).round(1)+dyn1;
-step2=c.lag(0.001).linlin(0,(16256*9),(16256*9),0).round(1)+dyn2;
-step3=c.lag(0.001).linlin(0,(16256*9),(16256*9),0).round(1)+dyn3;
-step4=c.lag(0.001).linlin(0,(16256*9),(16256*9),0).round(1)+dyn4;
-step5=c.lag(0.001).linlin(0,(16256*9),(16256*9),0).round(1)+dyn5;
-step6=c.lag(0.001).linlin(0,(16256*9),(16256*9),0).round(1)+dyn6;
-step7=c.lag(0.001).linlin(0,(16256*9),(16256*9),0).round(1)+dyn7;
-step8=c.lag(0.001).linlin(0,(16256*9),(16256*9),0).round(1)+dyn8;
-step9=c.lag(0.001).linlin(0,(16256*9),(16256*9),0).round(1)+dyn9;
+dyn1=dyn2=dyn3=dyn4=dyn5=dyn6=dyn7=dyn8=dyn9=dyn;
+step1=c.lag(0.001).linlin(0,(16256*9),(16256*orange),0).round(1);
+step2=c.lag(0.001).linlin(0,(16256*9),(16256*orange),0).round(1);
+step3=c.lag(0.001).linlin(0,(16256*9),(16256*orange),0).round(1);
+step4=c.lag(0.001).linlin(0,(16256*9),(16256*orange),0).round(1);
+step5=c.lag(0.001).linlin(0,(16256*9),(16256*orange),0).round(1);
+step6=c.lag(0.001).linlin(0,(16256*9),(16256*orange),0).round(1);
+step7=c.lag(0.001).linlin(0,(16256*9),(16256*orange),0).round(1);
+step8=c.lag(0.001).linlin(0,(16256*9),(16256*orange),0).round(1);
+step9=c.lag(0.001).linlin(0,(16256*9),(16256*orange),0).round(1);
 heavy=2.pow(drive.lag(0.001)/16256).round(0.00001);
 pan=2.pow(pan_mod.lag(0.001)/16256).round(0.00001);
 fundamental=(fu*(9/8))*expansion;
-m=c.lag(0.001).linlin(0,(16256*9),0,(12*9));
+m=c.lag(0.001).linlin(0,(16256*9),0,(12*orange));
 sph_mod=2.pow(m/12);
-timbre=c.lag(0.001).linlin(0,(16256*9),(16256*9),0).round(1);
+timbre=c.lag(0.001).linlin(0,(16256*9),(16256*orange),1).round(1);
 polytope=Spherical(timbre,az.lag(0.001),el.lag(0.001));
 waveSpeed=pan;
 waveFreq=sph_mod.reciprocal;
-bessel_ripple=waveSpeed.reciprocal*sin((waveFreq*polytope.theta)+(waveFreq * polytope.phi)-waveSpeed);
+bessel_ripple=(waveFreq.reciprocal*10)*sin((waveFreq*polytope.theta)+(waveFreq * polytope.phi)-waveSpeed);
 
-ton1=2.pow(Select.kr(polytope.x.round(1).linlin(0,timbre,0,10),round(1), Select.kr(scale.lag(0.001),~sc)) /12).round(0.00001);
-ton2=2.pow(Select.kr(polytope.y.round(1).linlin(0,timbre,0,10),round(1), Select.kr(scale.lag(0.001),~sc)) /12).round(0.00001);
-ton3=2.pow(Select.kr(polytope.z.round(1).linlin(0,timbre,0,10),round(1), Select.kr(scale.lag(0.001),~sc)) /12).round(0.00001);
+ton1=2.pow(Select.kr(polytope.x.round(1).linlin(0,timbre,0,10).round(1), Select.kr(scale.lag(0.001),~sc)) /12).round(0.00001);
+ton2=2.pow(Select.kr(polytope.y.round(1).linlin(0,timbre,0,10).round(1), Select.kr(scale.lag(0.001),~sc)) /12).round(0.00001);
+ton3=2.pow(Select.kr(polytope.z.round(1).linlin(0,timbre,0,10).round(1), Select.kr(scale.lag(0.001),~sc)) /12).round(0.00001);
 
 tonal_x=2.pow(polytope.x.round(1) /16256).round(0.00001);
 tonal_y=2.pow(polytope.y.round(1) /16256).round(0.00001);
@@ -135,13 +136,13 @@ phase_mod_x=(Complex(1,mod_x).theta*4);
 phase_mod_y=(Complex(1,mod_y).theta*4);
 phase_mod_z=(Complex(1,mod_z).theta*2);
 
-mod_anglex=(LPF.ar((Osc.ar(~wt.bufnum,sph_mod,phase:phase_mod_x,mul:level).abs*
+mod_anglex=(LPF.ar((Osc.ar(~wt.bufnum,sph_mod,phase:phase_mod_x,mul:level).abs+
 SinOsc.ar(sph_mod,phase:phase_mod_x)),
 sph_mod*heavy,1)).range(pi.neg,pi);
-mod_angley=(LPF.ar((Osc.ar(~wt.bufnum,sph_mod,phase:phase_mod_y,mul:level).abs*
+mod_angley=(LPF.ar((Osc.ar(~wt.bufnum,sph_mod,phase:phase_mod_y,mul:level).abs+
 SinOsc.ar(sph_mod,phase:phase_mod_y)),
 sph_mod*heavy,1)).range(pi.neg,pi);
-mod_anglez=(LPF.ar((Osc.ar(~wt.bufnum,sph_mod,phase:phase_mod_z,mul:level).abs*
+mod_anglez=(LPF.ar((Osc.ar(~wt.bufnum,sph_mod,phase:phase_mod_z,mul:level).abs+
 SinOsc.ar(sph_mod,phase:phase_mod_z)),
 sph_mod*heavy,1)).range(35.264390.degrad,35.264390.degrad.neg);
 
@@ -174,15 +175,15 @@ amp1=expansion.reciprocal*ton1.reciprocal*tonal_x.reciprocal;
 amp2=expansion.reciprocal*ton2.reciprocal*tonal_y.reciprocal;
 amp3=expansion.reciprocal*ton3.reciprocal*tonal_z.reciprocal;
 
-oct9=2.pow(step1/16256).round(0.00001);
-oct8=oct9*2.pow(step2/16256).round(0.00001);
-oct7=oct8*2.pow(step3/16256).round(0.00001);
-oct6=oct7*2.pow(step4/16256).round(0.00001);
-oct5=oct6*2.pow(step5/16256).round(0.00001);
-oct4=oct5*2.pow(step6/16256).round(0.00001);
-oct3=oct4*2.pow(step7/16256).round(0.00001);
-oct2=oct3*2.pow(step8/16256).round(0.00001);
-oct1=oct2*2.pow(step9/16256).round(0.00001);
+oct9=2.pow(step1/16256).round(0.00001)/dyn1;
+oct8=oct9*2.pow(step2/16256).round(0.00001)/dyn2;
+oct7=oct8*2.pow(step3/16256).round(0.00001)/dyn3;
+oct6=oct7*2.pow(step4/16256).round(0.00001)/dyn4;
+oct5=oct6*2.pow(step5/16256).round(0.00001)/dyn5;
+oct4=oct5*2.pow(step6/16256).round(0.00001)/dyn6;
+oct3=oct4*2.pow(step7/16256).round(0.00001)/dyn7;
+oct2=oct3*2.pow(step8/16256).round(0.00001)/dyn8;
+oct1=oct2*2.pow(step9/16256).round(0.00001)/dyn9;
 ph1=(ph+ph).wrap(pi.neg,pi).round(0.00001);
 ph2=(ph1+ph).wrap(pi.neg,pi).round(0.00001);
 ph3=(ph2+ph).wrap(pi.neg,pi).round(0.00001);
@@ -194,53 +195,59 @@ ph8=(ph7+ph).wrap(pi.neg,pi).round(0.00001);
 ph9=(ph8+ph).wrap(pi.neg,pi).round(0.00001);
 
 //feed=(SoundIn.ar(0,gain)*qq.sqrt.reciprocal);    ///input
-feed=(WhiteNoise.ar(gain));    ///noise
+//feed=(WhiteNoise.ar(gain));    ///noise
 //feed=PlayBuf.ar(1, ~c1.bufnum, BufRateScale.kr(~c1.bufnum), loop: 1, doneAction:0)*(gain/5);   ////buffer
 
 sig1=(
-((LPF.ar((Osc.ar(~wt.bufnum,freq1*oct1,phase:phasex+ph9,mul:level).abs*SinOsc.ar(freq1*oct1,phase:phasex+ph9)),freq1*heavy,amp1*oct1.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq1*oct2,phase:phasex+ph8,mul:level).abs*SinOsc.ar(freq1*oct2,phase:phasex+ph8)),freq1*heavy,amp1*oct2.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq1*oct3,phase:phasex+ph7,mul:level).abs*SinOsc.ar(freq1*oct3,phase:phasex+ph7)),freq1*heavy,amp1*oct3.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq1*oct4,phase:phasex+ph6,mul:level).abs*SinOsc.ar(freq1*oct4,phase:phasex+ph6)),freq1*heavy,amp1*oct4.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq1*oct5,phase:phasex+ph5,mul:level).abs*SinOsc.ar(freq1*oct5,phase:phasex+ph5)),freq1*heavy,amp1*oct5.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq1*oct6,phase:phasex+ph4,mul:level).abs*SinOsc.ar(freq1*oct6,phase:phasex+ph4)),freq1*heavy,amp1*oct6.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq1*oct7,phase:phasex+ph3,mul:level).abs*SinOsc.ar(freq1*oct7,phase:phasex+ph3)),freq1*heavy,amp1*oct7.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq1*oct8,phase:phasex+ph2,mul:level).abs*SinOsc.ar(freq1*oct8,phase:phasex+ph2)),freq1*heavy,amp1*oct8.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq1*oct9,phase:phasex+ph1,mul:level).abs*SinOsc.ar(freq1*oct9,phase:phasex+ph1)),freq1*heavy,amp1*oct9.reciprocal)).abs)*
-(LPF.ar((Osc.ar(~wt.bufnum,freq1,phase:phasex+ph,mul:level).abs*SinOsc.ar(freq1,phase:phasex+ph)),freq1*heavy,amp1))
+(
+//(LPF.ar((Osc.ar(~wt.bufnum,freq1*oct1,phase:phasex+ph9,mul:level).abs+SinOsc.ar(freq1*oct1,phase:phasex+ph9)),freq1*heavy,amp1*oct1.reciprocal)).abs+
+//(LPF.ar((Osc.ar(~wt.bufnum,freq1*oct2,phase:phasex+ph8,mul:level).abs+SinOsc.ar(freq1*oct2,phase:phasex+ph8)),freq1*heavy,amp1*oct2.reciprocal)).abs+
+//(LPF.ar((Osc.ar(~wt.bufnum,freq1*oct3,phase:phasex+ph7,mul:level).abs+SinOsc.ar(freq1*oct3,phase:phasex+ph7)),freq1*heavy,amp1*oct3.reciprocal)).abs+
+//(LPF.ar((Osc.ar(~wt.bufnum,freq1*oct4,phase:phasex+ph6,mul:level).abs+SinOsc.ar(freq1*oct4,phase:phasex+ph6)),freq1*heavy,amp1*oct4.reciprocal)).abs+
+//(LPF.ar((Osc.ar(~wt.bufnum,freq1*oct5,phase:phasex+ph5,mul:level).abs+SinOsc.ar(freq1*oct5,phase:phasex+ph5)),freq1*heavy,amp1*oct5.reciprocal)).abs+
+//(LPF.ar((Osc.ar(~wt.bufnum,freq1*oct6,phase:phasex+ph4,mul:level).abs+SinOsc.ar(freq1*oct6,phase:phasex+ph4)),freq1*heavy,amp1*oct6.reciprocal)).abs+
+(LPF.ar((Osc.ar(~wt.bufnum,freq1*oct7,phase:phasex+ph3,mul:level).abs+SinOsc.ar(freq1*oct7,phase:phasex+ph3)),freq1*heavy,amp1*oct7.reciprocal)).abs+
+(LPF.ar((Osc.ar(~wt.bufnum,freq1*oct8,phase:phasex+ph2,mul:level).abs+SinOsc.ar(freq1*oct8,phase:phasex+ph2)),freq1*heavy,amp1*oct8.reciprocal)).abs+
+(LPF.ar((Osc.ar(~wt.bufnum,freq1*oct9,phase:phasex+ph1,mul:level).abs+SinOsc.ar(freq1*oct9,phase:phasex+ph1)),freq1*heavy,amp1*oct9.reciprocal)).abs
+)*
+(LPF.ar((Osc.ar(~wt.bufnum,freq1,phase:phasex+ph,mul:level).abs+SinOsc.ar(freq1,phase:phasex+ph)),freq1*heavy,amp1))
 );
 sig2=(
-((LPF.ar((Osc.ar(~wt.bufnum,freq2*oct1,phase:phasey+ph9,mul:level).abs*SinOsc.ar(freq2*oct1,phase:phasey+ph9)),freq2*heavy,amp2*oct1.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq2*oct2,phase:phasey+ph8,mul:level).abs*SinOsc.ar(freq2*oct2,phase:phasey+ph8)),freq2*heavy,amp2*oct2.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq2*oct3,phase:phasey+ph7,mul:level).abs*SinOsc.ar(freq2*oct3,phase:phasey+ph7)),freq2*heavy,amp2*oct3.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq2*oct4,phase:phasey+ph6,mul:level).abs*SinOsc.ar(freq2*oct4,phase:phasey+ph6)),freq2*heavy,amp2*oct4.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq2*oct5,phase:phasey+ph5,mul:level).abs*SinOsc.ar(freq2*oct5,phase:phasey+ph5)),freq2*heavy,amp2*oct5.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq2*oct6,phase:phasey+ph4,mul:level).abs*SinOsc.ar(freq2*oct6,phase:phasey+ph4)),freq2*heavy,amp2*oct6.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq2*oct7,phase:phasey+ph3,mul:level).abs*SinOsc.ar(freq2*oct7,phase:phasey+ph3)),freq2*heavy,amp2*oct7.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq2*oct8,phase:phasey+ph2,mul:level).abs*SinOsc.ar(freq2*oct8,phase:phasey+ph2)),freq2*heavy,amp2*oct8.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq2*oct9,phase:phasey+ph1,mul:level).abs*SinOsc.ar(freq2*oct9,phase:phasey+ph1)),freq2*heavy,amp2*oct9.reciprocal)).abs)*
-(LPF.ar((Osc.ar(~wt.bufnum,freq2,phase:phasey+ph,mul:level).abs*SinOsc.ar(freq2,phase:phasey+ph)),freq2*heavy,amp2))
+(
+//(LPF.ar((Osc.ar(~wt.bufnum,freq2*oct1,phase:phasey+ph9,mul:level).abs+SinOsc.ar(freq2*oct1,phase:phasey+ph9)),freq2*heavy,amp2*oct1.reciprocal)).abs+
+//(LPF.ar((Osc.ar(~wt.bufnum,freq2*oct2,phase:phasey+ph8,mul:level).abs+SinOsc.ar(freq2*oct2,phase:phasey+ph8)),freq2*heavy,amp2*oct2.reciprocal)).abs+
+//(LPF.ar((Osc.ar(~wt.bufnum,freq2*oct3,phase:phasey+ph7,mul:level).abs+SinOsc.ar(freq2*oct3,phase:phasey+ph7)),freq2*heavy,amp2*oct3.reciprocal)).abs+
+//(LPF.ar((Osc.ar(~wt.bufnum,freq2*oct4,phase:phasey+ph6,mul:level).abs+SinOsc.ar(freq2*oct4,phase:phasey+ph6)),freq2*heavy,amp2*oct4.reciprocal)).abs+
+//(LPF.ar((Osc.ar(~wt.bufnum,freq2*oct5,phase:phasey+ph5,mul:level).abs+SinOsc.ar(freq2*oct5,phase:phasey+ph5)),freq2*heavy,amp2*oct5.reciprocal)).abs+
+//(LPF.ar((Osc.ar(~wt.bufnum,freq2*oct6,phase:phasey+ph4,mul:level).abs+SinOsc.ar(freq2*oct6,phase:phasey+ph4)),freq2*heavy,amp2*oct6.reciprocal)).abs+
+(LPF.ar((Osc.ar(~wt.bufnum,freq2*oct7,phase:phasey+ph3,mul:level).abs+SinOsc.ar(freq2*oct7,phase:phasey+ph3)),freq2*heavy,amp2*oct7.reciprocal)).abs+
+(LPF.ar((Osc.ar(~wt.bufnum,freq2*oct8,phase:phasey+ph2,mul:level).abs+SinOsc.ar(freq2*oct8,phase:phasey+ph2)),freq2*heavy,amp2*oct8.reciprocal)).abs+
+(LPF.ar((Osc.ar(~wt.bufnum,freq2*oct9,phase:phasey+ph1,mul:level).abs+SinOsc.ar(freq2*oct9,phase:phasey+ph1)),freq2*heavy,amp2*oct9.reciprocal)).abs
+)*
+(LPF.ar((Osc.ar(~wt.bufnum,freq2,phase:phasey+ph,mul:level).abs+SinOsc.ar(freq2,phase:phasey+ph)),freq2*heavy,amp2))
 );
 sig3=(
-((LPF.ar((Osc.ar(~wt.bufnum,freq3*oct1,phase:phasez+ph9,mul:level).abs*SinOsc.ar(freq3*oct1,phase:phasez+ph9)),freq3*heavy,amp3*oct1.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq3*oct2,phase:phasez+ph8,mul:level).abs*SinOsc.ar(freq3*oct2,phase:phasez+ph8)),freq3*heavy,amp3*oct2.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq3*oct3,phase:phasez+ph7,mul:level).abs*SinOsc.ar(freq3*oct3,phase:phasez+ph7)),freq3*heavy,amp3*oct3.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq3*oct4,phase:phasez+ph6,mul:level).abs*SinOsc.ar(freq3*oct4,phase:phasez+ph6)),freq3*heavy,amp3*oct4.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq3*oct5,phase:phasez+ph5,mul:level).abs*SinOsc.ar(freq3*oct5,phase:phasez+ph5)),freq3*heavy,amp3*oct5.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq3*oct6,phase:phasez+ph4,mul:level).abs*SinOsc.ar(freq3*oct6,phase:phasez+ph4)),freq3*heavy,amp3*oct6.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq3*oct7,phase:phasez+ph3,mul:level).abs*SinOsc.ar(freq3*oct7,phase:phasez+ph3)),freq3*heavy,amp3*oct7.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq3*oct8,phase:phasez+ph2,mul:level).abs*SinOsc.ar(freq3*oct8,phase:phasez+ph2)),freq3*heavy,amp3*oct8.reciprocal)).abs+
-(LPF.ar((Osc.ar(~wt.bufnum,freq3*oct9,phase:phasez+ph1,mul:level).abs*SinOsc.ar(freq3*oct9,phase:phasez+ph1)),freq3*heavy,amp3*oct9.reciprocal)).abs)*
-(LPF.ar((Osc.ar(~wt.bufnum,freq3,phase:phasez+ph,mul:level).abs*SinOsc.ar(freq3,phase:phasez+ph)),freq3*heavy,amp3))
+(
+//(LPF.ar((Osc.ar(~wt.bufnum,freq3*oct1,phase:phasez+ph9,mul:level).abs+SinOsc.ar(freq3*oct1,phase:phasez+ph9)),freq3*heavy,amp3*oct1.reciprocal)).abs+
+//(LPF.ar((Osc.ar(~wt.bufnum,freq3*oct2,phase:phasez+ph8,mul:level).abs+SinOsc.ar(freq3*oct2,phase:phasez+ph8)),freq3*heavy,amp3*oct2.reciprocal)).abs+
+//(LPF.ar((Osc.ar(~wt.bufnum,freq3*oct3,phase:phasez+ph7,mul:level).abs+SinOsc.ar(freq3*oct3,phase:phasez+ph7)),freq3*heavy,amp3*oct3.reciprocal)).abs+
+//(LPF.ar((Osc.ar(~wt.bufnum,freq3*oct4,phase:phasez+ph6,mul:level).abs+SinOsc.ar(freq3*oct4,phase:phasez+ph6)),freq3*heavy,amp3*oct4.reciprocal)).abs+
+//(LPF.ar((Osc.ar(~wt.bufnum,freq3*oct5,phase:phasez+ph5,mul:level).abs+SinOsc.ar(freq3*oct5,phase:phasez+ph5)),freq3*heavy,amp3*oct5.reciprocal)).abs+
+//(LPF.ar((Osc.ar(~wt.bufnum,freq3*oct6,phase:phasez+ph4,mul:level).abs+SinOsc.ar(freq3*oct6,phase:phasez+ph4)),freq3*heavy,amp3*oct6.reciprocal)).abs+
+(LPF.ar((Osc.ar(~wt.bufnum,freq3*oct7,phase:phasez+ph3,mul:level).abs+SinOsc.ar(freq3*oct7,phase:phasez+ph3)),freq3*heavy,amp3*oct7.reciprocal)).abs+
+(LPF.ar((Osc.ar(~wt.bufnum,freq3*oct8,phase:phasez+ph2,mul:level).abs+SinOsc.ar(freq3*oct8,phase:phasez+ph2)),freq3*heavy,amp3*oct8.reciprocal)).abs+
+(LPF.ar((Osc.ar(~wt.bufnum,freq3*oct9,phase:phasez+ph1,mul:level).abs+SinOsc.ar(freq3*oct9,phase:phasez+ph1)),freq3*heavy,amp3*oct9.reciprocal)).abs
+)*
+(LPF.ar((Osc.ar(~wt.bufnum,freq3,phase:phasez+ph,mul:level).abs+SinOsc.ar(freq3,phase:phasez+ph)),freq3*heavy,amp3))
 );
 
 sig1=(sig1*heavy).softclip;
 sig2=(sig2*heavy).softclip;
 sig3=(sig3*heavy).softclip;
 
-control1=SinOsc.ar(freq1,phase:phasex,mul:amp1);
-control2=SinOsc.ar(freq2,phase:phasey,mul:amp2);
-control3=SinOsc.ar(freq3,phase:phasez,mul:amp3);
+control1=SinOsc.ar(freq1,phase:phasex+ph,mul:amp1);
+control2=SinOsc.ar(freq2,phase:phasey+ph,mul:amp2);
+control3=SinOsc.ar(freq3,phase:phasez+ph,mul:amp3);
 threshold1=(((343/speaker_size)/fundamental).reciprocal.ampdb/2.sqrt).dbamp;
 threshold2=(((343/speaker_size)/fundamental).reciprocal.ampdb/2.sqrt).dbamp;
 threshold3=(((343/speaker_size)/fundamental).reciprocal.ampdb/2.sqrt).dbamp;
@@ -249,9 +256,9 @@ sig1=HPF.ar(sig1,lowend);
 sig2=HPF.ar(sig2, lowend);
 sig3=HPF.ar(sig3, lowend);
 
-sig1=Compander.ar(sig1,control1,threshold1,1.2,1/3,0.03,0.15)+BrownNoise.ar(0.00001);
-sig2=Compander.ar(sig2,control2,threshold2,1.2,1/3,0.03,0.15)+BrownNoise.ar(0.00001);
-sig3=Compander.ar(sig3,control3,threshold3,1.2,1/3,0.03,0.15)+BrownNoise.ar(0.00001);
+//sig1=Compander.ar(sig1,control1,threshold1,1.2,1/3,0.03,0.15)+BrownNoise.ar(0.00001);
+//sig2=Compander.ar(sig2,control2,threshold2,1.2,1/3,0.03,0.15)+BrownNoise.ar(0.00001);
+//sig3=Compander.ar(sig3,control3,threshold3,1.2,1/3,0.03,0.15)+BrownNoise.ar(0.00001);
 
 
 g_ch1 = (
@@ -287,10 +294,10 @@ Spherical(sph_y,~az[3],~el[3]).y)+
 Spherical(sph_z,~az[3],~el[3]).z)
 );
 g_ch1 = g_ch1.pow(spread);   g_ch2 = g_ch2.pow(spread);   g_ch3 = g_ch3.pow(spread);   g_ch4 = g_ch4.pow(spread);
-pan1=SinOsc.ar(bessel_ripple,0).range(spread.linlin(0.001,1,1,0.001),1);
-pan2=SinOsc.ar(bessel_ripple,0.25pi).range(spread.linlin(0.001,1,1,0.001),1);
-pan3=SinOsc.ar(bessel_ripple,0.5pi).range(spread.linlin(0.001,1,1,0.001),1);
-pan4=SinOsc.ar(bessel_ripple,0.75pi).range(spread.linlin(0.001,1,1,0.001),1);
+pan1=SinOsc.ar(pan/bessel_ripple,0).range(spread.linlin(0.001,1,1,0.001),1);
+pan2=SinOsc.ar(pan/bessel_ripple,0.25pi).range(spread.linlin(0.001,1,1,0.001),1);
+pan3=SinOsc.ar(pan/bessel_ripple,0.5pi).range(spread.linlin(0.001,1,1,0.001),1);
+pan4=SinOsc.ar(pan/bessel_ripple,0.75pi).range(spread.linlin(0.001,1,1,0.001),1);
 
 (
 Out.ar(0,
@@ -353,10 +360,9 @@ Out.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:
 
 2.wait;
 
-
 		(
-~synth=Synth.new(\synth,[\gain,100,\drive,16267,\c,16256*3,\az,0,\el,0,\scale,0,\lowend,64,\level,100,
-				\speaker_size,0.15,\room,0.5,\mix,0.5,\pan_mod,~tempo/10,\spread,1,\limit,0.8,\fu,32]).register);
+~synth=Synth.new(\synth,[\gain,0.5,\drive,16266,\c,0,\az,0,\el,0,\scale,0,\lowend,64,\level,100,\orange,1,\dyn,1,
+				\speaker_size,0.15,\room,0.5,\mix,0.5,\pan_mod,(~tempo*1)*16256.neg,\spread,1,\limit,0.8,\fu,32]).register);
 
 	}); Tdef(\drone).play;
 })
