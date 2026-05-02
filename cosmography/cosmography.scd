@@ -355,7 +355,7 @@ Out.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:
 
 
 		(
-~synth=Synth.new([\gain,1,\drive,0,\c,16256*3,\az,0,\el,0,\scale,0,\lowend,64,\level,100,
+~synth=Synth.new(\synth,[\gain,100,\drive,16267,\c,16256*3,\az,0,\el,0,\scale,0,\lowend,64,\level,100,
 				\speaker_size,0.15,\room,0.5,\mix,0.5,\pan_mod,~tempo/10,\spread,1,\limit,0.8,\fu,32]).register);
 
 	}); Tdef(\drone).play;
