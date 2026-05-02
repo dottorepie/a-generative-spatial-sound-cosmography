@@ -361,9 +361,9 @@ Out.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:
 
 2.wait;
 
-		~range=1;
+		~orange=1;
 (
-~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0.3pi,\el,0,\scale,0,\lowend,64,\level,100,\orange,~range,\dyn,2.pow(0),
+~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0.3pi,\el,0,\scale,0,\lowend,64,\level,100,\orange,~orange,\dyn,2.pow(0),
 \speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,(~tempo*64)*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,0.01]).register);
 
 		///midi control
@@ -422,7 +422,7 @@ if(~synth.isPlaying,{~synth.set(\scale,a)});
 (
 MIDIdef.cc(\midi_pot7,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,1,32,128).round(0.0001);
+a=val.linlin(0,127,32,128).round(0.0001);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\lowend,a)});
 },7);
@@ -432,6 +432,7 @@ MIDIdef.cc(\midi_pot8,{ |val, num, chan, src|
 var a;
 a=val.linlin(0,127,1,3).round(0.0001);
 a.postln;
+						~orange=a;
 if(~synth.isPlaying,{~synth.set(\orange,a)});
 },8);
 );
@@ -470,7 +471,7 @@ if(~synth.isPlaying,{~synth.set(\mix,a)});
 (
 MIDIdef.cc(\midi_pot13,{ |val, num, chan, src|
 var a;
-	a=val.linlin(0,127,(16256*16).neg,(16256*8)).round(1).asInteger;
+	a=val.linlin(0,127,(16256*6).neg,(16256*3)).round(1).asInteger;
 a.postln;
 if(~synth.isPlaying,{~synth.set(\pan_mod,a/~tempo)});
 },13);
@@ -486,7 +487,7 @@ if(~synth.isPlaying,{~synth.set(\spread,a)});
 (
 MIDIdef.cc(\midi_pot15,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,1,0.01).round(0.0001);
+a=val.linlin(0,127,1,0.001).round(0.000001);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\limit,a)});
 },15);
@@ -498,6 +499,14 @@ a=val.linlin(0,127,8,256).round(0.0001);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\fu,a)});
 },16);
+);
+(
+MIDIdef.cc(\midi_pot17,{ |val, num, chan, src|
+var a;
+a=val.linlin(0,127,0,16256*~orange).round(1).asInteger;
+a.postln;
+if(~synth.isPlaying,{~synth.set(\c,a)});
+},17);
 );
 ));
 
