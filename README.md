@@ -1,5 +1,5 @@
-# a-generative-spatial-sound-cosmography
-an instrumentally generative spatial sound cosmography via SuperCollider
+# an-instrumentally-generative-spatial-sound-cosmography
+ SuperCollider
 
 basic synthesis components derived from work on previous repository:
 
