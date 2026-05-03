@@ -194,7 +194,7 @@ ph8=(ph7+ph).wrap(pi.neg,pi).round(0.00001);
 
 //feed=(SoundIn.ar(0,heavy));    ///input
 //feed=(WhiteNoise.ar(heavy));    ///noise
-feed=(PlayBuf.ar(1, ~c1.bufnum, BufRateScale.kr(~c1.bufnum), loop: 1, doneAction:0)*heavy);   ////buffer
+feed=(PlayBuf.ar(1, ~c1.bufnum, BufRateScale.kr(~c1.bufnum), loop: 1, doneAction:0)*heavy*heavy);   ////buffer
 
 sig1=(
 (((((((
@@ -433,7 +433,7 @@ if(~synth.isPlaying,{~synth.set(\orange,a)});
 (
 MIDIdef.cc(\midi_pot9,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0,8).round(0.0001);
+a=val.linlin(0,127,0,4).round(0.0001);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\dyn,2.pow(a))});
 },9);
