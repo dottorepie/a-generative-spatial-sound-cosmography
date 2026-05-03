@@ -205,6 +205,8 @@ ph9=(ph8+ph).wrap(pi.neg,pi).round(0.00001);
 //feed=(WhiteNoise.ar(heavy));    ///noise
 				feed=(PlayBuf.ar(1, ~c1.bufnum, BufRateScale.kr(~c1.bufnum), loop: 1, doneAction:0)*heavy);   ////buffer
 
+
+///mult chain// beware of 32-bit underflow and value 0 smash
 sig1=(
 ((((((((((((((((((
 (LPF.ar((Osc.ar(~wt.bufnum,freq1*oct2,phase:phasex+ph8,mul:level).abs*SinOsc.ar(freq1*oct2,phase:phasex+ph8)),freq1*heavy,amp1*oct2.reciprocal)).abs*
