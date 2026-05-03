@@ -215,7 +215,7 @@ sig1=(
 (LPF.ar((Osc.ar(~wt.bufnum,freq1*oct7,phase:phasex+ph3,mul:level).abs*SinOsc.ar(freq1*oct7,phase:phasex+ph3)),freq1*heavy,amp1*oct7.reciprocal)))+~comp).abs*
 (LPF.ar((Osc.ar(~wt.bufnum,freq1*oct8,phase:phasex+ph2,mul:level).abs*SinOsc.ar(freq1*oct8,phase:phasex+ph2)),freq1*heavy,amp1*oct8.reciprocal)))+~comp).abs*
 (LPF.ar((Osc.ar(~wt.bufnum,freq1*oct9,phase:phasex+ph1,mul:level).abs*SinOsc.ar(freq1*oct9,phase:phasex+ph1)),freq1*heavy,amp1*oct9.reciprocal)))+~comp).abs)*
-(LPF.ar((Osc.ar(~wt.bufnum,freq1,phase:phasex+ph,mul:level).abs*SinOsc.ar(freq1,phase:phasex+ph)),freq1*heavy,amp1))+~comp)*comp)+
+(LPF.ar((Osc.ar(~wt.bufnum,freq1,phase:phasex+ph,mul:level).abs*SinOsc.ar(freq1,phase:phasex+ph)),freq1*heavy,amp1))+~comp)*comp).poll+
 (BPF.ar(feed,freq1,band,band.sqrt.reciprocal*amp1)))
 );
 sig2=(
@@ -363,10 +363,10 @@ Out.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:
 );
 
 2.wait;
-~comp=0;
-~level=10.pow(35);
+~comp=2.pow(45.neg)
+~level=10.pow(12);
 (
-~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0.3pi,\el,0,\scale,0,\lowend,64,\level,100,\dyn,1,\comp,10.pow(35),
+~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0.3pi,\el,0,\scale,0,\lowend,64,\level,100,\dyn,1,\comp,~level,
 \speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,(~tempo*64)*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,0.01]).register);
 
 		///midi control
