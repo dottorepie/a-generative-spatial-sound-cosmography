@@ -122,7 +122,7 @@ timbre=step+1;
 fundamental=(fu*(9/8))*expansion;
 polytope=Spherical(timbre-depth,az.lag(0.001),el.lag(0.001));
 depth_harm=depth.linlin(0,(8128*orange),0,5);
-mag_sphharm=step.linlin(0,(16256*orange),0,9)--depth_harm;
+mag_sphharm=step.linlin(0,(16256*orange),0,9)-depth_harm;
 m_sphharm=Spherical(mag_sphharm,az.lag(0.001),el.lag(0.001));
 mx=m_sphharm.x.abs;
 my=m_sphharm.y.abs;
@@ -134,18 +134,10 @@ waveFreq=Cartesian(mx,my,mz).rho;
 bessel_wave=waveAmp*sin((waveFreq*polytope.theta)+(waveFreq * polytope.phi)-waveSpeed);
 bessel_ripple=Complex(1,bessel_wave).theta*4;
 
-pan1=(LPF.ar((Osc.ar(~wt.bufnum,pan,phase:0+bessel_ripple,mul:100).abs*
-SinOsc.ar(pan,phase:0+bessel_ripple)),
-pan*heavy));
-pan2=(LPF.ar((Osc.ar(~wt.bufnum,pan,phase:0+bessel_ripple,mul:100).abs*
-SinOsc.ar(pan,phase:0.25pi +bessel_ripple)),
-pan*heavy))
-pan3=(LPF.ar((Osc.ar(~wt.bufnum,pan,phase:0+bessel_ripple,mul:100).abs*
-SinOsc.ar(pan,phase:0.5pi +bessel_ripple)),
-pan*heavy))
-pan4=(LPF.ar((Osc.ar(~wt.bufnum,pan,phase:0+bessel_ripple,mul:100).abs*
-SinOsc.ar(pan,phase:0.75pi +bessel_ripple)),
-pan*heavy));
+pan1=SinOsc.ar(pan,phase:0).range(spread.linlin(0.01,1,1,0.001),1);
+pan2=SinOsc.ar(pan,phase:0.25pi).range(spread.linlin(0.01,1,1,0.001),1);
+pan3=SinOsc.ar(pan,phase:0.5pi).range(spread.linlin(0.01,1,1,0.001),1);
+pan4=SinOsc.ar(pan,phase:0.75pi).range(spread.linlin(0.01,1,1,0.001),1);
 
 ton1=2.pow(Select.kr(polytope.x.round(1).abs.linlin(1,timbre,0,~note).round(1), Select.kr(scale.lag(0.001),~sc)) /12);
 ton2=2.pow(Select.kr(polytope.y.round(1).abs.linlin(1,timbre,0,~note).round(1), Select.kr(scale.lag(0.001),~sc)) /12);
@@ -158,9 +150,9 @@ tonal_z=2.pow(polytope.z.round(1) /16256);
 mod_x=polytope.x;
 mod_y=polytope.y;
 mod_z=polytope.z;
-phase_mod_x=(Complex(1,mod_x).theta*4);
-phase_mod_y=(Complex(1,mod_y).theta*4);
-phase_mod_z=(Complex(1,mod_z).theta*2);
+phase_mod_x=(Complex(1,mod_x).theta*4)-bessel_ripple;
+phase_mod_y=(Complex(1,mod_y).theta*4)-bessel_ripple;
+phase_mod_z=(Complex(1,mod_z).theta*2)-bessel_ripple;
 
 mod_anglex=(LPF.ar((Osc.ar(~wt.bufnum,sph_mod,phase:phase_mod_x,mul:100).abs*
 SinOsc.ar(sph_mod,phase:phase_mod_x)),
@@ -439,7 +431,7 @@ if(~synth.isPlaying,{~synth.set(\drive,a)});
 (
 MIDIdef.cc(\midi_pot3,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0.0001,1);
+a=val.linlin(0,127,0.00001,1);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\band,a)});
 },3);
@@ -561,7 +553,7 @@ if(~synth.isPlaying,{~synth.set(\comp,b)});
 (
 MIDIdef.cc(\midi_pot18,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0.1,100);
+a=val.linlin(0,127,0.01,100);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\buffer,a)});
 },18);
