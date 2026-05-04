@@ -78,7 +78,7 @@ var nn=1.neg;
 );
 ~sc=[~scalee,~scaleee];
 
-~orange=5;
+~orange=3;
 ~comp=0;
 
 /////sound engine
@@ -266,6 +266,7 @@ sig1=Compander.ar(sig1,control1,threshold1,1.2,1/3,0.03,0.15)+BrownNoise.ar(0.00
 sig2=Compander.ar(sig2,control2,threshold2,1.2,1/3,0.03,0.15)+BrownNoise.ar(0.00001);
 sig3=Compander.ar(sig3,control3,threshold3,1.2,1/3,0.03,0.15)+BrownNoise.ar(0.00001);
 
+gain=gain*dyn;
 
 g_ch1 = (
 (Spherical(sph_x,(polytope.theta).wrap(pi,pi.neg),(polytope.phi).wrap(~el[2],~el[1])).x *
@@ -369,7 +370,7 @@ Out.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:
 ~level=10.pow(12);
 (
 ~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0.3pi,\el,0,\scale,0,\lowend,64,\level,100,\dyn,1,\comp,~level,\buffer=1,
-\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,(~tempo*64)*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,0.01]).register);
+\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,0.01]).register);
 
 		///midi control
 (
@@ -536,7 +537,7 @@ s.record(numChannels:4)
 ///sequencer///musical automaton
 (
 ({
-var m1=1.neg, m2=1.neg, m3=1.neg,a,b,c,n=0,bank=4,time=8.reciprocal,beat=1,r=0;
+var m1=1.neg, m2=1.neg, m3=1.neg,a,b,c,n=0,bank=4,time=32.reciprocal,beat=1,r=0;
 ~r=0;		~r1=0;		~r2=0;
 (
 
@@ -568,7 +569,7 @@ bank.do{ ~dur3=~dur3++~dz.[n];n=n+1;};n=0;
 ~dur=~dur++~dur1++~dur2++~dur3;
 )}.value);
 
-~seqen= Pseq(~dur ,inf).asStream;
+~seq= Pseq(~dur ,inf).asStream;
 ~val=123;
 ~tempo=1;
 TempoClock.default.tempo_(~tempo);
@@ -577,9 +578,9 @@ TempoClock.default.tempo_(~tempo);
 ~sq= Routine({loop{
 thisThread.randSeed = ~val;
 
-~synth.set(\az, ~s1);
-~synth.set(\el, ~s1);
-  ~seqen.next.wait;
+~synth.set(\az, pi.rand2);
+~synth.set(\el, 0.5.rand2);
+  ~seq.next.wait;
 }}));
 
 )
