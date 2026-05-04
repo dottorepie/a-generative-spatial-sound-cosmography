@@ -1,15 +1,15 @@
 
 (
 ~time=120;
-s.options.numWireBufs = 1024*4;
-s.options.numOutputBusChannels=10;
+s.options.numWireBufs = 1024*2;
+s.options.numOutputBusChannels=4;
 s.options.numInputBusChannels=1;
-s.options.memSize = 8192*32;
+s.options.memSize = 8192*16;
 s.options.blockSize = 128;
-s.options.maxNodes = 8192*2;
+s.options.maxNodes = 1024 * 2;
 s.makeGui;
 s.waitForBoot{
-Buffer.freeAll;
+//Buffer.freeAll;
 ~controlBus = Bus.control(s, 1);
 ~controlBus1 = Bus.control(s, 1);
 ~controlBus2 = Bus.control(s, 1);
@@ -148,6 +148,7 @@ var theta,phi ,wave;
 	~az=[];~el=[];~magx=[];~magy=[];~magz=[];~qx=[]; ~cart=[];      ~detune=1;
 //	spread = if(m_z < 1) { 1 / m_z } { m_z };
 ~hz=Synth.new(\player);
+~hz.set(\hz,0.1);
 data = [];
 Window.free;
 ~w = Window.new("3D Scatterplot", Rect(40,40, 2000, 1200)).front;
@@ -672,6 +673,7 @@ r.play;
         x = rx; y = ry;
 
         [x,y,z];
+			Cartesian(x,y,x).rho.postln;
     };
 
 };
