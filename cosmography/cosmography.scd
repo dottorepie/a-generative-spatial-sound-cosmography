@@ -70,17 +70,17 @@ wt = signal.asWavetable;
 );
 
 /////scales
-
+~note=10;
 (
 {
 var nn=1.neg;
-~scalee=10.collect{nn=nn+1;Scale.majorPentatonic.performDegreeToKey(nn,12)};
+~scalee=~note.collect{nn=nn+1;Scale.majorPentatonic.performDegreeToKey(nn,12)};
 }.value;
 );
 (
 {
 var nn=1.neg;
-~scaleee=10.collect{nn=nn+1;Scale.minorPentatonic.performDegreeToKey(nn,12)};
+~scaleee=~note.collect{nn=nn+1;Scale.minorPentatonic.performDegreeToKey(nn,12)};
 }.value;
 );
 ~sc=[~scalee,~scaleee];
@@ -92,16 +92,15 @@ var nn=1.neg;
 (
 SynthDef.new(\synth,{
 
-arg gain=1,drive=0,c=0,az=0,el=0,scale=0,lowend=64,level=100,speaker_size=0.15,room=0.5,mix=0.5,pan_mod=0.01,spread=1,limit=0.8,fu=32,
-				dyn=1,band=0.000001,comp=10.pow(35),buffer=1,sphharm=1;
+arg gain=1,drive=0,c=0,az=0,el=0,scale=0,lowend=64,level=100,speaker_size=0.15,room=0.5,mix=0.5,pan_mod=0.01,spread=1,limit=0.8,fu=32,depth=0,dyn=1,band=0.000001,comp=10.pow(35),buffer=1,sphharm=1;
 
 var expansion,heavy,fundamental,sph_mod,polytope,bessel_ripple,magx,magy,magz,sph;
 var ton1,ton2,ton3,tonal_x,tonal_y,tonal_z,mod_x,mod_y,mod_z,phase_mod_x,phase_mod_y,phase_mod_z;
 var mod_anglex,mod_angley,mod_anglez,m,mx,my,mz,sph_x,sph_y,sph_z,sph_mag,phasex,phasey,phasez;
 var freq1,freq2,freq3,amp1,amp2,amp3,feed,control1,control2,control3,sig1,sig2,sig3;
-var oct1,oct2,oct3,oct4,oct5,oct6,oct7,oct8,oct9,g=((1+5.sqrt)/2),s=(1+2.sqrt),pan;
-var step,ph,ph1,ph2,ph3,ph4,ph5,ph6,ph7,ph8,ph9,orange=~orange,polx,poly,polz;
-var threshold1,threshold2,threshold3,g_ch1,g_ch2,g_ch3,g_ch4,pan1,pan2,pan3,pan4;
+var oct1,oct2,oct3,oct4,oct5,oct6,oct7,oct8,oct9,g=((1+5.sqrt)/2),s=(1+2.sqrt),pan,m_sphharm,depth_harm;
+var step,ph,ph1,ph2,ph3,ph4,ph5,ph6,ph7,ph8,ph9,orange=~orange,polx,poly,polz,mag_sphharm;
+var threshold1,threshold2,threshold3,g_ch1,g_ch2,g_ch3,g_ch4,pan1,pan2,pan3,pan4,bessel_wave;
 var waveAmp,waveSpeed,waveFreq,dyn1,dyn2,dyn3,dyn4,dyn5,dyn6,dyn7,dyn8,dyn9,timbre;
 
 pan=2.pow(pan_mod.lag(0.001)/16256);
@@ -121,18 +120,36 @@ expansion=2.pow(c.lag(0.001)/16256);
 step=c.lag(0.001).linlin(0,(16256*orange),(16256*orange),0).round(1).asInteger;
 timbre=step+1;
 fundamental=(fu*(9/8))*expansion;
-polytope=Spherical(timbre,az.lag(0.001),el.lag(0.001));
-m=c.lag.(0.001).linlin(0,(16256*orange),9,0);
-timbre=step+1;
+polytope=Spherical(timbre-depth,az.lag(0.001),el.lag(0.001));
+depth_harm=depth.linlin(0,(8128*orange),0,5);
+mag_sphharm=step.linlin(0,(16256*orange),0,9)--depth_harm;
+m_sphharm=Spherical(mag_sphharm,az.lag(0.001),el.lag(0.001));
+mx=m_sphharm.x.abs;
+my=m_sphharm.y.abs;
+mz=m_sphharm.z.abs;
 sph_mod=2.pow(sphharm.lag(0.001)/16256);
-waveAmp=((m+pan)/m).reciprocal+0.01;
+waveAmp=expansion/2;
 waveSpeed=pan.reciprocal;
-waveFreq=m+1;
-bessel_ripple=waveAmp*sin((waveFreq*polytope.theta)+(waveFreq * polytope.phi)-waveSpeed);
+waveFreq=Cartesian(mx,my,mz).rho;
+bessel_wave=waveAmp*sin((waveFreq*polytope.theta)+(waveFreq * polytope.phi)-waveSpeed);
+bessel_ripple=Complex(1,bessel_wave).theta*4;
 
-ton1=2.pow(Select.kr(polytope.x.round(1).linlin(0,timbre,0,10).round(1), Select.kr(scale.lag(0.001),~sc)) /12);
-ton2=2.pow(Select.kr(polytope.y.round(1).linlin(0,timbre,0,10).round(1), Select.kr(scale.lag(0.001),~sc)) /12);
-ton3=2.pow(Select.kr(polytope.z.round(1).linlin(0,timbre,0,10).round(1), Select.kr(scale.lag(0.001),~sc)) /12);
+pan1=(LPF.ar((Osc.ar(~wt.bufnum,pan,phase:0+bessel_ripple,mul:100).abs*
+SinOsc.ar(pan,phase:0+bessel_ripple)),
+pan*heavy));
+pan2=(LPF.ar((Osc.ar(~wt.bufnum,pan,phase:0+bessel_ripple,mul:100).abs*
+SinOsc.ar(pan,phase:0.25pi +bessel_ripple)),
+pan*heavy))
+pan3=(LPF.ar((Osc.ar(~wt.bufnum,pan,phase:0+bessel_ripple,mul:100).abs*
+SinOsc.ar(pan,phase:0.5pi +bessel_ripple)),
+pan*heavy))
+pan4=(LPF.ar((Osc.ar(~wt.bufnum,pan,phase:0+bessel_ripple,mul:100).abs*
+SinOsc.ar(pan,phase:0.75pi +bessel_ripple)),
+pan*heavy));
+
+ton1=2.pow(Select.kr(polytope.x.round(1).abs.linlin(1,timbre,0,~note).round(1), Select.kr(scale.lag(0.001),~sc)) /12);
+ton2=2.pow(Select.kr(polytope.y.round(1).abs.linlin(1,timbre,0,~note).round(1), Select.kr(scale.lag(0.001),~sc)) /12);
+ton3=2.pow(Select.kr(polytope.z.round(1).abs.linlin(1,timbre,0,~note).round(1), Select.kr(scale.lag(0.001),~sc)) /12);
 
 tonal_x=2.pow(polytope.x.round(1) /16256);
 tonal_y=2.pow(polytope.y.round(1) /16256);
@@ -145,26 +162,26 @@ phase_mod_x=(Complex(1,mod_x).theta*4);
 phase_mod_y=(Complex(1,mod_y).theta*4);
 phase_mod_z=(Complex(1,mod_z).theta*2);
 
-mod_anglex=(LPF.ar((Osc.ar(~wt.bufnum,sph_mod,phase:phase_mod_x,mul:level).abs*
+mod_anglex=(LPF.ar((Osc.ar(~wt.bufnum,sph_mod,phase:phase_mod_x,mul:100).abs*
 SinOsc.ar(sph_mod,phase:phase_mod_x)),
-sph_mod*heavy,1)).range(pi.neg,pi);
-mod_angley=(LPF.ar((Osc.ar(~wt.bufnum,sph_mod,phase:phase_mod_y,mul:level).abs*
+sph_mod*heavy)).range(pi.neg,pi);
+mod_angley=(LPF.ar((Osc.ar(~wt.bufnum,sph_mod,phase:phase_mod_y,mul:100).abs*
 SinOsc.ar(sph_mod,phase:phase_mod_y)),
-sph_mod*heavy,1)).range(pi.neg,pi);
-mod_anglez=(LPF.ar((Osc.ar(~wt.bufnum,sph_mod,phase:phase_mod_z,mul:level).abs*
+sph_mod*heavy)).range(pi.neg,pi);
+mod_anglez=(LPF.ar((Osc.ar(~wt.bufnum,sph_mod,phase:phase_mod_z,mul:100).abs*
 SinOsc.ar(sph_mod,phase:phase_mod_z)),
-sph_mod*heavy,1)).range(35.264390.degrad,35.264390.degrad.neg);
+sph_mod*heavy)).range(35.264390.degrad,35.264390.degrad.neg);
 
-magx=((Complex(cos(((polytope.theta+mod_anglex)*m).wrap(pi.neg,pi)),
-cos((((polytope.theta+mod_anglex)*m)).wrap(pi.neg,pi))).rho/(2.sqrt))*
+magx=((Complex(cos(((polytope.theta+mod_anglex)*mx).wrap(pi.neg,pi)),
+cos((((polytope.theta+mod_anglex)*mx)).wrap(pi.neg,pi))).rho/(2.sqrt))*
 (Complex(cos((polytope.phi).wrap((pi/2).neg,(pi/2))),cos((polytope.phi).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)));
 
-magy=((Complex(sin(((polytope.theta+mod_angley)*m).wrap(pi.neg,pi)),
-sin(((polytope.theta+mod_angley)*m).wrap(pi.neg,pi))).rho/(2.sqrt))*
+magy=((Complex(sin(((polytope.theta+mod_angley)*my).wrap(pi.neg,pi)),
+sin(((polytope.theta+mod_angley)*my).wrap(pi.neg,pi))).rho/(2.sqrt))*
 (Complex(cos((polytope.phi).wrap((pi/2).neg,(pi/2))),cos((polytope.phi).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)));
 
-magz=((Complex(cos(((polytope.phi+mod_anglez)*m).wrap((pi/2).neg,(pi/2))),
-cos(((polytope.phi)*m).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)));
+magz=((Complex(cos(((polytope.phi+mod_anglez)*mz).wrap((pi/2).neg,(pi/2))),
+cos(((polytope.phi)*mz).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)));
 
 sph_x=(Cartesian(magx,0,0).rho);
 sph_y=(Cartesian(0,magy,0).rho);
@@ -310,10 +327,6 @@ g_ch1 = g_ch1.pow(spread);
 g_ch2 = g_ch2.pow(spread);
 g_ch3 = g_ch3.pow(spread);
 g_ch4 = g_ch4.pow(spread);
-pan1=SinOsc.ar(pan,0,bessel_ripple).range(spread.linlin(0.001,1,1,0.001),1);
-pan2=SinOsc.ar(pan,0.25pi,bessel_ripple).range(spread.linlin(0.001,1,1,0.001),1);
-pan3=SinOsc.ar(pan,0.5pi,bessel_ripple).range(spread.linlin(0.001,1,1,0.001),1);
-pan4=SinOsc.ar(pan,0.75pi,bessel_ripple).range(spread.linlin(0.001,1,1,0.001),1);
 
 (
 Out.ar(0,
@@ -357,10 +370,10 @@ FreeVerb.ar(sig3*g_ch4*pan4,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01
 /*(
 Out.ar(0,Pan2.ar(
 Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*sph_x)),limit,0.01),SinOsc.ar(pan,0,bessel_ripple)));
+FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*sph_x)),limit,0.01),pan1));
 Out.ar(0,Pan2.ar(
 Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*sph_y)),limit,0.01),SinOsc.ar(pan,0.5pi,bessel_ripple)));
+FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*sph_y)),limit,0.01),pan3));
 Out.ar(0,
 Limiter.ar(LeakDC.ar(
 FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*sph_z)),limit,0.01)!2);
@@ -376,19 +389,19 @@ Out.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:
 Out.ar(0,VBAP.ar(4,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.001),room.lag(0.001),mul:gain*sph_x)),0.9,0.01),
 ~vbap_buf ,
-(polytope.theta.raddeg+SinOsc.ar(pan,0,bessel_ripple)).wrap(180,180.neg),
-(polytope.phi.raddeg+bessel_ripple).wrap(90,90.neg),
+(polytope.theta.raddeg+pan1.range(0.5pi.neg.raddeg,0.5pi.raddeg)).wrap(180,180.neg),
+(polytope.phi.raddeg+bessel_ripple.raddeg).wrap(90,90.neg),
 spread:spread.reciprocal));
 Out.ar(0,VBAP.ar(4,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.001),room.lag(0.001),mul:gain*sph_y)),0.9,0.01),
 ~vbap_buf ,
-(polytope.theta.raddeg+SinOsc.ar(pan,0.5pi,bessel_ripple)).wrap(180,180.neg),
-(polytope.phi.raddeg+bessel_ripple).wrap(90,90.neg),
+(polytope.theta.raddeg+pan3.range(0.5pi.neg.raddeg,0.5pi.raddeg)).wrap(180,180.neg),
+(polytope.phi.raddeg+bessel_ripple.raddeg).wrap(90,90.neg),
 spread:spread.reciprocal));
 Out.ar(0,VBAP.ar(4,
 Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.001),room.lag(0.001),mul:gain*sph_z)),0.9,0.01),
 ~vbap_buf ,
-(polytope.theta.raddeg+bessel_ripple).wrap(180,180.neg),
+(polytope.theta.raddeg+bessel_ripple.raddeg).wrap(180,180.neg),
 (polytope.phi.raddeg).wrap(90,90.neg),
 spread:spread.reciprocal));
 )*/
@@ -399,7 +412,7 @@ spread:spread.reciprocal));
 ~comp=2.pow(45.neg);
 ~level=10.pow(12);
 (
-~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0.3pi,\el,0,\scale,0,\lowend,64,\level,200,\dyn,1,\comp,~level,\buffer,1,
+~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0.3pi,\el,0,\scale,0,\lowend,64,\level,200,\dyn,1,\comp,~level,\buffer,1,\depth,1,
 \sphharm,0,\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,0.01]).register);
 
 		///midi control
@@ -568,6 +581,14 @@ a=val.linlin(0,127,(16256*10).neg,(16256*5)).round(1).asInteger;
 a.postln;
 if(~synth.isPlaying,{~synth.set(\sphharm,a)});
 },20);
+);
+(
+MIDIdef.cc(\midi_pot21,{ |val, num, chan, src|
+var a;
+a=val.linlin(0,127,0,8128*~orange).round(1).asInteger;
+a.postln;
+if(~synth.isPlaying,{~synth.set(\depth,a)});
+},21);
 );
 ));
 
