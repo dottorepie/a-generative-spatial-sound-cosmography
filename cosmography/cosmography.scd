@@ -400,10 +400,10 @@ spread:spread.reciprocal));
 );
 
 2.wait;
-~comp=2.pow(45.neg)
+~comp=2.pow(45.neg);
 ~level=10.pow(12);
 (
-~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0.3pi,\el,0,\scale,0,\lowend,64,\level,100,\dyn,1,\comp,~level,\buffer=1,
+~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0.3pi,\el,0,\scale,0,\lowend,64,\level,100,\dyn,1,\comp,~level,\buffer,1,
 \speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,0.01]).register);
 
 		///midi control
@@ -533,29 +533,29 @@ if(~synth.isPlaying,{~synth.set(\limit,a)});
 );
 (
 MIDIdef.cc(\midi_pot16,{ |val, num, chan, src|
-var a;
+var a,b;
 a=val.linlin(0,127,1,8).round(1).asInteger;
-a=2.pow(a);
-a.postln;
-if(~synth.isPlaying,{~synth.set(\fu,a)});
+b=2.pow(a);
+b.postln;
+if(~synth.isPlaying,{~synth.set(\fu,b)});
 },16);
 );
 (
-MIDIdef.cc(\midi_pot16,{ |val, num, chan, src|
-var a;
-a=val.linlin(0,127,10,20).round(0.000001);
-a=10.pow(a);
-a.postln;
-if(~synth.isPlaying,{~synth.set(\comp,a)});
-},16);
+MIDIdef.cc(\midi_pot17,{ |val, num, chan, src|
+var a,b;
+a=val.linlin(0,127,15,25).round(0.000001);
+b=10.pow(a);
+b.postln;
+if(~synth.isPlaying,{~synth.set(\comp,b)});
+},17);
 );
 (
-MIDIdef.cc(\midi_pot16,{ |val, num, chan, src|
+MIDIdef.cc(\midi_pot18,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,1,10).round(0.000001);
+a=val.linlin(0,127,0.1,10).round(0.000001);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\buffer,a)});
-},16);
+},18);
 );
 ));
 
@@ -604,7 +604,7 @@ bank.do{ ~dur3=~dur3++~dz.[n];n=n+1;};n=0;
 )}.value);
 
 ~seq= Pseq(~dur ,inf).asStream;
-~val=123;
+~val=1234;
 ~tempo=1;
 TempoClock.default.tempo_(~tempo);
 
@@ -619,6 +619,47 @@ thisThread.randSeed = ~val;
 
 )
 ~sq.play;
+
+
+///reactive control to cosmos animation
+
+////synth parameters
+(
+	~val=1234;
+
+~str = Routine({
+    var i=0,m,l,az=0,el=0,expansion;
+	var r1,r2,r3,sphr,time=1/32,melody,rhythm;
+
+    loop {
+								thisThread.randSeed = ~val;
+							i= ~cart.lag(0.01).size.rand;
+				//	i=0;
+	expansion=Cartesian(~cart.lag(0.01).[i].[0].round(0.00001),
+						~cart.lag(0.01).[i].[1].round(0.00001),
+						~cart.lag(0.00001).[i].[2].round(0.00001));
+					rhythm=Spherical(1,expansion.theta,expansion.phi);
+					melody=Spherical(10,expansion.theta,expansion.phi);
+				r1=2.pow(rhythm.x.abs).round(time);
+				r2=2.pow(rhythm.y.abs).round(time);
+				r3=2.pow(rhythm.z.abs).round(time);
+					sphr=[r1,r2,r3];
+
+	~synth.set(\az, melody.theta);
+~synth.set(\el, melody.phi);
+		sphr.[0].next.wait;
+			~synth.set(\az, melody.theta);
+~synth.set(\el, melody.phi);
+		sphr.[1].next.wait;
+			~synth.set(\az, melody.theta);
+~synth.set(\el, melody.phi);
+		sphr.[2].next.wait;
+    }
+		});
+
+
+		) ;
+			~str.play;
 
 ////////further spatial arrays
 /*
