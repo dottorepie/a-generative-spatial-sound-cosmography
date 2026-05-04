@@ -52,7 +52,7 @@ s.meter;
 ////////////////////////////////////////////painter
 
 (
-var win,wx=0,wy=0,g=((1+5.sqrt)/2),s=(1+2.sqrt), posit=0,size=500,scale=150;
+var win,wx=0,wy=0,g=((1+5.sqrt)/2),s=(1+2.sqrt), posit=0,size=1100,scale=150;
 var xPos,yPos, ax,ay,ofset;
 //Window.closeAll;
 
@@ -64,8 +64,8 @@ var xPos,yPos, ax,ay,ofset;
 ~amp6= 0;
 ~amp7= 0;
 
-win = Window("RGB Audio Visualizer", Rect(10, 10, size, size));
-~v1 = UserView(win, Rect(0,0,size,size)).background_(Color.black);
+win = Window("RGB Audio Visualizer", Rect(10, 10, 2*size,size));
+~v1 = UserView(win, Rect(0,0,2*size,size)).background_(Color.black);
 
 SynthDef(\painting, {
 	arg lag=0.1,gain1=5,gain2=100;
@@ -161,15 +161,14 @@ ofset=0.1.rand;
 		xPos =  0+ (~amp5.lag(ofset));
 	yPos = 0 + (~amp6.lag(ofset));
 
-		Pen.fillColor = Color(2.pow(~amp1/992.neg).lag(0.01.rand),
-			2.pow(~amp2/992.neg).lag(ofset),
-			2.pow(~amp3/992.neg).lag(ofset),
-			2.pow(~amp4/992.neg).lag(ofset));
+		Pen.fillColor = Color(~amp1.lag(ofset),
+		~amp2.lag(ofset),
+			~amp3.lag(ofset),
+			~amp3.lag(ofset*10));
 
-     Pen.fillRect(Rect.aboutPoint(xPos @ yPos,
-			~amp7.pow(0.1).lag(ofset)*(size/scale)*50,
+     Pen.fillRect(Rect.aboutPoint(xPos @ yPos,2*size,
 			//(size/scale),
-				~amp7.pow(0.1).lag(ofset)*(size/scale)*50));
+			size));
 			//(size/scale)));
 
     };
@@ -194,7 +193,7 @@ MIDIIn.connectAll;
 					(
 MIDIdef.cc(\midi_pot1,{ |val, num, chan, src|
 		var k;
-			k=val.linlin(0,127,0,992*5).round(0.00001);
+			k=val.linlin(0,127,0.1,2).round(0.00001);
 		k.postln;
 		if(~a.isPlaying,{~a.set(\gain1,k)});
 
