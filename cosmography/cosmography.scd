@@ -85,28 +85,29 @@ var nn=1.neg;
 );
 ~sc=[~scalee,~scaleee];
 
-~orange=3;
-~comp=0;
+~orange=4;
+~comp=2.pow(45.neg);
 
 /////sound engine
 (
 SynthDef.new(\synth,{
 
 arg gain=1,drive=0,c=0,az=0,el=0,scale=0,lowend=64,level=100,speaker_size=0.15,room=0.5,mix=0.5,pan_mod=0.01,spread=1,limit=0.8,fu=32,
-				dyn=1,band=0.000001,comp=10.pow(35),buffer=1;
+				dyn=1,band=0.000001,comp=10.pow(35),buffer=1,sphharm=1;
 
 var expansion,heavy,fundamental,sph_mod,polytope,bessel_ripple,magx,magy,magz,sph;
 var ton1,ton2,ton3,tonal_x,tonal_y,tonal_z,mod_x,mod_y,mod_z,phase_mod_x,phase_mod_y,phase_mod_z;
-var mod_anglex,mod_angley,mod_anglez,mx,my,mz,sph_x,sph_y,sph_z,sph_mag,phasex,phasey,phasez;
+var mod_anglex,mod_angley,mod_anglez,m,mx,my,mz,sph_x,sph_y,sph_z,sph_mag,phasex,phasey,phasez;
 var freq1,freq2,freq3,amp1,amp2,amp3,feed,control1,control2,control3,sig1,sig2,sig3;
 var oct1,oct2,oct3,oct4,oct5,oct6,oct7,oct8,oct9,g=((1+5.sqrt)/2),s=(1+2.sqrt),pan;
 var step,ph,ph1,ph2,ph3,ph4,ph5,ph6,ph7,ph8,ph9,orange=~orange,polx,poly,polz;
 var threshold1,threshold2,threshold3,g_ch1,g_ch2,g_ch3,g_ch4,pan1,pan2,pan3,pan4;
-var waveSpeed,waveFreq,dyn1,dyn2,dyn3,dyn4,dyn5,dyn6,dyn7,dyn8,dyn9,timbre;
+var waveAmp,waveSpeed,waveFreq,dyn1,dyn2,dyn3,dyn4,dyn5,dyn6,dyn7,dyn8,dyn9,timbre;
 
-
+pan=2.pow(pan_mod.lag(0.001)/16256);
 ph = (2pi-(2pi/s));
-expansion=2.pow(c.lag(0.001)/16256).round(0.00001);
+heavy=2.pow(drive.lag(0.001)/16256);
+level=level*heavy;
 dyn1=dyn*2;
 dyn2=dyn*3;
 dyn3=dyn*4;
@@ -116,34 +117,30 @@ dyn6=dyn*7;
 dyn7=dyn*8;
 dyn8=dyn*9;
 dyn9=dyn*10;
-step=c.lag(0.001).linlin(0,(16256*orange),(16256*orange),0).round(1);
-heavy=2.pow(drive.lag(0.001)/16256).round(0.00001);
-level=level*heavy;
-pan=2.pow(pan_mod.lag(0.001)/16256).round(0.00001);
+expansion=2.pow(c.lag(0.001)/16256);
+step=c.lag(0.001).linlin(0,(16256*orange),(16256*orange),0).round(1).asInteger;
+timbre=step+1;
 fundamental=(fu*(9/8))*expansion;
-mx=2;
-my=2;
-mz=2;
-sph_mod=1;
-timbre=c.lag(0.001).linlin(0,(16256*orange),(16256*orange),1).round(1);
 polytope=Spherical(timbre,az.lag(0.001),el.lag(0.001));
-waveSpeed=1;
-waveFreq=2;
-bessel_ripple=(0.5)*sin((waveFreq*polytope.theta)+(waveFreq * polytope.phi)-waveSpeed);
+m=c.lag.(0.001).linlin(0,(16256*orange),9,0);
+timbre=step+1;
+sph_mod=2.pow(sphharm.lag(0.001)/16256);
+waveAmp=((m+pan)/m).reciprocal+0.01;
+waveSpeed=pan.reciprocal;
+waveFreq=m+1;
+bessel_ripple=waveAmp*sin((waveFreq*polytope.theta)+(waveFreq * polytope.phi)-waveSpeed);
 
-ton1=2.pow(Select.kr(polytope.x.round(1).linlin(0,timbre,0,10).round(1), Select.kr(scale.lag(0.001),~sc)) /12).round(0.00001);
-ton2=2.pow(Select.kr(polytope.y.round(1).linlin(0,timbre,0,10).round(1), Select.kr(scale.lag(0.001),~sc)) /12).round(0.00001);
-ton3=2.pow(Select.kr(polytope.z.round(1).linlin(0,timbre,0,10).round(1), Select.kr(scale.lag(0.001),~sc)) /12).round(0.00001);
+ton1=2.pow(Select.kr(polytope.x.round(1).linlin(0,timbre,0,10).round(1), Select.kr(scale.lag(0.001),~sc)) /12);
+ton2=2.pow(Select.kr(polytope.y.round(1).linlin(0,timbre,0,10).round(1), Select.kr(scale.lag(0.001),~sc)) /12);
+ton3=2.pow(Select.kr(polytope.z.round(1).linlin(0,timbre,0,10).round(1), Select.kr(scale.lag(0.001),~sc)) /12);
 
-tonal_x=2.pow(polytope.x.round(1) /16256).round(0.00001);
-tonal_y=2.pow(polytope.y.round(1) /16256).round(0.00001);
-tonal_z=2.pow(polytope.z.round(1) /16256).round(0.00001);
+tonal_x=2.pow(polytope.x.round(1) /16256);
+tonal_y=2.pow(polytope.y.round(1) /16256);
+tonal_z=2.pow(polytope.z.round(1) /16256);
 
-
-
-mod_x=polytope.x.round(0.00001);
-mod_y=polytope.y.round(0.00001);
-mod_z=polytope.z.round(0.00001);
+mod_x=polytope.x;
+mod_y=polytope.y;
+mod_z=polytope.z;
 phase_mod_x=(Complex(1,mod_x).theta*4);
 phase_mod_y=(Complex(1,mod_y).theta*4);
 phase_mod_z=(Complex(1,mod_z).theta*2);
@@ -158,16 +155,16 @@ mod_anglez=(LPF.ar((Osc.ar(~wt.bufnum,sph_mod,phase:phase_mod_z,mul:level).abs*
 SinOsc.ar(sph_mod,phase:phase_mod_z)),
 sph_mod*heavy,1)).range(35.264390.degrad,35.264390.degrad.neg);
 
-magx=((Complex(cos(((polytope.theta+mod_anglex).round(0.00001)*mx).wrap(pi.neg,pi)),
-cos((((polytope.theta+mod_anglex).round(0.00001)*mx)).wrap(pi.neg,pi))).rho/(2.sqrt))*
-(Complex(cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2))),cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)));
+magx=((Complex(cos(((polytope.theta+mod_anglex)*m).wrap(pi.neg,pi)),
+cos((((polytope.theta+mod_anglex)*m)).wrap(pi.neg,pi))).rho/(2.sqrt))*
+(Complex(cos((polytope.phi).wrap((pi/2).neg,(pi/2))),cos((polytope.phi).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)));
 
-magy=((Complex(sin(((polytope.theta+mod_angley).round(0.00001)*my).wrap(pi.neg,pi)),
-sin(((polytope.theta+mod_angley).round(0.00001)*my).wrap(pi.neg,pi))).rho/(2.sqrt))*
-(Complex(cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2))),cos((polytope.phi.round(0.00001)).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)));
+magy=((Complex(sin(((polytope.theta+mod_angley)*m).wrap(pi.neg,pi)),
+sin(((polytope.theta+mod_angley)*m).wrap(pi.neg,pi))).rho/(2.sqrt))*
+(Complex(cos((polytope.phi).wrap((pi/2).neg,(pi/2))),cos((polytope.phi).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)));
 
-magz=((Complex(cos(((polytope.phi+mod_anglez).round(0.00001)*mz).wrap((pi/2).neg,(pi/2))),
-cos(((polytope.phi).round(0.00001)*mz).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)));
+magz=((Complex(cos(((polytope.phi+mod_anglez)*m).wrap((pi/2).neg,(pi/2))),
+cos(((polytope.phi)*m).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)));
 
 sph_x=(Cartesian(magx,0,0).rho);
 sph_y=(Cartesian(0,magy,0).rho);
@@ -182,39 +179,38 @@ phasex=Complex(1,sph.x).theta*4;
 phasey=Complex(1,sph.y).theta*4;
 phasez=Complex(1,sph.z).theta*2;
 
-freq1=(fundamental)*ton1*tonal_x;
-freq2=(fundamental)*ton2*tonal_y;
-freq3=(fundamental)*ton3*tonal_z;
+freq1=fundamental*ton1*tonal_x;
+freq2=fundamental*ton2*tonal_y;
+freq3=fundamental*ton3*tonal_z;
 
 amp1=expansion.reciprocal*ton1.reciprocal*tonal_x.reciprocal;
 amp2=expansion.reciprocal*ton2.reciprocal*tonal_y.reciprocal;
 amp3=expansion.reciprocal*ton3.reciprocal*tonal_z.reciprocal;
 
 ////calculate range of spectrum 2.pow((16256*1)/16256).pow(8)
+oct9=dyn*2.pow(step/16256);
+oct8=dyn1*2.pow(step/16256);
+oct7=dyn2*2.pow(step/16256);
+oct6=dyn3*2.pow(step/16256);
+oct5=dyn4*2.pow(step/16256);
+oct4=dyn5*2.pow(step/16256);
+oct3=dyn6*2.pow(step/16256);
+oct2=dyn7*2.pow(step/16256);
+oct1=dyn8*2.pow(step/16256);
 
-oct9=dyn*2.pow(step/16256).round(0.00001);
-oct8=dyn1*2.pow(step/16256).round(0.00001);
-oct7=dyn2*2.pow(step/16256).round(0.00001);
-oct6=dyn3*2.pow(step/16256).round(0.00001);
-oct5=dyn4*2.pow(step/16256).round(0.00001);
-oct4=dyn5*2.pow(step/16256).round(0.00001);
-oct3=dyn6*2.pow(step/16256).round(0.00001);
-oct2=dyn7*2.pow(step/16256).round(0.00001);
-oct1=dyn8*2.pow(step/16256).round(0.00001);
-ph1=(ph+ph).wrap(pi.neg,pi).round(0.00001);
-ph2=(ph1+ph).wrap(pi.neg,pi).round(0.00001);
-ph3=(ph2+ph).wrap(pi.neg,pi).round(0.00001);
-ph4=(ph3+ph).wrap(pi.neg,pi).round(0.00001);
-ph5=(ph4+ph).wrap(pi.neg,pi).round(0.00001);
-ph6=(ph5+ph).wrap(pi.neg,pi).round(0.00001);
-ph7=(ph6+ph).wrap(pi.neg,pi).round(0.00001);
-ph8=(ph7+ph).wrap(pi.neg,pi).round(0.00001);
-ph9=(ph8+ph).wrap(pi.neg,pi).round(0.00001);
+ph1=(ph+ph).wrap(pi.neg,pi);
+ph2=(ph1+ph).wrap(pi.neg,pi);
+ph3=(ph2+ph).wrap(pi.neg,pi);
+ph4=(ph3+ph).wrap(pi.neg,pi);
+ph5=(ph4+ph).wrap(pi.neg,pi);
+ph6=(ph5+ph).wrap(pi.neg,pi);
+ph7=(ph6+ph).wrap(pi.neg,pi);
+ph8=(ph7+ph).wrap(pi.neg,pi);
+ph9=(ph8+ph).wrap(pi.neg,pi);
 
 //feed=(SoundIn.ar(0,heavy));    ///input
 //feed=(WhiteNoise.ar(heavy));    ///noise
-				feed=(PlayBuf.ar(1, ~c1.bufnum, BufRateScale.kr(~c1.bufnum), loop: 1, doneAction:0)*buffer);   ////buffer
-
+feed=(PlayBuf.ar(1, ~c1.bufnum, BufRateScale.kr(~c1.bufnum), loop: 1, doneAction:0)*buffer);   ////buffer
 
 ///mult chain// beware of 32-bit underflow and value 0 smash
 sig1=(
@@ -403,8 +399,8 @@ spread:spread.reciprocal));
 ~comp=2.pow(45.neg);
 ~level=10.pow(12);
 (
-~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0.3pi,\el,0,\scale,0,\lowend,64,\level,100,\dyn,1,\comp,~level,\buffer,1,
-\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,0.01]).register);
+~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0.3pi,\el,0,\scale,0,\lowend,64,\level,200,\dyn,1,\comp,~level,\buffer,1,
+\sphharm,0,\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,0.01]).register);
 
 		///midi control
 (
@@ -414,7 +410,7 @@ MIDIIn.connectAll;
 (
 MIDIdef.cc(\midi_pot1,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0,1).round(0.00000001);
+a=val.linlin(0,127,0,1);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\gain,a)});
 },1);
@@ -430,7 +426,7 @@ if(~synth.isPlaying,{~synth.set(\drive,a)});
 (
 MIDIdef.cc(\midi_pot3,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0.00001,1).round(0.00000001);
+a=val.linlin(0,127,0.0001,1);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\band,a)});
 },3);
@@ -438,7 +434,7 @@ if(~synth.isPlaying,{~synth.set(\band,a)});
 (
 MIDIdef.cc(\midi_pot4,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,pi.neg,pi).round(0.0001);
+a=val.linlin(0,127,pi.neg,pi);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\az,a)});
 },4);
@@ -446,7 +442,7 @@ if(~synth.isPlaying,{~synth.set(\az,a)});
 (
 MIDIdef.cc(\midi_pot5,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0.5pi.neg,0.5pi).round(0.0001);
+a=val.linlin(0,127,0.5pi.neg,0.5pi);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\el,a)});
 },5);
@@ -462,7 +458,7 @@ if(~synth.isPlaying,{~synth.set(\scale,a)});
 (
 MIDIdef.cc(\midi_pot7,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,32,128).round(0.0001);
+a=val.linlin(0,127,32,128);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\lowend,a)});
 },7);
@@ -478,7 +474,7 @@ if(~synth.isPlaying,{~synth.set(\c,a)});
 (
 MIDIdef.cc(\midi_pot9,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,1,4).round(0.0001);
+a=val.linlin(0,127,1,4);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\dyn,a)});
 },9);
@@ -486,7 +482,7 @@ if(~synth.isPlaying,{~synth.set(\dyn,a)});
 (
 MIDIdef.cc(\midi_pot10,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0.05,0.3).round(0.0001);
+a=val.linlin(0,127,0.05,0.3);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\speaker_size,a)});
 },10);
@@ -494,7 +490,7 @@ if(~synth.isPlaying,{~synth.set(\speaker_size,a)});
 (
 MIDIdef.cc(\midi_pot11,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0,1).round(0.0001);
+a=val.linlin(0,127,0,1);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\room,a)});
 },11);
@@ -502,7 +498,7 @@ if(~synth.isPlaying,{~synth.set(\room,a)});
 (
 MIDIdef.cc(\midi_pot12,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0,1).round(0.0001);
+a=val.linlin(0,127,0,1);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\mix,a)});
 },12);
@@ -510,15 +506,15 @@ if(~synth.isPlaying,{~synth.set(\mix,a)});
 (
 MIDIdef.cc(\midi_pot13,{ |val, num, chan, src|
 var a;
-	a=val.linlin(0,127,(16256*6).neg,(16256*3)).round(1).asInteger;
+	a=val.linlin(0,127,(16256*10).neg,(16256*5)).round(1).asInteger;
 a.postln;
-if(~synth.isPlaying,{~synth.set(\pan_mod,a/~tempo)});
+if(~synth.isPlaying,{~synth.set(\pan_mod,a)});
 },13);
 );
 (
 MIDIdef.cc(\midi_pot14,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,1,0.01).round(0.0001);
+a=val.linlin(0,127,1,0.01);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\spread,a)});
 },14);
@@ -526,7 +522,7 @@ if(~synth.isPlaying,{~synth.set(\spread,a)});
 (
 MIDIdef.cc(\midi_pot15,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,1,0.001).round(0.000001);
+a=val.linlin(0,127,1,0.001);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\limit,a)});
 },15);
@@ -543,7 +539,7 @@ if(~synth.isPlaying,{~synth.set(\fu,b)});
 (
 MIDIdef.cc(\midi_pot17,{ |val, num, chan, src|
 var a,b;
-a=val.linlin(0,127,15,25).round(0.000001);
+a=val.linlin(0,127,9,13);
 b=10.pow(a);
 b.postln;
 if(~synth.isPlaying,{~synth.set(\comp,b)});
@@ -552,10 +548,26 @@ if(~synth.isPlaying,{~synth.set(\comp,b)});
 (
 MIDIdef.cc(\midi_pot18,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0.1,10).round(0.000001);
+a=val.linlin(0,127,0.1,100);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\buffer,a)});
 },18);
+);
+(
+MIDIdef.cc(\midi_pot19,{ |val, num, chan, src|
+var a;
+a=val.linlin(0,127,100,1000);
+a.postln;
+if(~synth.isPlaying,{~synth.set(\level,a)});
+},19);
+);
+(
+MIDIdef.cc(\midi_pot20,{ |val, num, chan, src|
+var a;
+a=val.linlin(0,127,(16256*10).neg,(16256*5)).round(1).asInteger;
+a.postln;
+if(~synth.isPlaying,{~synth.set(\sphharm,a)});
+},20);
 );
 ));
 
@@ -580,17 +592,17 @@ var m1=1.neg, m2=1.neg, m3=1.neg,a,b,c,n=0,bank=4,time=32.reciprocal,beat=1,r=0;
 1.do{
 ~x=bank.collect{
 m1=m1+1;
-b=Spherical(beat,~az.[m1],~el.[m1]).rotate(~r).tilt(~r1).tumble(~r2).x.round(0.00001);
+b=Spherical(beat,~az.[m1],~el.[m1]).rotate(~r).tilt(~r1).tumble(~r2).x;
 2.pow(b).round(time);
 };
 ~y=bank.collect{
 m2=m2+1;
-c=Spherical(beat,~az.[m2],~el.[m2]).rotate(~r).tilt(~r1).tumble(~r2).y.round(0.00001);
+c=Spherical(beat,~az.[m2],~el.[m2]).rotate(~r).tilt(~r1).tumble(~r2).y;
 2.pow(c).round(time);
 };
 ~z=bank.collect{
 m3=m3+1;
-d=Spherical(beat,~az.[m3],~el.[m3]).rotate(~r).tilt(~r1).tumble(~r2).z.round(0.00001);
+d=Spherical(beat,~az.[m3],~el.[m3]).rotate(~r).tilt(~r1).tumble(~r2).z;
 2.pow(d).round(time);
 };
 m1=1.neg; m2=1.neg; m3=1.neg; ~dx=~dx++~x; ~dy=~dy++~y;  ~dz=~dz++~z;   ~x=[]; ~y=[]; ~z=[];  r=r+90.degrad; };
@@ -635,9 +647,9 @@ thisThread.randSeed = ~val;
 								thisThread.randSeed = ~val;
 							i= ~cart.lag(0.01).size.rand;
 				//	i=0;
-	expansion=Cartesian(~cart.lag(0.01).[i].[0].round(0.00001),
-						~cart.lag(0.01).[i].[1].round(0.00001),
-						~cart.lag(0.00001).[i].[2].round(0.00001));
+	expansion=Cartesian(~cart.lag(0.01).[i].[0],
+						~cart.lag(0.01).[i].[1],
+						~cart.lag(0.00001).[i].[2]);
 					rhythm=Spherical(1,expansion.theta,expansion.phi);
 					melody=Spherical(10,expansion.theta,expansion.phi);
 				r1=2.pow(rhythm.x.abs).round(time);
