@@ -42,6 +42,13 @@ Buffer.freeAll;
 ~az=[45.degrad,135.neg.degrad,45.neg.degrad,135.degrad];
 ~el=[35.264390.neg.degrad,35.264390.neg.degrad,35.264390.degrad,35.264390.degrad];
 );
+/////vbap
+				/*(
+~vbap = VBAPSpeakerArray .new(3,
+[[~az.[0],~el.[0]], [~az.[1],~el.[1]], [~az.[2],~el.[2]], [~az.[3],~el.[3]]]);
+	 ~vbap_buf = Buffer.loadCollection(s, ~vbap.getSetsAndMatrices);
+)*/
+
 
 ////// wavetable
 (
@@ -93,7 +100,7 @@ var ton1,ton2,ton3,tonal_x,tonal_y,tonal_z,mod_x,mod_y,mod_z,phase_mod_x,phase_m
 var mod_anglex,mod_angley,mod_anglez,mx,my,mz,sph_x,sph_y,sph_z,sph_mag,phasex,phasey,phasez;
 var freq1,freq2,freq3,amp1,amp2,amp3,feed,control1,control2,control3,sig1,sig2,sig3;
 var oct1,oct2,oct3,oct4,oct5,oct6,oct7,oct8,oct9,g=((1+5.sqrt)/2),s=(1+2.sqrt),pan;
-var step,ph,ph1,ph2,ph3,ph4,ph5,ph6,ph7,ph8,ph9,orange=~orange;
+var step,ph,ph1,ph2,ph3,ph4,ph5,ph6,ph7,ph8,ph9,orange=~orange,polx,poly,polz;
 var threshold1,threshold2,threshold3,g_ch1,g_ch2,g_ch3,g_ch4,pan1,pan2,pan3,pan4;
 var waveSpeed,waveFreq,dyn1,dyn2,dyn3,dyn4,dyn5,dyn6,dyn7,dyn8,dyn9,timbre;
 
@@ -167,6 +174,9 @@ sph_y=(Cartesian(0,magy,0).rho);
 sph_z=(Cartesian(0,0,magz).rho);
 sph_mag=(Cartesian(sph_x,sph_y,sph_z));
 sph=Spherical(sph_mag.rho,polytope.theta,polytope.phi);
+polx=Spherical(sph_x,polytope.theta,polytope.phi);
+poly=Spherical(sph_y,polytope.theta,polytope.phi);
+polz=Spherical(sph_z,polytope.theta,polytope.phi);
 
 phasex=Complex(1,sph.x).theta*4;
 phasey=Complex(1,sph.y).theta*4;
@@ -300,11 +310,14 @@ Spherical(sph_y,~az[3],~el[3]).y)+
 (Spherical(sph_z,(polytope.theta).wrap(pi,pi.neg),(polytope.phi).wrap(~el[2],~el[1])).z *
 Spherical(sph_z,~az[3],~el[3]).z)
 );
-g_ch1 = g_ch1.pow(spread);   g_ch2 = g_ch2.pow(spread);   g_ch3 = g_ch3.pow(spread);   g_ch4 = g_ch4.pow(spread);
-pan1=SinOsc.ar(pan,0).range(spread.linlin(0.001,1,1,0.001),1);
-pan2=SinOsc.ar(pan,0.25pi).range(spread.linlin(0.001,1,1,0.001),1);
-pan3=SinOsc.ar(pan,0.5pi).range(spread.linlin(0.001,1,1,0.001),1);
-pan4=SinOsc.ar(pan,0.75pi).range(spread.linlin(0.001,1,1,0.001),1);
+g_ch1 = g_ch1.pow(spread);
+g_ch2 = g_ch2.pow(spread);
+g_ch3 = g_ch3.pow(spread);
+g_ch4 = g_ch4.pow(spread);
+pan1=SinOsc.ar(pan,0,bessel_ripple).range(spread.linlin(0.001,1,1,0.001),1);
+pan2=SinOsc.ar(pan,0.25pi,bessel_ripple).range(spread.linlin(0.001,1,1,0.001),1);
+pan3=SinOsc.ar(pan,0.5pi,bessel_ripple).range(spread.linlin(0.001,1,1,0.001),1);
+pan4=SinOsc.ar(pan,0.75pi,bessel_ripple).range(spread.linlin(0.001,1,1,0.001),1);
 
 (
 Out.ar(0,
@@ -348,19 +361,40 @@ FreeVerb.ar(sig3*g_ch4*pan4,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01
 /*(
 Out.ar(0,Pan2.ar(
 Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*sph_x)),0.9,0.01),SinOsc.ar(bessel_ripple,0)));
+FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*sph_x)),limit,0.01),SinOsc.ar(pan,0,bessel_ripple)));
 Out.ar(0,Pan2.ar(
 Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*sph_y)),0.9,0.01),SinOsc.ar(bessel_ripple,90.degrad)));
+FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*sph_y)),limit,0.01),SinOsc.ar(pan,0.5pi,bessel_ripple)));
 Out.ar(0,
 Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*sph_z)),0.9,0.01)!2);
+FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*sph_z)),limit,0.01)!2);
 )*/
 ///three channel
 /*(
-Out.ar(4,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain*sph_x)),0.9,0.01));
-Out.ar(5,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain*sph_y)),0.9,0.01));
-Out.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain*sph_z)),0.9,0.01));
+Out.ar(4,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain*sph_x)),limit,0.01));
+Out.ar(5,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain*sph_y)),limit,0.01));
+Out.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain*sph_z)),limit,0.01));
+)*/
+////3d vbap expansion
+/*(
+Out.ar(0,VBAP.ar(4,
+Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.001),room.lag(0.001),mul:gain*sph_x)),0.9,0.01),
+~vbap_buf ,
+(polytope.theta.raddeg+SinOsc.ar(pan,0,bessel_ripple)).wrap(180,180.neg),
+(polytope.phi.raddeg+bessel_ripple).wrap(90,90.neg),
+spread:spread.reciprocal));
+Out.ar(0,VBAP.ar(4,
+Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.001),room.lag(0.001),mul:gain*sph_y)),0.9,0.01),
+~vbap_buf ,
+(polytope.theta.raddeg+SinOsc.ar(pan,0.5pi,bessel_ripple)).wrap(180,180.neg),
+(polytope.phi.raddeg+bessel_ripple).wrap(90,90.neg),
+spread:spread.reciprocal));
+Out.ar(0,VBAP.ar(4,
+Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.001),room.lag(0.001),mul:gain*sph_z)),0.9,0.01),
+~vbap_buf ,
+(polytope.theta.raddeg+bessel_ripple).wrap(180,180.neg),
+(polytope.phi.raddeg).wrap(90,90.neg),
+spread:spread.reciprocal));
 )*/
 }).add
 );
