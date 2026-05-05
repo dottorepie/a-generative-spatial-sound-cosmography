@@ -92,16 +92,18 @@ var nn=1.neg;
 (
 SynthDef.new(\synth,{
 
-arg gain=1,drive=0,c=0,az=0,el=0,scale=0,lowend=64,level=100,speaker_size=0.15,room=0.5,mix=0.5,pan_mod=0.01,spread=1,limit=0.8,fu=32,depth=0,dyn=1,band=0.000001,comp=10.pow(35),buffer=1,sphharm=1;
+arg gain=1,drive=0,c=0,az=0,el=0,scale=0,lowend=64,level=100,speaker_size=0.15,tone_axis=0,
+				room=0.5,mix=0.5,pan_mod=0.01,spread=1,limit=0.8,fu=32,dyn=1,band=0.000001,comp=10.pow(35),buffer=1,sphharm=1;
 
-var expansion,heavy,fundamental,sph_mod,polytope,bessel_ripple,magx,magy,magz,sph;
+var expansion,heavy,fundamental,sph_mod,polytope,bessel_ripple,magx,magy,magz,sph,mod_timbre;
 var ton1,ton2,ton3,tonal_x,tonal_y,tonal_z,mod_x,mod_y,mod_z,phase_mod_x,phase_mod_y,phase_mod_z;
 var mod_anglex,mod_angley,mod_anglez,m,mx,my,mz,sph_x,sph_y,sph_z,sph_mag,phasex,phasey,phasez;
 var freq1,freq2,freq3,amp1,amp2,amp3,feed,control1,control2,control3,sig1,sig2,sig3;
-var oct1,oct2,oct3,oct4,oct5,oct6,oct7,oct8,oct9,g=((1+5.sqrt)/2),s=(1+2.sqrt),pan,m_sphharm,depth_harm;
+var oct1,oct2,oct3,oct4,oct5,oct6,oct7,oct8,oct9,g=((1+5.sqrt)/2),s=(1+2.sqrt),pan,m_sphharm,tonal_polytope;
 var step,ph,ph1,ph2,ph3,ph4,ph5,ph6,ph7,ph8,ph9,orange=~orange,polx,poly,polz,mag_sphharm;
 var threshold1,threshold2,threshold3,g_ch1,g_ch2,g_ch3,g_ch4,pan1,pan2,pan3,pan4,bessel_wave;
 var waveAmp,waveSpeed,waveFreq,dyn1,dyn2,dyn3,dyn4,dyn5,dyn6,dyn7,dyn8,dyn9,timbre;
+var tonaldegree_x,tonaldegree_y,tonaldegree_z;
 
 pan=2.pow(pan_mod.lag(0.001)/16256);
 ph = (2pi-(2pi/s));
@@ -120,32 +122,28 @@ expansion=2.pow(c.lag(0.001)/16256);
 step=c.lag(0.001).linlin(0,(16256*orange),(16256*orange),0).round(1).asInteger;
 timbre=step+1;
 fundamental=(fu*(9/8))*expansion;
-polytope=Spherical(timbre-depth,az.lag(0.001),el.lag(0.001));
-depth_harm=depth.linlin(0,(8128*orange),0,5);
-mag_sphharm=step.linlin(0,(16256*orange),0,9)-depth_harm;
+polytope=Spherical(1,az.lag(0.001),el.lag(0.001));
+tonal_polytope=Spherical(timbre,polytope.theta,polytope.phi);
+mag_sphharm=c.lag(0.01).linlin(0,(16256*orange),1,9).round(1).asInteger;
 m_sphharm=Spherical(mag_sphharm,az.lag(0.001),el.lag(0.001));
+sph_mod=2.pow(sphharm.lag(0.001)/16256);
 mx=m_sphharm.x.abs;
 my=m_sphharm.y.abs;
 mz=m_sphharm.z.abs;
-sph_mod=2.pow(sphharm.lag(0.001)/16256);
-waveAmp=expansion/2;
-waveSpeed=pan.reciprocal;
-waveFreq=Cartesian(mx,my,mz).rho;
+waveAmp=expansion;
+waveSpeed=expansion;
+waveFreq=expansion.reciprocal;
 bessel_wave=waveAmp*sin((waveFreq*polytope.theta)+(waveFreq * polytope.phi)-waveSpeed);
-bessel_ripple=Complex(1,bessel_wave).theta*4;
+bessel_ripple=Complex(1,bessel_wave).theta*2;
+
+ton1=2.pow(Select.kr(tonal_polytope.x.round(1).abs.linlin(1,timbre,0,~note).round(1), Select.kr(scale.lag(0.001),~sc)) /12);
+ton2=2.pow(Select.kr(tonal_polytope.y.round(1).abs.linlin(1,timbre,0,~note).round(1), Select.kr(scale.lag(0.001),~sc)) /12);
+ton3=2.pow(Select.kr(tonal_polytope.z.round(1).abs.linlin(1,timbre,0,~note).round(1), Select.kr(scale.lag(0.001),~sc)) /12);
 
 pan1=SinOsc.ar(pan,phase:0).range(spread.linlin(0.01,1,1,0.001),1);
 pan2=SinOsc.ar(pan,phase:0.25pi).range(spread.linlin(0.01,1,1,0.001),1);
 pan3=SinOsc.ar(pan,phase:0.5pi).range(spread.linlin(0.01,1,1,0.001),1);
 pan4=SinOsc.ar(pan,phase:0.75pi).range(spread.linlin(0.01,1,1,0.001),1);
-
-ton1=2.pow(Select.kr(polytope.x.round(1).abs.linlin(1,timbre,0,~note).round(1), Select.kr(scale.lag(0.001),~sc)) /12);
-ton2=2.pow(Select.kr(polytope.y.round(1).abs.linlin(1,timbre,0,~note).round(1), Select.kr(scale.lag(0.001),~sc)) /12);
-ton3=2.pow(Select.kr(polytope.z.round(1).abs.linlin(1,timbre,0,~note).round(1), Select.kr(scale.lag(0.001),~sc)) /12);
-
-tonal_x=2.pow(polytope.x.round(1) /16256);
-tonal_y=2.pow(polytope.y.round(1) /16256);
-tonal_z=2.pow(polytope.z.round(1) /16256);
 
 mod_x=polytope.x;
 mod_y=polytope.y;
@@ -184,9 +182,16 @@ polx=Spherical(sph_x,polytope.theta,polytope.phi);
 poly=Spherical(sph_y,polytope.theta,polytope.phi);
 polz=Spherical(sph_z,polytope.theta,polytope.phi);
 
-phasex=Complex(1,sph.x).theta*4;
-phasey=Complex(1,sph.y).theta*4;
-phasez=Complex(1,sph.z).theta*2;
+tonaldegree_x = Select.kr(tone_axis, [polx.x, poly.x, polz.x]);
+tonaldegree_y = Select.kr(tone_axis, [polx.y, poly.y, polz.y]);
+tonaldegree_z = Select.kr(tone_axis, [polx.z, poly.z, polz.z]);
+tonal_x=2.pow(tonaldegree_x.round(1) /16256);
+tonal_y=2.pow(tonaldegree_y.round(1) /16256);
+tonal_z=2.pow(tonaldegree_z.round(1) /16256);
+
+phasex=Complex(1,tonaldegree_x).theta*4;
+phasey=Complex(1,tonaldegree_y).theta*4;
+phasez=Complex(1,tonaldegree_z).theta*2;
 
 freq1=fundamental*ton1*tonal_x;
 freq2=fundamental*ton2*tonal_y;
@@ -404,7 +409,7 @@ spread:spread.reciprocal));
 ~comp=2.pow(45.neg);
 ~level=10.pow(12);
 (
-~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0.3pi,\el,0,\scale,0,\lowend,64,\level,200,\dyn,1,\comp,~level,\buffer,1,\depth,1,
+~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0.3pi,\el,0,\scale,0,\lowend,64,\level,200,\dyn,1,\comp,~level,\buffer,1,\tone_axis,1,
 \sphharm,0,\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,0.01]).register);
 
 		///midi control
@@ -577,9 +582,9 @@ if(~synth.isPlaying,{~synth.set(\sphharm,a)});
 (
 MIDIdef.cc(\midi_pot21,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0,8128*~orange).round(1).asInteger;
+a=val.linlin(0,127,0,2).round(1).asInteger;
 a.postln;
-if(~synth.isPlaying,{~synth.set(\depth,a)});
+if(~synth.isPlaying,{~synth.set(\tone_axis,a)});
 },21);
 );
 ));
