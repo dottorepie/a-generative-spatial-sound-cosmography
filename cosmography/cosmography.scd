@@ -222,8 +222,8 @@ ph7=(ph6+ph).wrap(pi.neg,pi);
 ph8=(ph7+ph).wrap(pi.neg,pi);
 ph9=(ph8+ph).wrap(pi.neg,pi);
 
-//feed=(SoundIn.ar(0,heavy));    ///input
-//feed=(WhiteNoise.ar(heavy));    ///noise
+//feed=(SoundIn.ar(0,buffer));    ///input
+//feed=(WhiteNoise.ar(buffer));    ///noise
 feed=(PlayBuf.ar(1, ~c1.bufnum, BufRateScale.kr(~c1.bufnum), loop: 1, doneAction:0)*buffer);   ////buffer
 
 ///mult chain// beware of 32-bit underflow and value 0 smash
