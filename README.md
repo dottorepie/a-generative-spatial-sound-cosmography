@@ -43,7 +43,7 @@ randomness,
 tonal events in wavefunction partials
 
 
-////all synthesis, geometry and math concepts consifering this wotk, can be plotted via ScatterView3D via
-array distribution cloud point tensor methos, as foundin previous repository (under titles susch as visualization, spherical harmonics ets),
-or explored with using adjuscent sound generating animations and code blocks. Plotts can give an estimate on haw the spatial sound
+////all synthesis, geometry and math concepts consifering this wotk, can be plotted with ScatterView3D Object via
+array distribution cloud point tensor plots, as found on previous repository (under titles susch as visualization, spherical harmonics ets),
+or explored by using adjuscent sound generating animations and code blocks. Plotts can give an estimate on haw the spatial sound
 and its distributions in the spectrum are formed and sculpted through the synthesis and its modulation
