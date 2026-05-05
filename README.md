@@ -90,7 +90,7 @@ band: band pass filter oscillator rq on feed buffer playback or loop
 
 
 
-////main code file 'cosmography' also includes a musical automaton sequencer and a response sequencer to data input from animations, eg. cosmos animation in file 'visuals'
+////main code file 'cosmography' also includes a musical automaton sequencer (Routine) and a response sequencer to data input from animations, eg. cosmos animation in file 'visuals'
 
 
 ////all synthesis, geometry and math concepts consifering this wotk, can be plotted with ScatterView3D Object via
