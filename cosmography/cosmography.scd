@@ -130,7 +130,7 @@ sph_mod=2.pow(sphharm.lag(0.001)/16256);
 mx=m_sphharm.x.abs;
 my=m_sphharm.y.abs;
 mz=m_sphharm.z.abs;
-waveAmp=expansion;
+waveAmp=expansion*gain;
 waveSpeed=expansion;
 waveFreq=expansion.reciprocal;
 bessel_wave=waveAmp*sin((waveFreq*polytope.theta)+(waveFreq * polytope.phi)-waveSpeed);
@@ -148,9 +148,9 @@ pan4=SinOsc.ar(pan,phase:0.75pi).range(spread.linlin(0.01,1,1,0.001),1);
 mod_x=polytope.x;
 mod_y=polytope.y;
 mod_z=polytope.z;
-phase_mod_x=(Complex(1,mod_x).theta*4)-bessel_ripple;
-phase_mod_y=(Complex(1,mod_y).theta*4)-bessel_ripple;
-phase_mod_z=(Complex(1,mod_z).theta*2)-bessel_ripple;
+phase_mod_x=(Complex(1,mod_x).theta*4);
+phase_mod_y=(Complex(1,mod_y).theta*4);
+phase_mod_z=(Complex(1,mod_z).theta*2);
 
 mod_anglex=(LPF.ar((Osc.ar(~wt.bufnum,sph_mod,phase:phase_mod_x,mul:100).abs*
 SinOsc.ar(sph_mod,phase:phase_mod_x)),
@@ -173,9 +173,9 @@ sin(((polytope.theta+mod_angley)*my).wrap(pi.neg,pi))).rho/(2.sqrt))*
 magz=((Complex(cos(((polytope.phi+mod_anglez)*mz).wrap((pi/2).neg,(pi/2))),
 cos(((polytope.phi)*mz).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)));
 
-sph_x=(Cartesian(magx,0,0).rho);
-sph_y=(Cartesian(0,magy,0).rho);
-sph_z=(Cartesian(0,0,magz).rho);
+sph_x=(Cartesian(magx,0,0).rho)*(bessel_wave);
+sph_y=(Cartesian(0,magy,0).rho)*(bessel_wave);
+sph_z=(Cartesian(0,0,magz).rho)*(bessel_wave);
 sph_mag=(Cartesian(sph_x,sph_y,sph_z));
 sph=Spherical(sph_mag.rho,polytope.theta,polytope.phi);
 polx=Spherical(sph_x*timbre,polytope.theta,polytope.phi);
