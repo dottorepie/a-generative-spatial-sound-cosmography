@@ -178,9 +178,9 @@ sph_y=(Cartesian(0,magy,0).rho);
 sph_z=(Cartesian(0,0,magz).rho);
 sph_mag=(Cartesian(sph_x,sph_y,sph_z));
 sph=Spherical(sph_mag.rho,polytope.theta,polytope.phi);
-polx=Spherical(sph_x,polytope.theta,polytope.phi);
-poly=Spherical(sph_y,polytope.theta,polytope.phi);
-polz=Spherical(sph_z,polytope.theta,polytope.phi);
+polx=Spherical(sph_x*timbre,polytope.theta,polytope.phi);
+poly=Spherical(sph_y*timbre,polytope.theta,polytope.phi);
+polz=Spherical(sph_z*timbre,polytope.theta,polytope.phi);
 
 tonaldegree_x = Select.kr(tone_axis, [polx.x, poly.x, polz.x]);
 tonaldegree_y = Select.kr(tone_axis, [polx.y, poly.y, polz.y]);
