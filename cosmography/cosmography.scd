@@ -574,7 +574,7 @@ if(~synth.isPlaying,{~synth.set(\level,a)});
 (
 MIDIdef.cc(\midi_pot20,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,(16256*10).neg,(16256*5)).round(1).asInteger;
+a=val.linlin(0,127,(16256*12).neg,(16256*6)).round(1).asInteger;
 a.postln;
 if(~synth.isPlaying,{~synth.set(\sphharm,a)});
 },20);
