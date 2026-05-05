@@ -32,9 +32,9 @@ Tdef(\drone, {
 //Buffer.freeAll;
 ///feed buffers, xyz from b-format or mono
 (
-~c1 = Buffer.readChannel(s,"/Users/amimid/Desktop/marine.wav",channels:0 );
-~c2 = Buffer.readChannel(s,"/Users/amimid/Desktop/marine.wav",channels:0 );
-~c3 = Buffer.readChannel(s,"/Users/amimid/Desktop/marine.wav",channels:0 );
+~c1 = Buffer.readChannel(s,"/home/pi/Desktop/C/marine.wav",channels:0 );
+~c2 = Buffer.readChannel(s,"/home/pi/Desktop/C/marine.wav",channels:0 );
+~c3 = Buffer.readChannel(s,"/home/pi/Desktop/C/marine.wav",channels:0 );
 );
 
 /////tetrahedron
@@ -131,7 +131,7 @@ mx=m_sphharm.x.abs;
 my=m_sphharm.y.abs;
 mz=m_sphharm.z.abs;
 waveAmp=expansion*gain;
-waveSpeed=expansion;
+waveSpeed=expansion*2;
 waveFreq=expansion.reciprocal;
 bessel_wave=waveAmp*sin((waveFreq*polytope.theta)+(waveFreq * polytope.phi)-waveSpeed);
 bessel_ripple=Complex(1,bessel_wave).theta*2;
@@ -173,14 +173,14 @@ sin(((polytope.theta+mod_angley)*my).wrap(pi.neg,pi))).rho/(2.sqrt))*
 magz=((Complex(cos(((polytope.phi+mod_anglez)*mz).wrap((pi/2).neg,(pi/2))),
 cos(((polytope.phi)*mz).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)));
 
-sph_x=(Cartesian(magx,0,0).rho)*(bessel_wave);
-sph_y=(Cartesian(0,magy,0).rho)*(bessel_wave);
-sph_z=(Cartesian(0,0,magz).rho)*(bessel_wave);
+sph_x=(Cartesian(magx,0,0).rho);
+sph_y=(Cartesian(0,magy,0).rho);
+sph_z=(Cartesian(0,0,magz).rho);
 sph_mag=(Cartesian(sph_x,sph_y,sph_z));
 sph=Spherical(sph_mag.rho,polytope.theta,polytope.phi);
-polx=Spherical(sph_x*timbre,polytope.theta,polytope.phi);
-poly=Spherical(sph_y*timbre,polytope.theta,polytope.phi);
-polz=Spherical(sph_z*timbre,polytope.theta,polytope.phi);
+polx=Spherical(sph_x*timbre*(bessel_wave),polytope.theta,polytope.phi);
+poly=Spherical(sph_y*timbre*(bessel_wave),polytope.theta,polytope.phi);
+polz=Spherical(sph_z*timbre*(bessel_wave),polytope.theta,polytope.phi);
 
 tonaldegree_x = Select.kr(tone_axis, [polx.x, poly.x, polz.x]);
 tonaldegree_y = Select.kr(tone_axis, [polx.y, poly.y, polz.y]);
