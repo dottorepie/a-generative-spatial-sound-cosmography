@@ -86,7 +86,7 @@ var nn=1.neg;
 ~sc=[~scalee,~scaleee];
 
 ~orange=4;
-~mass=(pi*2.pow(2))*10.pow(45.neg);
+~mass=10.pow(45.neg);
 
 /////sound engine
 (
@@ -404,10 +404,10 @@ spread:spread.reciprocal));
 )*/
 }).add
 );
-		pi*2.pow(2)
+
 2.wait;
-~mass=(pi*2.pow(2))*10.pow(45.neg);
-~level=pi*10.pow(10);
+~mass=10.pow(45.neg);
+~level=10.pow(10);
 (
 ~synth=Synth.new(\synth,[\gain,1,\drive,16256,\c,0,\az,0.3pi,\el,0,\scale,0,\lowend,64,\level,700,\dyn,1,\comp,~level,\buffer,1,\tone_axis,1,
 \sphharm,0,\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,0.01]).register);
@@ -549,7 +549,7 @@ if(~synth.isPlaying,{~synth.set(\fu,b)});
 (
 MIDIdef.cc(\midi_pot17,{ |val, num, chan, src|
 var a,b;
-a=val.linlin(0,127,9,18);
+a=val.linlin(0,127,9,30);
 b=10.pow(a);
 b.postln;
 if(~synth.isPlaying,{~synth.set(\comp,b)});
@@ -766,4 +766,3 @@ thisThread.randSeed = ~val;
 37.717.degrad,37.717.degrad,37.717.degrad,37.717.degrad,37.717.degrad,37.717.neg.degrad,37.717.neg.degrad,37.717.neg.degrad,37.717.neg.degrad,37.717.neg.degrad];
 
 )*/
-
