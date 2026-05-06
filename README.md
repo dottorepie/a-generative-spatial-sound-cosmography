@@ -50,7 +50,7 @@ gain: sound gain amplitude multiplier
 
 drive: distortion and softclip gain multiplier
 
-c: tonal range of fundamental, inverse as tonal range of spectrum synthesis
+c: tonal range of fundamental, inverse as tonal range of spectrum synthesis. Conceptually a tonal index 0 corresponds to cosmic heatdeath scenario and spacetime at its max dynamic range ,as in contrary a tonal maximum and high octave tonal index corresponds to a bigbang setting with dynamic range being shorter and much more compressed. In the first range index scenario fundamental is low and energy scalar is high (compressed mass, longer distances), while on the high range, fundamental is high, spatial parameters have less numeric range energy scalar is low (compressed kinetic 'mass', energy)
 
 az: azimuth angle for spatial data tensor
 
@@ -64,7 +64,7 @@ level: DC amplitude level of audio oscillators
 
 dyn: tonal and dynamic range scaler of spectrum synthesis
 
-comp: level of signal level recovery after level loss due to synthesis multiplication chain,(without level recovery, signal level scales to underflow)
+comp: level of signal level recovery after level loss due to synthesis multiplication chain,(without level recovery, signal level scales to underflow, note that the signal synthesis multiplication chain brings the wavefunction level to an 10^-45 underflow, and simple addition of pi*10^-45 on every layer of the chain times a range of pi*10^9-10^18 on the  synthesis chain as a while, brings the level back to normal scope and audible range. A bit like the physical workings and indiference bewtween E=mc^2 and E=pc)
 
 buffer: amplitude level gain for buffer, noise or sound input feed to the synthesis
 
