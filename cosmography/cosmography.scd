@@ -484,7 +484,7 @@ if(~synth.isPlaying,{~synth.set(\c,a)});
 (
 MIDIdef.cc(\midi_pot9,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,1,4);
+a=val.linlin(0,127,1,10).round(1).asInteger;
 a.postln;
 if(~synth.isPlaying,{~synth.set(\dyn,a)});
 },9);
