@@ -265,17 +265,17 @@ sig3=
 (LPF.ar((Osc.ar(~wt.bufnum,freq3*oct7,phase:phasez+ph3,mul:level).abs*SinOsc.ar(freq3*oct7,phase:phasez+ph3)),freq3*heavy,amp3*oct7.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq3*oct8,phase:phasez+ph2,mul:level).abs*SinOsc.ar(freq3*oct8,phase:phasez+ph2)),freq3*heavy,amp3*oct8.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq3*oct9,phase:phasez+ph1,mul:level).abs*SinOsc.ar(freq3*oct9,phase:phasez+ph1)),freq3*heavy,amp3*oct9.reciprocal))).abs+mass)*
-(LPF.ar((Osc.ar(~wt.bufnum,freq3,phase:phasez+ph,mul:level).abs*SinOsc.ar(freq3,phase:phasez+ph)),freq3*heavy,amp3))+mass)*comp)+
-feed)
+(LPF.ar((Osc.ar(~wt.bufnum,freq3,phase:phasez+ph,mul:level).abs*SinOsc.ar(freq3,phase:phasez+ph)),freq3*heavy,amp3))+mass)*comp)
+				)
 );
 
 sig1=(sig1*heavy).softclip;
 sig2=(sig2*heavy).softclip;
 sig3=(sig3*heavy).softclip;
 
-control1=SinOsc.ar(freq1,phase:phasex+ph,mul:amp1)*feed;
-control2=SinOsc.ar(freq2,phase:phasey+ph,mul:amp2)*feed;
-control3=SinOsc.ar(freq3,phase:phasez+ph,mul:amp3)*feed;
+control1=SinOsc.ar(freq1,phase:phasex+ph,mul:amp1)+feed1;
+control2=SinOsc.ar(freq2,phase:phasey+ph,mul:amp2)+feed2;
+control3=SinOsc.ar(freq3,phase:phasez+ph,mul:amp3)+feed;
 threshold1=(((343/speaker_size)/fundamental).reciprocal.ampdb/2.sqrt).dbamp;
 threshold2=(((343/speaker_size)/fundamental).reciprocal.ampdb/2.sqrt).dbamp;
 threshold3=(((343/speaker_size)/fundamental).reciprocal.ampdb/2.sqrt).dbamp;
@@ -412,7 +412,7 @@ spread:spread.reciprocal));
 ~level=10.pow(10);
 (
 ~synth=Synth.new(\synth,[\gain,1,\drive,16256,\c,0,\az,0.3pi,\el,0,\scale,0,\lowend,64,\level,700,\dyn,1,\comp,~level,\buffer,1,\tone_axis,1,
-\sphharm,0,\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,0.01]).register);
+\sphharm,0,\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,1]).register);
 
 		///midi control
 (
