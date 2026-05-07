@@ -4,7 +4,7 @@ Server.killAll
 (
 s.options.numWireBufs = 1024*2;
 s.options.numOutputBusChannels=4;
-s.options.numInputBusChannels=1;
+s.options.numInputBusChannels=2;
 s.options.memSize = 8192*16;
 s.options.blockSize = 128;
 s.options.maxNodes = 1024 * 2;
@@ -222,11 +222,13 @@ ph7=(ph6+ph).wrap(pi.neg,pi);
 ph8=(ph7+ph).wrap(pi.neg,pi);
 ph9=(ph8+ph).wrap(pi.neg,pi);
 
-//feed=(SoundIn.ar(0,buffer));    ///input
+//feed1=(SoundIn.ar(0,buffer));    ///input
+//feed2=(SoundIn.ar(1,buffer));
+//feed3=(feed1+feed2)/2.sqrt;
 //feed=(WhiteNoise.ar(buffer));    ///noise
-feed=0;
 feed1=(PlayBuf.ar(1, ~c1.bufnum, BufRateScale.kr(~c1.bufnum), loop: 1, doneAction:0)*buffer);   ////buffer
-feed2=(PlayBuf.ar(1, ~c2.bufnum, BufRateScale.kr(~c2.bufnum), loop: 1, doneAction:0)*buffer);   ////buffer
+feed2=(PlayBuf.ar(1, ~c2.bufnum, BufRateScale.kr(~c2.bufnum), loop: 1, doneAction:0)*buffer);
+feed3=(feed1+feed2)/2.sqrt;
 
 ///mult chain// beware of 32-bit underflow and value 0 smash
 sig1=
@@ -265,8 +267,8 @@ sig3=
 (LPF.ar((Osc.ar(~wt.bufnum,freq3*oct7,phase:phasez+ph3,mul:level).abs*SinOsc.ar(freq3*oct7,phase:phasez+ph3)),freq3*heavy,amp3*oct7.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq3*oct8,phase:phasez+ph2,mul:level).abs*SinOsc.ar(freq3*oct8,phase:phasez+ph2)),freq3*heavy,amp3*oct8.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq3*oct9,phase:phasez+ph1,mul:level).abs*SinOsc.ar(freq3*oct9,phase:phasez+ph1)),freq3*heavy,amp3*oct9.reciprocal))).abs+mass)*
-(LPF.ar((Osc.ar(~wt.bufnum,freq3,phase:phasez+ph,mul:level).abs*SinOsc.ar(freq3,phase:phasez+ph)),freq3*heavy,amp3))+mass)*comp)
-				)
+(LPF.ar((Osc.ar(~wt.bufnum,freq3,phase:phasez+ph,mul:level).abs*SinOsc.ar(freq3,phase:phasez+ph)),freq3*heavy,amp3))+mass)*comp)+
+(BPF.ar(feed3,freq3,band,band.sqrt.reciprocal*amp3)))
 );
 
 sig1=(sig1*heavy).softclip;
@@ -438,7 +440,7 @@ if(~synth.isPlaying,{~synth.set(\drive,a)});
 (
 MIDIdef.cc(\midi_pot3,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0.00001,1);
+a=val.linlin(0,127,0.0001,1);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\band,a)});
 },3);
