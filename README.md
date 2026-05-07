@@ -1,4 +1,4 @@
-# an-instrumentally-generative-spatial-sound-cosmography
+# an-instrumentally-generative-spatial-sound-cosmography, or a heavy metal fx and digital synth
  SuperCollider
 
 ///basic synthesis components derived from work on previous repository:
