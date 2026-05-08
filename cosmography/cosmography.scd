@@ -3,7 +3,7 @@ Server.killAll
 (
 (
 s.options.numWireBufs = 1024*2;
-s.options.numOutputBusChannels=4;
+s.options.numOutputBusChannels=6;
 s.options.numInputBusChannels=2;
 s.options.memSize = 8192*16;
 s.options.blockSize = 128;
@@ -85,7 +85,7 @@ var nn=1.neg;
 );
 ~sc=[~scalee,~scaleee];
 
-~orange=4;
+~orange=3;
 ~mass=10.pow(45.neg);
 
 /////sound engine
@@ -103,7 +103,7 @@ var oct1,oct2,oct3,oct4,oct5,oct6,oct7,oct8,oct9,g=((1+5.sqrt)/2),s=(1+2.sqrt),p
 var step,ph,ph1,ph2,ph3,ph4,ph5,ph6,ph7,ph8,ph9,orange=~orange,polx,poly,polz,mag_sphharm;
 var threshold1,threshold2,threshold3,g_ch1,g_ch2,g_ch3,g_ch4,pan1,pan2,pan3,pan4,bessel_wave;
 var waveAmp,waveSpeed,waveFreq,dyn1,dyn2,dyn3,dyn4,dyn5,dyn6,dyn7,dyn8,dyn9,timbre;
-var tonaldegree_x,tonaldegree_y,tonaldegree_z,feed1,feed2,feed3;
+var tonaldegree_x,tonaldegree_y,tonaldegree_z,feed1,feed2,feed3,bw,bx,by,bz;
 
 pan=2.pow(pan_mod.lag(0.001)/16256);
 ph = (2pi-(2pi/s));
@@ -277,7 +277,7 @@ sig3=(sig3*heavy).softclip;
 
 control1=SinOsc.ar(freq1,phase:phasex+ph,mul:amp1)+feed1;
 control2=SinOsc.ar(freq2,phase:phasey+ph,mul:amp2)+feed2;
-control3=SinOsc.ar(freq3,phase:phasez+ph,mul:amp3)+feed;
+control3=SinOsc.ar(freq3,phase:phasez+ph,mul:amp3)+feed3;
 threshold1=(((343/speaker_size)/fundamental).reciprocal.ampdb/2.sqrt).dbamp;
 threshold2=(((343/speaker_size)/fundamental).reciprocal.ampdb/2.sqrt).dbamp;
 threshold3=(((343/speaker_size)/fundamental).reciprocal.ampdb/2.sqrt).dbamp;
@@ -330,43 +330,76 @@ g_ch3 = g_ch3.pow(spread);
 g_ch4 = g_ch4.pow(spread);
 
 (
-Out.ar(0,
+Out.ar(2,
 Limiter.ar(LeakDC.ar(
 FreeVerb.ar(sig1*g_ch1*pan1,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
-Out.ar(1,
+Out.ar(3,
 Limiter.ar(LeakDC.ar(
 FreeVerb.ar(sig1*g_ch2*pan2,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
-Out.ar(2,
+Out.ar(4,
 Limiter.ar(LeakDC.ar(
 FreeVerb.ar(sig1*g_ch3*pan3,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
-Out.ar(3,
+Out.ar(5,
 Limiter.ar(LeakDC.ar(
 FreeVerb.ar(sig1*g_ch4*pan4,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
-Out.ar(0,
+Out.ar(2,
 Limiter.ar(LeakDC.ar(
 FreeVerb.ar(sig2*g_ch1*pan1,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
-Out.ar(1,
+Out.ar(3,
 Limiter.ar(LeakDC.ar(
 FreeVerb.ar(sig2*g_ch2*pan2,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
-Out.ar(2,
+Out.ar(4,
 Limiter.ar(LeakDC.ar(
 FreeVerb.ar(sig2*g_ch3*pan3,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
-Out.ar(3,
+Out.ar(5,
 Limiter.ar(LeakDC.ar(
 FreeVerb.ar(sig2*g_ch4*pan4,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
-Out.ar(0,
-Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig3*g_ch1*pan1,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
-Out.ar(1,
-Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig3*g_ch2*pan2,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
 Out.ar(2,
 Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig3*g_ch3*pan3,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
+FreeVerb.ar(sig3*g_ch1*pan1,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
 Out.ar(3,
+Limiter.ar(LeakDC.ar(
+FreeVerb.ar(sig3*g_ch2*pan2,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
+Out.ar(4,
+Limiter.ar(LeakDC.ar(
+FreeVerb.ar(sig3*g_ch3*pan3,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
+Out.ar(5,
 Limiter.ar(LeakDC.ar(
 FreeVerb.ar(sig3*g_ch4*pan4,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
 );
+
+///b-format stereo defuser
+///w=flu+frd+bld+bru
+//x=flu+frd-bld-bru
+//y=flu-frd+bld-bru
+//z=flu-frd-bld+bru
+
+				(
+bw=(
+InFeedback.ar(2)+
+InFeedback.ar(3)+
+InFeedback.ar(4)+
+InFeedback.ar(5));
+bx=(
+InFeedback.ar(2)-
+InFeedback.ar(3)-
+InFeedback.ar(4)+
+InFeedback.ar(5));
+by=(
+InFeedback.ar(2)-
+InFeedback.ar(3)+
+InFeedback.ar(4)-
+InFeedback.ar(5));
+bz=(
+InFeedback.ar(2)+
+InFeedback.ar(3)-
+InFeedback.ar(4)-
+InFeedback.ar(5));
+);
+
+Out.ar(0,DecodeB2.ar(2, bw, bx, by,0));
+				/Out.ar(0,BFDecode1.ar(bw, bx, by, bz,[polytope.theta,polytope.theta+0.5pi], [polytope.phi,polytope.phi]));
+
 ////stereo
 /*(
 Out.ar(0,Pan2.ar(
