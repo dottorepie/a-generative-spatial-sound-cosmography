@@ -398,7 +398,7 @@ InFeedback.ar(5));
 );
 
 Out.ar(0,DecodeB2.ar(2, bw, bx, by,0));
-				/Out.ar(0,BFDecode1.ar(bw, bx, by, bz,[polytope.theta,polytope.theta+0.5pi], [polytope.phi,polytope.phi]));
+			//Out.ar(0,BFDecode1.ar(bw, bx, by, bz,[polytope.theta,polytope.theta+0.5pi], [polytope.phi,polytope.phi]));
 
 ////stereo
 /*(
