@@ -235,11 +235,13 @@ feed3=(PlayBuf.ar(1, ~c3.bufnum, BufRateScale.kr(~c3.bufnum), loop: 1, doneActio
 
 ///mult chain// beware of 32-bit underflow and value 0 smash
 sig1=
-((((((((((((((((((
+((((((((((((
+				/*	((((
+					((
 (SinOsc.ar(freq1*oct2,phasex+ph8,amp1*oct2.reciprocal)).abs*
 (SinOsc.ar(freq1*oct3,phasex+ph7,amp1*oct3.reciprocal))).abs+mass)*
 (SinOsc.ar(freq1*oct4,phasex+ph6,amp1*oct4.reciprocal))).abs+mass)*
-(SinOsc.ar(freq1*oct5,phasex+ph5,amp1*oct5.reciprocal))).abs+mass)*
+(SinOsc.ar(freq1*oct5,phasex+ph5,amp1*oct5.reciprocal))).abs+mass)**/
 (SinOsc.ar(freq1*oct6,phasex+ph4,amp1*oct6.reciprocal))).abs+mass)*
 (SinOsc.ar(freq1*oct7,phasex+ph3,amp1*oct7.reciprocal))).abs+mass)*
 (SinOsc.ar(freq1*oct8,phasex+ph2,amp1*oct8.reciprocal))).abs+mass)*
@@ -248,11 +250,13 @@ sig1=
 (BPF.ar(feed1,freq1,band,band.sqrt.reciprocal*amp1*buffer)))
 );
 sig2=
-((((((((((((((((((
+((((((((((((
+				/*	((((
+					((
 (SinOsc.ar(freq2*oct2,phasey+ph8,amp2*oct2.reciprocal)).abs*
 (SinOsc.ar(freq2*oct3,phasey+ph7,amp2*oct3.reciprocal))).abs+mass)*
 (SinOsc.ar(freq2*oct4,phasey+ph6,amp2*oct4.reciprocal))).abs+mass)*
-(SinOsc.ar(freq2*oct5,phasey+ph5,amp2*oct5.reciprocal))).abs+mass)*
+(SinOsc.ar(freq2*oct5,phasey+ph5,amp2*oct5.reciprocal))).abs+mass)**/
 (SinOsc.ar(freq2*oct6,phasey+ph4,amp2*oct6.reciprocal))).abs+mass)*
 (SinOsc.ar(freq2*oct7,phasey+ph3,amp2*oct7.reciprocal))).abs+mass)*
 (SinOsc.ar(freq2*oct8,phasey+ph2,amp2*oct8.reciprocal))).abs+mass)*
@@ -261,11 +265,13 @@ sig2=
 (BPF.ar(feed2,freq2,band,band.sqrt.reciprocal*amp2*buffer)))
 );
 sig3=
-((((((((((((((((((
+((((((((((((
+				/*	((((
+					((
 (SinOsc.ar(freq3*oct2,phasez+ph8,amp3*oct2.reciprocal)).abs*
 (SinOsc.ar(freq3*oct3,phasez+ph7,amp3*oct3.reciprocal))).abs+mass)*
 (SinOsc.ar(freq3*oct4,phasez+ph6,amp3*oct4.reciprocal))).abs+mass)*
-(SinOsc.ar(freq3*oct5,phasez+ph5,amp3*oct5.reciprocal))).abs+mass)*
+(SinOsc.ar(freq3*oct5,phasez+ph5,amp3*oct5.reciprocal))).abs+mass)**/
 (SinOsc.ar(freq3*oct6,phasez+ph4,amp3*oct6.reciprocal))).abs+mass)*
 (SinOsc.ar(freq3*oct7,phasez+ph3,amp3*oct7.reciprocal))).abs+mass)*
 (SinOsc.ar(freq3*oct8,phasez+ph2,amp3*oct8.reciprocal))).abs+mass)*
@@ -448,7 +454,7 @@ spread:spread.reciprocal));
 2.wait;
 //~mass=10.pow(45.neg);
 		~mass=0;
-~level=10.pow(10);
+~level=10.pow(6);
 (
 ~synth=Synth.new(\synth,[\gain,1,\drive,16256,\c,0,\az,0.3pi,\el,0,\scale,0,\lowend,64,\level,700,\dyn,1,\comp,~level,\buffer,1,\tone_axis,1,\ran,0,
 \sphharm,0,\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,1]).register);
@@ -590,7 +596,7 @@ if(~synth.isPlaying,{~synth.set(\fu,b)});
 (
 MIDIdef.cc(\midi_pot17,{ |val, num, chan, src|
 var a,b;
-a=val.linlin(0,127,9,15);
+a=val.linlin(0,127,1,9);
 b=10.pow(a);
 b.postln;
 if(~synth.isPlaying,{~synth.set(\comp,b)});
@@ -613,8 +619,8 @@ if(~synth.isPlaying,{~synth.set(\level,a)});
 },19);
 );
 (
-MIDIdef.cc(\midi_pot20,{ |val, num, chan, src|
-var a;
+MIDIdef.cc(\midi_pot20,{ |val, num;, chan, src|
+var a
 a=val.linlin(0,127,(16256*12).neg,(16256*6)).round(1).asInteger;
 a.postln;
 if(~synth.isPlaying,{~synth.set(\sphharm,a)});
