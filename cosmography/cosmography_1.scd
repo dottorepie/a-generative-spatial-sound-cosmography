@@ -103,7 +103,7 @@ var oct1,oct2,oct3,oct4,oct5,oct6,oct7,oct8,oct9,g=((1+5.sqrt)/2),s=(1+2.sqrt),p
 var step,ph,ph1,ph2,ph3,ph4,ph5,ph6,ph7,ph8,ph9,orange=~orange,polx,poly,polz,mag_sphharm;
 var threshold1,threshold2,threshold3,g_ch1,g_ch2,g_ch3,g_ch4,pan1,pan2,pan3,pan4,bessel_wave;
 var waveAmp,waveSpeed,waveFreq,dyn1,dyn2,dyn3,dyn4,dyn5,dyn6,dyn7,dyn8,dyn9,timbre;
-var tonaldegree_x,tonaldegree_y,tonaldegree_z,feed1,feed2,feed3,bw,bx,by,bz;
+var tonaldegree_x,tonaldegree_y,tonaldegree_z,feed1,feed2,feed3,bw,bx,by,bz,sstep;
 
 pan=2.pow(pan_mod.lag(0.001)/16256);
 ph = (2pi-(2pi/s));
@@ -119,8 +119,9 @@ dyn7=dyn*8;
 dyn8=dyn*9;
 dyn9=dyn*10;
 expansion=2.pow(c.lag(0.001)/16256);
-step=c.lag(0.001).linlin(0,(16256*orange),(16256*orange),0).round(1).asInteger;
-timbre=step+1;
+sstep=c.lag(0.001).linlin(0,(16256*orange),(16256*orange),0).round(1).asInteger;
+step=c.lag(0.001);
+timbre=sstep+1;
 fundamental=(fu*(9/8))*expansion;
 polytope=Spherical(1,az.lag(0.001),el.lag(0.001));
 tonal_polytope=Spherical(timbre,polytope.theta,polytope.phi);
@@ -524,7 +525,7 @@ if(~synth.isPlaying,{~synth.set(\c,a)});
 (
 MIDIdef.cc(\midi_pot9,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,1/2,3).round(1/4);
+a=val.linlin(0,127,1,3).round(1/4);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\dyn,a)});
 },9);
