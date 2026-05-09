@@ -454,7 +454,7 @@ spread:spread.reciprocal));
 2.wait;
 //~mass=10.pow(45.neg);
 		~mass=0;
-~level=10.pow(6);
+~level=10.pow(0);
 (
 ~synth=Synth.new(\synth,[\gain,1,\drive,16256,\c,0,\az,0.3pi,\el,0,\scale,0,\lowend,64,\level,700,\dyn,1,\comp,~level,\buffer,1,\tone_axis,1,\ran,0,
 \sphharm,0,\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,1]).register);
@@ -619,8 +619,8 @@ if(~synth.isPlaying,{~synth.set(\level,a)});
 },19);
 );
 (
-MIDIdef.cc(\midi_pot20,{ |val, num;, chan, src|
-var a
+MIDIdef.cc(\midi_pot20,{|val, num, chan, src|
+var a;
 a=val.linlin(0,127,(16256*12).neg,(16256*6)).round(1).asInteger;
 a.postln;
 if(~synth.isPlaying,{~synth.set(\sphharm,a)});
@@ -642,7 +642,8 @@ a.postln;
 if(~synth.isPlaying,{~synth.set(\ran,a)});
 },22);
 )
-));
+)
+		);
 
 	}); Tdef(\drone).play;
 })
