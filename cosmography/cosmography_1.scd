@@ -92,7 +92,7 @@ var nn=1.neg;
 (
 SynthDef.new(\synth,{
 
-arg gain=1,drive=0,c=0,az=0,el=0,scale=0,lowend=64,level=100,speaker_size=0.15,tone_axis=0,
+arg gain=1,drive=0,c=0,az=0,el=0,scale=0,lowend=64,level=100,speaker_size=0.15,tone_axis=0,ran=0,
 				room=0.5,mix=0.5,pan_mod=0.01,spread=1,limit=0.8,fu=32,dyn=1,band=0.000001,comp=10.pow(35),buffer=1,sphharm=1;
 
 var expansion,heavy,fundamental,sph_mod,polytope,bessel_ripple,magx,magy,magz,sph,mod_timbre,mass=~mass;
@@ -120,7 +120,7 @@ dyn8=dyn*9;
 dyn9=dyn*10;
 expansion=2.pow(c.lag(0.001)/16256);
 sstep=c.lag(0.001).linlin(0,(16256*orange),(16256*orange),0).round(1).asInteger;
-step=c.lag(0.001);
+step=ran.lag(0.001);
 timbre=sstep+1;
 fundamental=(fu*(9/8))*expansion;
 polytope=Spherical(1,az.lag(0.001),el.lag(0.001));
@@ -400,8 +400,8 @@ InFeedback.ar(4)-
 InFeedback.ar(5));
 );
 
-//Out.ar(0,DecodeB2.ar(2, bw, bx, by,0));
-			Out.ar(0,BFDecode1.ar(bw, bx, by, bz,[polytope.theta,polytope.theta+0.5pi], [polytope.phi,polytope.phi]));
+Out.ar(0,DecodeB2.ar(2, bw, bx, by,0));
+			//Out.ar(0,BFDecode1.ar(bw, bx, by, bz,[polytope.theta,polytope.theta+0.5pi], [polytope.phi,polytope.phi]));
 
 ////stereo
 /*(
@@ -450,7 +450,7 @@ spread:spread.reciprocal));
 		~mass=0;
 ~level=10.pow(10);
 (
-~synth=Synth.new(\synth,[\gain,1,\drive,16256,\c,0,\az,0.3pi,\el,0,\scale,0,\lowend,64,\level,700,\dyn,1,\comp,~level,\buffer,1,\tone_axis,1,
+~synth=Synth.new(\synth,[\gain,1,\drive,16256,\c,0,\az,0.3pi,\el,0,\scale,0,\lowend,64,\level,700,\dyn,1,\comp,~level,\buffer,1,\tone_axis,1,\ran,0,
 \sphharm,0,\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,1]).register);
 
 		///midi control
@@ -628,6 +628,14 @@ a.postln;
 if(~synth.isPlaying,{~synth.set(\tone_axis,a)});
 },21);
 );
+				(
+MIDIdef.cc(\midi_pot22,{ |val, num, chan, src|
+var a;
+a=val.linlin(0,127,0,16256*~orange).round(1).asInteger;
+a.postln;
+if(~synth.isPlaying,{~synth.set(\ran,a)});
+},22);
+)
 ));
 
 	}); Tdef(\drone).play;
