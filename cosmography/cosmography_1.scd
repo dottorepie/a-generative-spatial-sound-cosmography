@@ -124,7 +124,7 @@ step=ran.lag(0.001);
 timbre=sstep+1;
 fundamental=(fu*(9/8))*expansion;
 polytope=Spherical(1,az.lag(0.001),el.lag(0.001));
-tonal_polytope=Spherical(timbre,polytope.theta,polytope.phi);
+tonal_polytope=Spherical(step,polytope.theta,polytope.phi);
 mag_sphharm=c.lag(0.01).linlin(0,(16256*orange),1,5).round(1).asInteger;
 m_sphharm=Spherical(mag_sphharm,az.lag(0.001),el.lag(0.001));
 sph_mod=2.pow(sphharm.lag(0.001)/16256);
@@ -227,10 +227,10 @@ ph9=(ph8+ph).wrap(pi.neg,pi);
 //feed2=(SoundIn.ar(1,buffer));
 //feed3=(feed1+feed2)/2.sqrt;
 //feed=(WhiteNoise.ar(buffer));    ///noise
-feed1=(PlayBuf.ar(1, ~c1.bufnum, BufRateScale.kr(~c1.bufnum), loop: 1, doneAction:0));   ////buffer
-feed2=(PlayBuf.ar(1, ~c2.bufnum, BufRateScale.kr(~c2.bufnum), loop: 1, doneAction:0));
+feed1=(PlayBuf.ar(1, ~c1.bufnum, BufRateScale.kr(~c1.bufnum), loop: 1, doneAction:0)*buffer);   ////buffer
+feed2=(PlayBuf.ar(1, ~c2.bufnum, BufRateScale.kr(~c2.bufnum), loop: 1, doneAction:0)*buffer);
 //feed3=(feed1+feed2)/2.sqrt;
-feed3=(PlayBuf.ar(1, ~c3.bufnum, BufRateScale.kr(~c3.bufnum), loop: 1, doneAction:0));
+feed3=(PlayBuf.ar(1, ~c3.bufnum, BufRateScale.kr(~c3.bufnum), loop: 1, doneAction:0)*buffer);
 
 
 ///mult chain// beware of 32-bit underflow and value 0 smash
