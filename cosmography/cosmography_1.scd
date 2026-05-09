@@ -406,7 +406,7 @@ InFeedback.ar(4)-
 InFeedback.ar(5));
 );
 
-Out.ar(0,DecodeB2.ar(2, bw, bx, by,0));
+Out.ar(0,DecodeB2.ar(2, bw, bx, by,0)*spread.reciprocal);
 			//Out.ar(0,BFDecode1.ar(bw, bx, by, bz,[polytope.theta,polytope.theta+0.5pi], [polytope.phi,polytope.phi]));
 
 ////stereo
@@ -571,7 +571,7 @@ if(~synth.isPlaying,{~synth.set(\pan_mod,a)});
 (
 MIDIdef.cc(\midi_pot14,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,1,0.01);
+a=val.linlin(0,127,1,0.1);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\spread,a)});
 },14);
