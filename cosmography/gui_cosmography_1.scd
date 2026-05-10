@@ -7,7 +7,7 @@ var px13=0,py13=py7+sl+(sl/4),px14=px13+sl+(sl/2),py14=py7+sl+(sl/4),px15=px14+s
 var py16=py7+sl+(sl/4),px17=px16+sl+(sl/2),py17=py7+sl+(sl/4),px18=px17+sl+(sl/2), py18=py7+sl+(sl/4);
 var px19=0,py19=py13+sl+(sl/4),px20=px19+sl+(sl/2),py20=py13+sl+(sl/4);
 var px21=px20+sl+(sl/2),py21=py13+sl+(sl/4),px22=px21+sl+(sl/2),py22=py13+sl+(sl/4),px23=px22+sl+(sl/2),py23=py13+sl+(sl/4),px24=px23+sl+(sl/2),py24=py13+sl+(sl/4);
-Window.closeAll;
+//Window.closeAll;
 ~orange=3;
 w=Window.new("c_gui", Rect(10, 10, sizex,sizey)).front;
 ~v = UserView(w, Rect(0,0,sizex,sizey)).background_(Color.black);
