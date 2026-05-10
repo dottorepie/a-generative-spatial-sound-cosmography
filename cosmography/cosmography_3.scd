@@ -32,9 +32,33 @@ Tdef(\drone, {
 //Buffer.freeAll;
 ///feed buffers, xyz from b-format or mono
 (
-~c1 = Buffer.readChannel(s,"/Users/amimid/Documents/sound art/cosmography/untitled folder/KSYMEnsemble_Garufalis2025.wav",channels:1 );
-~c2 = Buffer.readChannel(s,"/Users/amimid/Documents/sound art/cosmography/untitled folder/KSYMEnsemble_Garufalis2025.wav",channels:1 );
-~c3 = Buffer.readChannel(s,"/Users/amimid/Documents/sound art/cosmography/untitled folder/KSYMEnsemble_Garufalis2025.wav",channels:0 );
+~c11 = Buffer.readChannel(s,,channels:1 );
+~c21 = Buffer.readChannel(s,,channels:2 );
+~c31 = Buffer.readChannel(s,,channels:3 );
+~c12 = Buffer.readChannel(s,,channels:1 );
+~c22 = Buffer.readChannel(s,,channels:2 );
+~c32 = Buffer.readChannel(s,,channels:3 );
+~c13 = Buffer.readChannel(s,,channels:1 );
+~c23 = Buffer.readChannel(s,,channels:2 );
+~c33 = Buffer.readChannel(s,,channels:3 );
+~c14 = Buffer.readChannel(s,,channels:1 );
+~c24 = Buffer.readChannel(s,,channels:2 );
+~c34 = Buffer.readChannel(s,,channels:3 );
+~c15 = Buffer.readChannel(s,,channels:1 );
+~c25 = Buffer.readChannel(s,,channels:2 );
+~c35 = Buffer.readChannel(s,,channels:3 );
+~c16 = Buffer.readChannel(s,,channels:1 );
+~c26 = Buffer.readChannel(s,,channels:2 );
+~c36 = Buffer.readChannel(s,,channels:3 );
+~c17 = Buffer.readChannel(s,,channels:1 );
+~c27 = Buffer.readChannel(s,,channels:2 );
+~c37 = Buffer.readChannel(s,,channels:3 );
+~c18 = Buffer.readChannel(s,,channels:1 );
+~c28 = Buffer.readChannel(s,,channels:2 );
+~c38 = Buffer.readChannel(s,,channels:3 );
+~c19 = Buffer.readChannel(s,,channels:1 );
+~c29 = Buffer.readChannel(s,,channels:2 );
+~c39 = Buffer.readChannel(s,,channels:3 );
 );
 
 ///animation control buffers
@@ -101,6 +125,7 @@ var nn=1.neg;
 SynthDef.new(\synth,{
 
 arg gain=1,drive=0,c=0,az=0,el=0,scale=0,lowend=64,level=100,speaker_size=0.15,tone_axis=0,ran=0,rect_level=1,harmonic=1,
+				bg1=0,bg2=0,bg3=0,bg4=0,bg5=0bg6=0,bg7=0,bg8=0,bg9=0,
 				room=0.5,mix=0.5,pan_mod=0.01,spread=1,limit=0.8,fu=32,dyn=1,band=0.000001,comp=10.pow(35),buffer=1,sphharm=1;
 
 var expansion,heavy,fundamental,sph_mod,polytope,bessel_ripple,magx,magy,magz,sph,mod_timbre,mass=~mass;
@@ -243,10 +268,33 @@ ph9=(ph8+ph).wrap(pi.neg,pi);
 //feed2=(SoundIn.ar(1,buffer));
 //feed3=(feed1+feed2)/2.sqrt;
 //feed=(WhiteNoise.ar(buffer));    ///noise
-feed1=(PlayBuf.ar(1, ~c1.bufnum, BufRateScale.kr(~c1.bufnum), loop: 1, doneAction:0)*(buffer/10));   ////buffer
-feed2=(PlayBuf.ar(1, ~c2.bufnum, BufRateScale.kr(~c2.bufnum), loop: 1, doneAction:0)*(buffer/10));
-//feed3=(feed1+feed2)/2.sqrt;
-feed3=(PlayBuf.ar(1, ~c3.bufnum, BufRateScale.kr(~c3.bufnum), loop: 1, doneAction:0)*(buffer/10));
+feed11=(PlayBuf.ar(1, ~c11.bufnum, BufRateScale.kr(~c11.bufnum), loop: 1, doneAction:0)*bg1*(buffer/10));   ////buffer
+feed12=(PlayBuf.ar(1, ~c12.bufnum, BufRateScale.kr(~c12.bufnum), loop: 1, doneAction:0)*bg2*(buffer/10));
+feed13=(PlayBuf.ar(1, ~c13.bufnum, BufRateScale.kr(~c13.bufnum), loop: 1, doneAction:0)*bg3*(buffer/10));
+feed14=(PlayBuf.ar(1, ~c14.bufnum, BufRateScale.kr(~c14.bufnum), loop: 1, doneAction:0)*bg4*(buffer/10));
+feed15=(PlayBuf.ar(1, ~c15.bufnum, BufRateScale.kr(~c15.bufnum), loop: 1, doneAction:0)*bg5*(buffer/10));
+feed16=(PlayBuf.ar(1, ~c16.bufnum, BufRateScale.kr(~c16.bufnum), loop: 1, doneAction:0)*bg6*(buffer/10));
+feed17=(PlayBuf.ar(1, ~c17.bufnum, BufRateScale.kr(~c17.bufnum), loop: 1, doneAction:0)*bg7*(buffer/10));
+feed18=(PlayBuf.ar(1, ~c18.bufnum, BufRateScale.kr(~c18.bufnum), loop: 1, doneAction:0)*bg8*(buffer/10));
+feed19=(PlayBuf.ar(1, ~c19.bufnum, BufRateScale.kr(~c19.bufnum), loop: 1, doneAction:0)*bg9*(buffer/10));
+feed21=(PlayBuf.ar(1, ~c21.bufnum, BufRateScale.kr(~c21.bufnum), loop: 1, doneAction:0)*bg1*(buffer/10));
+feed22=(PlayBuf.ar(1, ~c22.bufnum, BufRateScale.kr(~c22.bufnum), loop: 1, doneAction:0)*bg2*(buffer/10));
+feed23=(PlayBuf.ar(1, ~c23.bufnum, BufRateScale.kr(~c23.bufnum), loop: 1, doneAction:0)*bg3*(buffer/10));
+feed24=(PlayBuf.ar(1, ~c24.bufnum, BufRateScale.kr(~c24.bufnum), loop: 1, doneAction:0)*bg4*(buffer/10));
+feed25=(PlayBuf.ar(1, ~c25.bufnum, BufRateScale.kr(~c25.bufnum), loop: 1, doneAction:0)*bg5*(buffer/10));
+feed26=(PlayBuf.ar(1, ~c26.bufnum, BufRateScale.kr(~c26.bufnum), loop: 1, doneAction:0)*bg6*(buffer/10));
+feed27=(PlayBuf.ar(1, ~c27.bufnum, BufRateScale.kr(~c27.bufnum), loop: 1, doneAction:0)*bg7*(buffer/10));
+feed28=(PlayBuf.ar(1, ~c28.bufnum, BufRateScale.kr(~c28.bufnum), loop: 1, doneAction:0)*bg8*(buffer/10));
+feed29=(PlayBuf.ar(1, ~c29.bufnum, BufRateScale.kr(~c29.bufnum), loop: 1, doneAction:0)*bg9*(buffer/10));
+feed31=(PlayBuf.ar(1, ~c31.bufnum, BufRateScale.kr(~c31.bufnum), loop: 1, doneAction:0)*bg1*(buffer/10));
+feed32=(PlayBuf.ar(1, ~c32.bufnum, BufRateScale.kr(~c32.bufnum), loop: 1, doneAction:0)*bg2*(buffer/10));
+feed33=(PlayBuf.ar(1, ~c33.bufnum, BufRateScale.kr(~c33.bufnum), loop: 1, doneAction:0)*bg3*(buffer/10));
+feed34=(PlayBuf.ar(1, ~c34.bufnum, BufRateScale.kr(~c34.bufnum), loop: 1, doneAction:0)*bg4*(buffer/10));
+feed35=(PlayBuf.ar(1, ~c35.bufnum, BufRateScale.kr(~c35.bufnum), loop: 1, doneAction:0)*bg5*(buffer/10));
+feed36=(PlayBuf.ar(1, ~c36.bufnum, BufRateScale.kr(~c36.bufnum), loop: 1, doneAction:0)*bg6*(buffer/10));
+feed37=(PlayBuf.ar(1, ~c37.bufnum, BufRateScale.kr(~c37.bufnum), loop: 1, doneAction:0)*bg7*(buffer/10));
+feed38=(PlayBuf.ar(1, ~c38.bufnum, BufRateScale.kr(~c38.bufnum), loop: 1, doneAction:0)*bg8*(buffer/10));
+feed39=(PlayBuf.ar(1, ~c39.bufnum, BufRateScale.kr(~c39.bufnum), loop: 1, doneAction:0)*bg9*(buffer/10));
 
 
 ///mult chain// beware of 32-bit underflow and value 0 smash
@@ -264,7 +312,17 @@ sig1=
 (SinOsc.ar(freq1*oct9,phasex+ph1,amp1*oct9.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq1,phase:phasex+ph,mul:level).abs*SinOsc.ar(freq1,phase:phasex+ph)),freq1*heavy,amp1)))*comp)+
 (rect_level*LPF.ar((Osc.ar(~wt.bufnum,freq1,phase:phasex+ph,mul:level).abs*SinOsc.ar(freq1,phase:phasex+ph)),freq1*heavy,amp1))+
-(BPF.ar(feed1,freq1,band,band.sqrt.reciprocal*amp1*buffer)))
+(
+(BPF.ar(feed11,freq1,band,band.sqrt.reciprocal*amp1*buffer))+
+(BPF.ar(feed12,freq1,band,band.sqrt.reciprocal*amp1*buffer))+
+(BPF.ar(feed13,freq1,band,band.sqrt.reciprocal*amp1*buffer))+
+(BPF.ar(feed14,freq1,band,band.sqrt.reciprocal*amp1*buffer))+
+(BPF.ar(feed15,freq1,band,band.sqrt.reciprocal*amp1*buffer))+
+(BPF.ar(feed16,freq1,band,band.sqrt.reciprocal*amp1*buffer))+
+(BPF.ar(feed17,freq1,band,band.sqrt.reciprocal*amp1*buffer))+
+(BPF.ar(feed18,freq1,band,band.sqrt.reciprocal*amp1*buffer))+
+(BPF.ar(feed19,freq1,band,band.sqrt.reciprocal*amp1*buffer))+
+				))
 );
 sig2=
 ((((((((((((
@@ -280,7 +338,17 @@ sig2=
 (SinOsc.ar(freq2*oct9,phasey+ph1,amp2*oct9.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq2,phase:phasey+ph,mul:level).abs*SinOsc.ar(freq2,phase:phasey+ph)),freq2*heavy,amp2)))*comp)+
 (rect_level*LPF.ar((Osc.ar(~wt.bufnum,freq2,phase:phasey+ph,mul:level).abs*SinOsc.ar(freq2,phase:phasey+ph)),freq2*heavy,amp2))+
-(BPF.ar(feed2,freq2,band,band.sqrt.reciprocal*amp2*buffer)))
+(
+(BPF.ar(feed21,freq2,band,band.sqrt.reciprocal*amp2*buffer))+
+(BPF.ar(feed22,freq2,band,band.sqrt.reciprocal*amp2*buffer))+
+(BPF.ar(feed23,freq2,band,band.sqrt.reciprocal*amp2*buffer))+
+(BPF.ar(feed24,freq2,band,band.sqrt.reciprocal*amp2*buffer))+
+(BPF.ar(feed25,freq2,band,band.sqrt.reciprocal*amp2*buffer))+
+(BPF.ar(feed26,freq2,band,band.sqrt.reciprocal*amp2*buffer))+
+(BPF.ar(feed27,freq2,band,band.sqrt.reciprocal*amp2*buffer))+
+(BPF.ar(feed28,freq2,band,band.sqrt.reciprocal*amp2*buffer))+
+(BPF.ar(feed29,freq2,band,band.sqrt.reciprocal*amp2*buffer))
+				))
 );
 sig3=
 ((((((((((((
@@ -296,7 +364,17 @@ sig3=
 (SinOsc.ar(freq3*oct9,phasez+ph1,amp3*oct9.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq3,phase:phasez+ph,mul:level).abs*SinOsc.ar(freq3,phase:phasez+ph)),freq3*heavy,amp3)))*comp)+
 (rect_level*LPF.ar((Osc.ar(~wt.bufnum,freq3,phase:phasez+ph,mul:level).abs*SinOsc.ar(freq3,phase:phasez+ph)),freq3*heavy,amp3))+
-(BPF.ar(feed3,freq3,band,band.sqrt.reciprocal*amp3*buffer)))
+(
+(BPF.ar(feed31,freq3,band,band.sqrt.reciprocal*amp3*buffer))+
+(BPF.ar(feed32,freq3,band,band.sqrt.reciprocal*amp3*buffer))+
+(BPF.ar(feed33,freq3,band,band.sqrt.reciprocal*amp3*buffer))+
+(BPF.ar(feed34,freq3,band,band.sqrt.reciprocal*amp3*buffer))+
+(BPF.ar(feed35,freq3,band,band.sqrt.reciprocal*amp3*buffer))+
+(BPF.ar(feed36,freq3,band,band.sqrt.reciprocal*amp3*buffer))+
+(BPF.ar(feed37,freq3,band,band.sqrt.reciprocal*amp3*buffer))+
+(BPF.ar(feed38,freq3,band,band.sqrt.reciprocal*amp3*buffer))+
+(BPF.ar(feed39,freq3,band,band.sqrt.reciprocal*amp3*buffer))
+				))
 );
 
 sig1=(sig1*heavy).softclip;
@@ -475,6 +553,7 @@ spread:spread.reciprocal));
 		~mass=0;
 (
 ~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0,\el,0,\scale,0,\harmonic,1,
+				\bg1,0,\bg2,0,\bg3,0,\bg4,0,\bg5,0,\bg6,0,\bg7,0,\bg8,0,\bg9,0,
 				\lowend,64,\level,600,\dyn,1,\comp,1,\buffer,10,\tone_axis,1,\ran,16256,\rect_level,2,
 \sphharm,0,\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,10]).register);
 
@@ -676,7 +755,79 @@ a=val.linlin(0,127,1,10).round(1).asInteger;
 a.postln;
 if(~synth.isPlaying,{~synth.set(\harmonic,a)});
 },24);
-)
+);
+(
+MIDIdef.cc(\midi_slider1,{ |val, num, chan, src|
+var bfg;
+bfg=val.linlin(0,127,0,1);
+bfg.postln;
+if(~synth.isPlaying,{~synth.set(\bg1,a)});
+},25);
+);
+(
+MIDIdef.cc(\midi_slider2,{ |val, num, chan, src|
+var bfg;
+bfg=val.linlin(0,127,0,1);
+bfg.postln;
+if(~synth.isPlaying,{~synth.set(\bg2,a)});
+},26);
+);
+(
+MIDIdef.cc(\midi_slider3,{ |val, num, chan, src|
+var bfg;
+bfg=val.linlin(0,127,0,1);
+bfg.postln;
+if(~synth.isPlaying,{~synth.set(\bg3,a)});
+},27);
+);
+(
+MIDIdef.cc(\midi_slider4,{ |val, num, chan, src|
+var bfg;
+bfg=val.linlin(0,127,0,1);
+bfg.postln;
+if(~synth.isPlaying,{~synth.set(\bg4,a)});
+},28);
+);
+(
+MIDIdef.cc(\midi_slider5,{ |val, num, chan, src|
+var bfg;
+bfg=val.linlin(0,127,0,1);
+bfg.postln;
+if(~synth.isPlaying,{~synth.set(\bg5,a)});
+},29);
+);
+(
+MIDIdef.cc(\midi_slider6,{ |val, num, chan, src|
+var bfg;
+bfg=val.linlin(0,127,0,1);
+bfg.postln;
+if(~synth.isPlaying,{~synth.set(\bg6,a)});
+},30);
+);
+(
+MIDIdef.cc(\midi_slider7,{ |val, num, chan, src|
+var bfg;
+bfg=val.linlin(0,127,0,1);
+bfg.postln;
+if(~synth.isPlaying,{~synth.set(\bg7,a)});
+},31);
+);
+(
+MIDIdef.cc(\midi_slider8,{ |val, num, chan, src|
+	var bfg;
+bfg=val.linlin(0,127,0,1);
+bfg.postln;
+if(~synth.isPlaying,{~synth.set(\bg8,a)});
+},32);
+);
+(
+MIDIdef.cc(\midi_slider9,{ |val, num, chan, src|
+var bfg;
+bfg=val.linlin(0,127,0,1);
+bfg.postln;
+if(~synth.isPlaying,{~synth.set(\bg9,a)});
+},49);
+));
 
 ); 2.wait;
 			(
