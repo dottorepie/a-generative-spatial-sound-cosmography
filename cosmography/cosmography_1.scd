@@ -92,7 +92,7 @@ var nn=1.neg;
 (
 SynthDef.new(\synth,{
 
-arg gain=1,drive=0,c=0,az=0,el=0,scale=0,lowend=64,level=100,speaker_size=0.15,tone_axis=0,ran=0,rect_level=1,
+arg gain=1,drive=0,c=0,az=0,el=0,scale=0,lowend=64,level=100,speaker_size=0.15,tone_axis=0,ran=0,rect_level=1,harmonic,1,
 				room=0.5,mix=0.5,pan_mod=0.01,spread=1,limit=0.8,fu=32,dyn=1,band=0.000001,comp=10.pow(35),buffer=1,sphharm=1;
 
 var expansion,heavy,fundamental,sph_mod,polytope,bessel_ripple,magx,magy,magz,sph,mod_timbre,mass=~mass;
@@ -125,7 +125,8 @@ timbre=sstep+1;
 fundamental=(fu*(9/8))*expansion;
 polytope=Spherical(1,az.lag(0.001),el.lag(0.001));
 tonal_polytope=Spherical(step,polytope.theta,polytope.phi);
-mag_sphharm=c.lag(0.01).linlin(0,(16256*orange),1,5).round(1).asInteger;
+//mag_sphharm=c.lag(0.01).linlin(0,(16256*orange),1,5).round(1).asInteger;
+mag_sphharm=harmonic.lag(0.01);
 m_sphharm=Spherical(mag_sphharm,az.lag(0.001),el.lag(0.001));
 sph_mod=2.pow(sphharm.lag(0.001)/16256);
 mx=m_sphharm.x.abs;
@@ -459,7 +460,7 @@ spread:spread.reciprocal));
 		~mass=0;
 ~level=10.pow(0);
 (
-~synth=Synth.new(\synth,[\gain,1,\drive,16256,\c,0,\az,0.3pi,\el,0,\scale,0,
+~synth=Synth.new(\synth,[\gain,1,\drive,16256,\c,0,\az,0.3pi,\el,0,\scale,0,\harmonic,1,
 				\lowend,64,\level,700,\dyn,1,\comp,~level,\buffer,1,\tone_axis,1,\ran,0,\rect_level,1,
 \sphharm,0,\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,1]).register);
 
@@ -653,7 +654,16 @@ a=val.linlin(0,127,0,100);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\rect_level,a)});
 },23);
+);
+(
+MIDIdef.cc(\midi_pot24,{ |val, num, chan, src|
+var a;
+a=val.linlin(0,127,1,10);
+a.postln;
+if(~synth.isPlaying,{~synth.set(\harmonic,a)});
+},24);
 )
+
 )
 		);
 
