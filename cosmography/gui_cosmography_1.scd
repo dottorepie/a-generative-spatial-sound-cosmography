@@ -19,7 +19,7 @@ w=Window.new("c_gui", Rect(10, 10, sizex,sizey)).front;
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,0,1).postln;
+value=obj.x.value.linlin(0,1,0,1).postln;
 ~synth.set(\gain,value);
 ~nb1.value_(value);
 });
@@ -31,7 +31,7 @@ value=obj.x.value.linexp(0,1,0,1).postln;
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,(16256).neg,(16256*3)).round(1).asInteger.postln;
+value=obj.x.value.linlin(0,1,(16256).neg,(16256*3)).round(1).asInteger.postln;
 ~synth.set(\drive,value);
 ~nb2.value_(value);
 });
@@ -43,7 +43,7 @@ value=obj.x.value.linexp(0,1,(16256).neg,(16256*3)).round(1).asInteger.postln;
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,0.0001,1).postln;
+value=obj.x.value.linlin(0,1,0.0001,1).postln;
 ~synth.set(\band,value);
 ~nb3.value_(value);
 });
@@ -55,7 +55,7 @@ value=obj.x.value.linexp(0,1,0.0001,1).postln;
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,pi.neg,pi).postln;
+value=obj.x.value.linlin(0,1,pi.neg,pi).postln;
 ~synth.set(\az,value);
 ~nb4.value_(value);
 });
@@ -67,7 +67,7 @@ value=obj.x.value.linexp(0,1,pi.neg,pi).postln;
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,0.5pi.neg,0.5pi).postln;
+value=obj.x.value.linlin(0,1,0.5pi.neg,0.5pi).postln;
 ~synth.set(\el,value);
 ~nb5.value_(value);
 });
@@ -79,7 +79,7 @@ value=obj.x.value.linexp(0,1,0.5pi.neg,0.5pi).postln;
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,0,1).round(1).asInteger.postln;
+value=obj.x.value.linlin(0,1,0,1).round(1).asInteger.postln;
 ~synth.set(\scale,value);
 ~nb6.value_(value);
 });
@@ -91,7 +91,7 @@ value=obj.x.value.linexp(0,1,0,1).round(1).asInteger.postln;
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,32,128).postln;
+value=obj.x.value.linlin(0,1,32,128).postln;
 ~synth.set(\lowend,value);
 ~nb7.value_(value);
 });
@@ -103,7 +103,7 @@ value=obj.x.value.linexp(0,1,32,128).postln;
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,0,16256*~orange).round(1).asInteger.postln;
+value=obj.x.value.linlin(0,1,0,16256*~orange).round(1).asInteger.postln;
 ~synth.set(\c,value);
 ~nb8.value_(value);
 });
@@ -115,7 +115,7 @@ value=obj.x.value.linexp(0,1,0,16256*~orange).round(1).asInteger.postln;
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,1,3).round(1/4).postln;
+value=obj.x.value.linlin(0,1,1,3).round(1/4).postln;
 ~synth.set(\dyn,value);
 ~nb9.value_(value);
 });
@@ -127,7 +127,7 @@ value=obj.x.value.linexp(0,1,1,3).round(1/4).postln;
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,0.05,0.3).postln;
+value=obj.x.value.linlin(0,1,0.05,0.3).postln;
 ~synth.set(\speaker_size,value);
 ~nb10.value_(value);
 });
@@ -139,7 +139,7 @@ value=obj.x.value.linexp(0,1,0.05,0.3).postln;
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,0,1).postln;
+value=obj.x.value.linlin(0,1,0,1).postln;
 ~synth.set(\room,value);
 ~nb11.value_(value);
 });
@@ -151,7 +151,7 @@ value=obj.x.value.linexp(0,1,0,1).postln;
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,0,1).postln;
+value=obj.x.value.linlin(0,1,0,1).postln;
 ~synth.set(\mix,value);
 ~nb12.value_(value);
 });
@@ -163,7 +163,7 @@ value=obj.x.value.linexp(0,1,0,1).postln;
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,(16256*10).neg,(16256*5)).round(1).asInteger.postln;
+value=obj.x.value.linlin(0,1,(16256*10).neg,(16256*5)).round(1).asInteger.postln;
 ~synth.set(\pan_mod,value);
 ~nb13.value_(value);
 });
@@ -175,7 +175,7 @@ value=obj.x.value.linexp(0,1,(16256*10).neg,(16256*5)).round(1).asInteger.postln
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,1,0.1).postln;
+value=obj.x.value.linlin(0,1,1,0.1).postln;
 ~synth.set(\spread,value);
 ~nb14.value_(value);
 });
@@ -187,7 +187,7 @@ value=obj.x.value.linexp(0,1,1,0.1).postln;
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,1,0.001).postln;
+value=obj.x.value.linlin(0,1,1,0.001).postln;
 ~synth.set(\limit,value);
 ~nb15.value_(value);
 });
@@ -199,7 +199,7 @@ value=obj.x.value.linexp(0,1,1,0.001).postln;
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,2,9).round(1).asInteger.postln;
+value=obj.x.value.linlin(0,1,2,9).round(1).asInteger.postln;
 ~synth.set(\fu,2.pow(value));
 ~nb16.value_(value);
 });
@@ -211,7 +211,7 @@ value=obj.x.value.linexp(0,1,2,9).round(1).asInteger.postln;
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,0,10000000).postln;
+value=obj.x.value.linlin(0,1,0,10000000).postln;
 ~synth.set(\comp,value);
 ~nb17.value_(value);
 });
@@ -223,7 +223,7 @@ value=obj.x.value.linexp(0,1,0,10000000).postln;
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,0,500).postln;
+value=obj.x.value.linlin(0,1,0,500).postln;
 ~synth.set(\buffer,value);
 ~nb18.value_(value);
 });
@@ -235,7 +235,7 @@ value=obj.x.value.linexp(0,1,0,500).postln;
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,0,1000).postln;
+value=obj.x.value.linlin(0,1,0,1000).postln;
 ~synth.set(\level,value);
 ~nb19.value_(value);
 });
@@ -247,7 +247,7 @@ value=obj.x.value.linexp(0,1,0,1000).postln;
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,(16256*12).neg,(16256*6)).round(1).asInteger.postln;
+value=obj.x.value.linlin(0,1,(16256*12).neg,(16256*6)).round(1).asInteger.postln;
 ~synth.set(\sphharm,value);
 ~nb20.value_(value);
 });
@@ -259,7 +259,7 @@ value=obj.x.value.linexp(0,1,(16256*12).neg,(16256*6)).round(1).asInteger.postln
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,0,2).round(1).asInteger.postln;
+value=obj.x.value.linlin(0,1,0,2).round(1).asInteger.postln;
 ~synth.set(\tone_axis,value);
 ~nb21.value_(value);
 });
@@ -271,7 +271,7 @@ value=obj.x.value.linexp(0,1,0,2).round(1).asInteger.postln;
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,0,16256*~orange).round(1).asInteger.postln;
+value=obj.x.value.linlin(0,1,0,16256*~orange).round(1).asInteger.postln;
 ~synth.set(\ran,value);
 ~nb22.value_(value);
 });
@@ -283,7 +283,7 @@ value=obj.x.value.linexp(0,1,0,16256*~orange).round(1).asInteger.postln;
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,0,100).postln;
+value=obj.x.value.linlin(0,1,0,100).postln;
 ~synth.set(\rect_level,value);
 ~nb23.value_(value);
 });
@@ -295,7 +295,7 @@ value=obj.x.value.linexp(0,1,0,100).postln;
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linexp(0,1,1,10).round(1).asInteger.postln;
+value=obj.x.value.linlin(0,1,1,10).round(1).asInteger.postln;
 ~synth.set(\harmonic,value);
 ~nb24.value_(value);
 });
