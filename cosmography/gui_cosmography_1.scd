@@ -10,12 +10,12 @@ var px21=px20+sl+(sl/2),py21=py13+sl+(sl/4),px22=px21+sl+(sl/2),py22=py13+sl+(sl
 //Window.closeAll;
 ~orange=3;
 w=Window.new("c_gui", Rect(10, 10, sizex,sizey)).front;
-~v = UserView(w, Rect(0,0,sizex,sizey)).background_(Color.black);
+~vw = UserView(w, Rect(0,0,sizex,sizey)).background_(Color.black);
 
 (
-~nb1=NumberBox(~v,Rect(0+px1,(sl/4)+py1,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl1=StaticText(~v,Rect((sl/2)+px1,(sl/4)+py1,sl/2,sl/4)).string_("gain").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl1=Slider2D.new(~v,Rect.new(px1,py1,sl,sl/4)).
+~nb1=NumberBox(~vw,Rect(0+px1,(sl/4)+py1,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl1=StaticText(~vw,Rect((sl/2)+px1,(sl/4)+py1,sl/2,sl/4)).string_("gain").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl1=Slider2D.new(~vw,Rect.new(px1,py1,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;
@@ -25,9 +25,9 @@ value=obj.x.value.linlin(0,1,0,1).postln;
 });
 );
 (
-~nb2=NumberBox(~v,Rect(0+px2,(sl/4)+py2,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl2=StaticText(~v,Rect((sl/2)+px2,(sl/4)+py2,sl/2,sl/4)).string_("drive").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl2=Slider2D.new(~v,Rect.new(px2,py2,sl,sl/4)).
+~nb2=NumberBox(~vw,Rect(0+px2,(sl/4)+py2,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl2=StaticText(~vw,Rect((sl/2)+px2,(sl/4)+py2,sl/2,sl/4)).string_("drive").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl2=Slider2D.new(~vw,Rect.new(px2,py2,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;
@@ -37,21 +37,21 @@ value=obj.x.value.linlin(0,1,(16256).neg,(16256*3)).round(1).asInteger.postln;
 });
 );
 (
-~nb3=NumberBox(~v,Rect(0+px3,(sl/4)+py3,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl3=StaticText(~v,Rect((sl/2)+px3,(sl/4)+py3,sl/2,sl/4)).string_("band").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl3=Slider2D.new(~v,Rect.new(px3,py3,sl,sl/4)).
+~nb3=NumberBox(~vw,Rect(0+px3,(sl/4)+py3,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl3=StaticText(~vw,Rect((sl/2)+px3,(sl/4)+py3,sl/2,sl/4)).string_("band").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl3=Slider2D.new(~vw,Rect.new(px3,py3,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;
-value=obj.x.value.linlin(0,1,0.0001,1).postln;
+value=obj.x.value.linlin(0,1,0.00001,10).postln;
 ~synth.set(\band,value);
 ~nb3.value_(value);
 });
 );
 (
-~nb4=NumberBox(~v,Rect(0+px4,(sl/4)+py4,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl4=StaticText(~v,Rect((sl/2)+px4,(sl/4)+py4,sl/2,sl/4)).string_("azimuth").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl4=Slider2D.new(~v,Rect.new(px4,py4,sl,sl/4)).
+~nb4=NumberBox(~vw,Rect(0+px4,(sl/4)+py4,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl4=StaticText(~vw,Rect((sl/2)+px4,(sl/4)+py4,sl/2,sl/4)).string_("azimuth").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl4=Slider2D.new(~vw,Rect.new(px4,py4,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;
@@ -61,9 +61,9 @@ value=obj.x.value.linlin(0,1,pi.neg,pi).postln;
 });
 );
 (
-~nb5=NumberBox(~v,Rect(0+px5,(sl/4)+py5,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl5=StaticText(~v,Rect((sl/2)+px5,(sl/4)+py5,sl/2,sl/4)).string_("elevation").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl5=Slider2D.new(~v,Rect.new(px5,py5,sl,sl/4)).
+~nb5=NumberBox(~vw,Rect(0+px5,(sl/4)+py5,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl5=StaticText(~vw,Rect((sl/2)+px5,(sl/4)+py5,sl/2,sl/4)).string_("elevation").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl5=Slider2D.new(~vw,Rect.new(px5,py5,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;
@@ -73,9 +73,9 @@ value=obj.x.value.linlin(0,1,0.5pi.neg,0.5pi).postln;
 });
 );
 (
-~nb6=NumberBox(~v,Rect(0+px6,(sl/4)+py6,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl6=StaticText(~v,Rect((sl/2)+px6,(sl/4)+py6,sl/2,sl/4)).string_("scale").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl6=Slider2D.new(~v,Rect.new(px6,py6,sl,sl/4)).
+~nb6=NumberBox(~vw,Rect(0+px6,(sl/4)+py6,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl6=StaticText(~vw,Rect((sl/2)+px6,(sl/4)+py6,sl/2,sl/4)).string_("scale").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl6=Slider2D.new(~vw,Rect.new(px6,py6,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;
@@ -85,9 +85,9 @@ value=obj.x.value.linlin(0,1,0,1).round(1).asInteger.postln;
 });
 );
 (
-~nb7=NumberBox(~v,Rect(0+px7,(sl/4)+py7,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl7=StaticText(~v,Rect((sl/2)+px7,(sl/4)+py7,sl/2,sl/4)).string_("lowend").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl7=Slider2D.new(~v,Rect.new(px7,py7,sl,sl/4)).
+~nb7=NumberBox(~vw,Rect(0+px7,(sl/4)+py7,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl7=StaticText(~vw,Rect((sl/2)+px7,(sl/4)+py7,sl/2,sl/4)).string_("lowend").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl7=Slider2D.new(~vw,Rect.new(px7,py7,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;
@@ -97,9 +97,9 @@ value=obj.x.value.linlin(0,1,32,128).postln;
 });
 );
 (
-~nb8=NumberBox(~v,Rect(0+px8,(sl/4)+py8,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl8=StaticText(~v,Rect((sl/2)+px8,(sl/4)+py8,sl/2,sl/4)).string_("c").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl8=Slider2D.new(~v,Rect.new(px8,py8,sl,sl/4)).
+~nb8=NumberBox(~vw,Rect(0+px8,(sl/4)+py8,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl8=StaticText(~vw,Rect((sl/2)+px8,(sl/4)+py8,sl/2,sl/4)).string_("c").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl8=Slider2D.new(~vw,Rect.new(px8,py8,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;
@@ -109,9 +109,9 @@ value=obj.x.value.linlin(0,1,0,16256*~orange).round(1).asInteger.postln;
 });
 );
 (
-~nb9=NumberBox(~v,Rect(0+px9,(sl/4)+py9,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl9=StaticText(~v,Rect((sl/2)+px9,(sl/4)+py9,sl/2,sl/4)).string_("dynamic").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl9=Slider2D.new(~v,Rect.new(px9,py9,sl,sl/4)).
+~nb9=NumberBox(~vw,Rect(0+px9,(sl/4)+py9,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl9=StaticText(~vw,Rect((sl/2)+px9,(sl/4)+py9,sl/2,sl/4)).string_("dynamic").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl9=Slider2D.new(~vw,Rect.new(px9,py9,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;
@@ -121,9 +121,9 @@ value=obj.x.value.linlin(0,1,1,3).round(1/4).postln;
 });
 );
 (
-~nb10=NumberBox(~v,Rect(0+px10,(sl/4)+py10,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl10=StaticText(~v,Rect((sl/2)+px10,(sl/4)+py10,sl/2,sl/4)).string_("speaker_size").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl10=Slider2D.new(~v,Rect.new(px10,py10,sl,sl/4)).
+~nb10=NumberBox(~vw,Rect(0+px10,(sl/4)+py10,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl10=StaticText(~vw,Rect((sl/2)+px10,(sl/4)+py10,sl/2,sl/4)).string_("speaker_size").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl10=Slider2D.new(~vw,Rect.new(px10,py10,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;
@@ -133,9 +133,9 @@ value=obj.x.value.linlin(0,1,0.05,0.3).postln;
 });
 );
 (
-~nb11=NumberBox(~v,Rect(0+px11,(sl/4)+py11,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl11=StaticText(~v,Rect((sl/2)+px11,(sl/4)+py11,sl/2,sl/4)).string_("room").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl11=Slider2D.new(~v,Rect.new(px11,py11,sl,sl/4)).
+~nb11=NumberBox(~vw,Rect(0+px11,(sl/4)+py11,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl11=StaticText(~vw,Rect((sl/2)+px11,(sl/4)+py11,sl/2,sl/4)).string_("room").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl11=Slider2D.new(~vw,Rect.new(px11,py11,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;
@@ -145,9 +145,9 @@ value=obj.x.value.linlin(0,1,0,1).postln;
 });
 );
 (
-~nb12=NumberBox(~v,Rect(0+px12,(sl/4)+py12,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl12=StaticText(~v,Rect((sl/2)+px12,(sl/4)+py12,sl/2,sl/4)).string_("mix").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl12=Slider2D.new(~v,Rect.new(px12,py12,sl,sl/4)).
+~nb12=NumberBox(~vw,Rect(0+px12,(sl/4)+py12,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl12=StaticText(~vw,Rect((sl/2)+px12,(sl/4)+py12,sl/2,sl/4)).string_("mix").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl12=Slider2D.new(~vw,Rect.new(px12,py12,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;
@@ -157,9 +157,9 @@ value=obj.x.value.linlin(0,1,0,1).postln;
 });
 );
 (
-~nb13=NumberBox(~v,Rect(0+px13,(sl/4)+py13,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl13=StaticText(~v,Rect((sl/2)+px13,(sl/4)+py13,sl/2,sl/4)).string_("pann").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl13=Slider2D.new(~v,Rect.new(px13,py13,sl,sl/4)).
+~nb13=NumberBox(~vw,Rect(0+px13,(sl/4)+py13,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl13=StaticText(~vw,Rect((sl/2)+px13,(sl/4)+py13,sl/2,sl/4)).string_("pann").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl13=Slider2D.new(~vw,Rect.new(px13,py13,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;
@@ -169,9 +169,9 @@ value=obj.x.value.linlin(0,1,(16256*10).neg,(16256*5)).round(1).asInteger.postln
 });
 );
 (
-~nb14=NumberBox(~v,Rect(0+px14,(sl/4)+py14,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl14=StaticText(~v,Rect((sl/2)+px14,(sl/4)+py14,sl/2,sl/4)).string_("spread").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl14=Slider2D.new(~v,Rect.new(px14,py14,sl,sl/4)).
+~nb14=NumberBox(~vw,Rect(0+px14,(sl/4)+py14,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl14=StaticText(~vw,Rect((sl/2)+px14,(sl/4)+py14,sl/2,sl/4)).string_("spread").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl14=Slider2D.new(~vw,Rect.new(px14,py14,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;
@@ -181,9 +181,9 @@ value=obj.x.value.linlin(0,1,1,0.1).postln;
 });
 );
 (
-~nb15=NumberBox(~v,Rect(0+px15,(sl/4)+py15,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl15=StaticText(~v,Rect((sl/2)+px15,(sl/4)+py15,sl/2,sl/4)).string_("limiter").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl15=Slider2D.new(~v,Rect.new(px15,py15,sl,sl/4)).
+~nb15=NumberBox(~vw,Rect(0+px15,(sl/4)+py15,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl15=StaticText(~vw,Rect((sl/2)+px15,(sl/4)+py15,sl/2,sl/4)).string_("limiter").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl15=Slider2D.new(~vw,Rect.new(px15,py15,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;
@@ -193,9 +193,9 @@ value=obj.x.value.linlin(0,1,1,0.001).postln;
 });
 );
 (
-~nb16=NumberBox(~v,Rect(0+px16,(sl/4)+py16,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl16=StaticText(~v,Rect((sl/2)+px16,(sl/4)+py16,sl/2,sl/4)).string_("fundamental").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl16=Slider2D.new(~v,Rect.new(px16,py16,sl,sl/4)).
+~nb16=NumberBox(~vw,Rect(0+px16,(sl/4)+py16,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl16=StaticText(~vw,Rect((sl/2)+px16,(sl/4)+py16,sl/2,sl/4)).string_("fundamental").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl16=Slider2D.new(~vw,Rect.new(px16,py16,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;
@@ -205,9 +205,9 @@ value=obj.x.value.linlin(0,1,2,9).round(1).asInteger.postln;
 });
 );
 (
-~nb17=NumberBox(~v,Rect(0+px17,(sl/4)+py17,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl17=StaticText(~v,Rect((sl/2)+px17,(sl/4)+py17,sl/2,sl/4)).string_("comp").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl1=Slider2D.new(~v,Rect.new(px17,py17,sl,sl/4)).
+~nb17=NumberBox(~vw,Rect(0+px17,(sl/4)+py17,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl17=StaticText(~vw,Rect((sl/2)+px17,(sl/4)+py17,sl/2,sl/4)).string_("comp").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl1=Slider2D.new(~vw,Rect.new(px17,py17,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;
@@ -217,9 +217,9 @@ value=obj.x.value.linlin(0,1,0,10000000).postln;
 });
 );
 (
-~nb18=NumberBox(~v,Rect(0+px18,(sl/4)+py18,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl18=StaticText(~v,Rect((sl/2)+px18,(sl/4)+py18,sl/2,sl/4)).string_("buffer_gain").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl18=Slider2D.new(~v,Rect.new(px18,py18,sl,sl/4)).
+~nb18=NumberBox(~vw,Rect(0+px18,(sl/4)+py18,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl18=StaticText(~vw,Rect((sl/2)+px18,(sl/4)+py18,sl/2,sl/4)).string_("buffer_gain").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl18=Slider2D.new(~vw,Rect.new(px18,py18,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;
@@ -229,9 +229,9 @@ value=obj.x.value.linlin(0,1,0,500).postln;
 });
 );
 (
-~nb19=NumberBox(~v,Rect(0+px19,(sl/4)+py19,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl19=StaticText(~v,Rect((sl/2)+px19,(sl/4)+py19,sl/2,sl/4)).string_("rect_level").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl19=Slider2D.new(~v,Rect.new(px19,py19,sl,sl/4)).
+~nb19=NumberBox(~vw,Rect(0+px19,(sl/4)+py19,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl19=StaticText(~vw,Rect((sl/2)+px19,(sl/4)+py19,sl/2,sl/4)).string_("rect_level").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl19=Slider2D.new(~vw,Rect.new(px19,py19,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;
@@ -241,9 +241,9 @@ value=obj.x.value.linlin(0,1,0,1000).postln;
 });
 );
 (
-~nb20=NumberBox(~v,Rect(0+px20,(sl/4)+py20,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl20=StaticText(~v,Rect((sl/2)+px20,(sl/4)+py20,sl/2,sl/4)).string_("harm_mod").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl1=Slider2D.new(~v,Rect.new(px20,py20,sl,sl/4)).
+~nb20=NumberBox(~vw,Rect(0+px20,(sl/4)+py20,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl20=StaticText(~vw,Rect((sl/2)+px20,(sl/4)+py20,sl/2,sl/4)).string_("harm_mod").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl1=Slider2D.new(~vw,Rect.new(px20,py20,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;
@@ -253,9 +253,9 @@ value=obj.x.value.linlin(0,1,(16256*12).neg,(16256*6)).round(1).asInteger.postln
 });
 );
 (
-~nb21=NumberBox(~v,Rect(0+px21,(sl/4)+py21,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl21=StaticText(~v,Rect((sl/2)+px21,(sl/4)+py21,sl/2,sl/4)).string_("axis").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl21=Slider2D.new(~v,Rect.new(px21,py21,sl,sl/4)).
+~nb21=NumberBox(~vw,Rect(0+px21,(sl/4)+py21,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl21=StaticText(~vw,Rect((sl/2)+px21,(sl/4)+py21,sl/2,sl/4)).string_("axis").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl21=Slider2D.new(~vw,Rect.new(px21,py21,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;
@@ -265,9 +265,9 @@ value=obj.x.value.linlin(0,1,0,2).round(1).asInteger.postln;
 });
 );
 (
-~nb22=NumberBox(~v,Rect(0+px22,(sl/4)+py22,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl22=StaticText(~v,Rect((sl/2)+px22,(sl/4)+py22,sl/2,sl/4)).string_("tonal_range").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl22=Slider2D.new(~v,Rect.new(px22,py22,sl,sl/4)).
+~nb22=NumberBox(~vw,Rect(0+px22,(sl/4)+py22,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl22=StaticText(~vw,Rect((sl/2)+px22,(sl/4)+py22,sl/2,sl/4)).string_("tonal_range").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl22=Slider2D.new(~vw,Rect.new(px22,py22,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;
@@ -277,9 +277,9 @@ value=obj.x.value.linlin(0,1,0,16256*~orange).round(1).asInteger.postln;
 });
 );
 (
-~nb23=NumberBox(~v,Rect(0+px23,(sl/4)+py23,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl23=StaticText(~v,Rect((sl/2)+px23,(sl/4)+py23,sl/2,sl/4)).string_("drone_level").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl23=Slider2D.new(~v,Rect.new(px23,py23,sl,sl/4)).
+~nb23=NumberBox(~vw,Rect(0+px23,(sl/4)+py23,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl23=StaticText(~vw,Rect((sl/2)+px23,(sl/4)+py23,sl/2,sl/4)).string_("drone_level").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl23=Slider2D.new(~vw,Rect.new(px23,py23,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;
@@ -289,9 +289,9 @@ value=obj.x.value.linlin(0,1,0,100).postln;
 });
 );
 (
-~nb24=NumberBox(~v,Rect(0+px24,(sl/4)+py24,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
-~t_sl24=StaticText(~v,Rect((sl/2)+px24,(sl/4)+py24,sl/2,sl/4)).string_("spherical_harm").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
-~sl24=Slider2D.new(~v,Rect.new(px24,py24,sl,sl/4)).
+~nb24=NumberBox(~vw,Rect(0+px24,(sl/4)+py24,sl/2,sl/4)).background_(Color.black).normalColor_(Color.white).font_(Font('Arial',16));
+~t_sl24=StaticText(~vw,Rect((sl/2)+px24,(sl/4)+py24,sl/2,sl/4)).string_("spherical_harm").stringColor_(Color.white).background_(Color.black).font_(Font('Arial',16));
+~sl24=Slider2D.new(~vw,Rect.new(px24,py24,sl,sl/4)).
 background_(Color.gray).action_({
 arg obj;
 var value;

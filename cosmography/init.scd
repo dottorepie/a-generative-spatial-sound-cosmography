@@ -486,7 +486,7 @@ if(~synth.isPlaying,{~synth.set(\drive,a)});
 (
 MIDIdef.cc(\midi_pot3,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0.0001,1);
+a=val.linlin(0,127,0.00001,10);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\band,a)});
 },3);
@@ -608,7 +608,7 @@ if(~synth.isPlaying,{~synth.set(\comp,b)});
 (
 MIDIdef.cc(\midi_pot18,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0,500);
+a=val.linlin(0,127,0,300);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\buffer,a)});
 },18);
