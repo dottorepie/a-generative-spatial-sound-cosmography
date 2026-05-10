@@ -2,7 +2,7 @@
  SuperCollider
 
  //for standalone put init file content in SC startup file
-
+  install Mathilib quark, optionally SC plugins
 ///basic synthesis components derived from work on previous repository:
 
 -cosmic sound engine envelope///
