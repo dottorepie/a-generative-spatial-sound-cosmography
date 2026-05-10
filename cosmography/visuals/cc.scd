@@ -473,11 +473,10 @@ spread:spread.reciprocal));
 2.wait;
 //~mass=10.pow(45.neg);
 		~mass=0;
-~level=10.pow(0);
 (
-~synth=Synth.new(\synth,[\gain,1,\drive,16256,\c,0,\az,0.3pi,\el,0,\scale,0,\harmonic,1,
-				\lowend,64,\level,700,\dyn,1,\comp,~level,\buffer,1,\tone_axis,1,\ran,0,\rect_level,1,
-\sphharm,0,\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,1]).register);
+~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0,\el,0,\scale,0,\harmonic,1,
+				\lowend,64,\level,600,\dyn,1,\comp,1,\buffer,10,\tone_axis,1,\ran,16256,\rect_level,2,
+\sphharm,0,\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,10]).register);
 
 		///midi control
 (
@@ -503,7 +502,7 @@ if(~synth.isPlaying,{~synth.set(\drive,a)});
 (
 MIDIdef.cc(\midi_pot3,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0.0001,1);
+a=val.linlin(0,127,0.00001,10);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\band,a)});
 },3);
@@ -625,7 +624,7 @@ if(~synth.isPlaying,{~synth.set(\comp,b)});
 (
 MIDIdef.cc(\midi_pot18,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0,500);
+a=val.linlin(0,127,0,300);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\buffer,a)});
 },18);
