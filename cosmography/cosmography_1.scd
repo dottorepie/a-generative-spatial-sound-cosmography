@@ -92,7 +92,7 @@ var nn=1.neg;
 (
 SynthDef.new(\synth,{
 
-arg gain=1,drive=0,c=0,az=0,el=0,scale=0,lowend=64,level=100,speaker_size=0.15,tone_axis=0,ran=0,
+arg gain=1,drive=0,c=0,az=0,el=0,scale=0,lowend=64,level=100,speaker_size=0.15,tone_axis=0,ran=0,rect_level=1,
 				room=0.5,mix=0.5,pan_mod=0.01,spread=1,limit=0.8,fu=32,dyn=1,band=0.000001,comp=10.pow(35),buffer=1,sphharm=1;
 
 var expansion,heavy,fundamental,sph_mod,polytope,bessel_ripple,magx,magy,magz,sph,mod_timbre,mass=~mass;
@@ -227,10 +227,10 @@ ph9=(ph8+ph).wrap(pi.neg,pi);
 //feed2=(SoundIn.ar(1,buffer));
 //feed3=(feed1+feed2)/2.sqrt;
 //feed=(WhiteNoise.ar(buffer));    ///noise
-feed1=(PlayBuf.ar(1, ~c1.bufnum, BufRateScale.kr(~c1.bufnum), loop: 1, doneAction:0)*buffer);   ////buffer
-feed2=(PlayBuf.ar(1, ~c2.bufnum, BufRateScale.kr(~c2.bufnum), loop: 1, doneAction:0)*buffer);
+feed1=(PlayBuf.ar(1, ~c1.bufnum, BufRateScale.kr(~c1.bufnum), loop: 1, doneAction:0)*(buffer/10));   ////buffer
+feed2=(PlayBuf.ar(1, ~c2.bufnum, BufRateScale.kr(~c2.bufnum), loop: 1, doneAction:0)*(buffer/10));
 //feed3=(feed1+feed2)/2.sqrt;
-feed3=(PlayBuf.ar(1, ~c3.bufnum, BufRateScale.kr(~c3.bufnum), loop: 1, doneAction:0)*buffer);
+feed3=(PlayBuf.ar(1, ~c3.bufnum, BufRateScale.kr(~c3.bufnum), loop: 1, doneAction:0)*(buffer/10));
 
 
 ///mult chain// beware of 32-bit underflow and value 0 smash
@@ -247,6 +247,7 @@ sig1=
 (SinOsc.ar(freq1*oct8,phasex+ph2,amp1*oct8.reciprocal))).abs+mass)*
 (SinOsc.ar(freq1*oct9,phasex+ph1,amp1*oct9.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq1,phase:phasex+ph,mul:level).abs*SinOsc.ar(freq1,phase:phasex+ph)),freq1*heavy,amp1)))*comp)+
+(rect_level*LPF.ar((Osc.ar(~wt.bufnum,freq1,phase:phasex+ph,mul:level).abs*SinOsc.ar(freq1,phase:phasex+ph)),freq1*heavy,amp1))+
 (BPF.ar(feed1,freq1,band,band.sqrt.reciprocal*amp1*buffer)))
 );
 sig2=
@@ -261,7 +262,8 @@ sig2=
 (SinOsc.ar(freq2*oct7,phasey+ph3,amp2*oct7.reciprocal))).abs+mass)*
 (SinOsc.ar(freq2*oct8,phasey+ph2,amp2*oct8.reciprocal))).abs+mass)*
 (SinOsc.ar(freq2*oct9,phasey+ph1,amp2*oct9.reciprocal))).abs+mass)*
-(LPF.ar((Osc.ar(~wt.bufnum,freq2,phase:phasey+ph,mul:level).abs*SinOsc.ar(freq2,phase:phasey+ph)),freq2*heavy,amp2))+mass)*comp)+
+(LPF.ar((Osc.ar(~wt.bufnum,freq2,phase:phasey+ph,mul:level).abs*SinOsc.ar(freq2,phase:phasey+ph)),freq2*heavy,amp2)))*comp)+
+(rect_level*LPF.ar((Osc.ar(~wt.bufnum,freq2,phase:phasey+ph,mul:level).abs*SinOsc.ar(freq2,phase:phasey+ph)),freq2*heavy,amp2))+
 (BPF.ar(feed2,freq2,band,band.sqrt.reciprocal*amp2*buffer)))
 );
 sig3=
@@ -276,7 +278,8 @@ sig3=
 (SinOsc.ar(freq3*oct7,phasez+ph3,amp3*oct7.reciprocal))).abs+mass)*
 (SinOsc.ar(freq3*oct8,phasez+ph2,amp3*oct8.reciprocal))).abs+mass)*
 (SinOsc.ar(freq3*oct9,phasez+ph1,amp3*oct9.reciprocal))).abs+mass)*
-(LPF.ar((Osc.ar(~wt.bufnum,freq3,phase:phasez+ph,mul:level).abs*SinOsc.ar(freq3,phase:phasez+ph)),freq3*heavy,amp3))+mass)*comp)+
+(LPF.ar((Osc.ar(~wt.bufnum,freq3,phase:phasez+ph,mul:level).abs*SinOsc.ar(freq3,phase:phasez+ph)),freq3*heavy,amp3)))*comp)+
+(rect_level*LPF.ar((Osc.ar(~wt.bufnum,freq3,phase:phasez+ph,mul:level).abs*SinOsc.ar(freq3,phase:phasez+ph)),freq3*heavy,amp3))+
 (BPF.ar(feed3,freq3,band,band.sqrt.reciprocal*amp3*buffer)))
 );
 
@@ -456,7 +459,8 @@ spread:spread.reciprocal));
 		~mass=0;
 ~level=10.pow(0);
 (
-~synth=Synth.new(\synth,[\gain,1,\drive,16256,\c,0,\az,0.3pi,\el,0,\scale,0,\lowend,64,\level,700,\dyn,1,\comp,~level,\buffer,1,\tone_axis,1,\ran,0,
+~synth=Synth.new(\synth,[\gain,1,\drive,16256,\c,0,\az,0.3pi,\el,0,\scale,0,
+				\lowend,64,\level,700,\dyn,1,\comp,~level,\buffer,1,\tone_axis,1,\ran,0,\rect_level,1,
 \sphharm,0,\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,1]).register);
 
 		///midi control
@@ -587,7 +591,7 @@ if(~synth.isPlaying,{~synth.set(\limit,a)});
 (
 MIDIdef.cc(\midi_pot16,{ |val, num, chan, src|
 var a,b;
-a=val.linlin(0,127,0,8).round(1).asInteger;
+a=val.linlin(0,127,2,9).round(1).asInteger;
 b=2.pow(a);
 b.postln;
 if(~synth.isPlaying,{~synth.set(\fu,b)});
@@ -596,8 +600,8 @@ if(~synth.isPlaying,{~synth.set(\fu,b)});
 (
 MIDIdef.cc(\midi_pot17,{ |val, num, chan, src|
 var a,b;
-a=val.linlin(0,127,1,9);
-b=10.pow(a);
+b=val.linlin(0,127,0,10000000);
+//b=10.pow(a);
 b.postln;
 if(~synth.isPlaying,{~synth.set(\comp,b)});
 },17);
@@ -605,7 +609,7 @@ if(~synth.isPlaying,{~synth.set(\comp,b)});
 (
 MIDIdef.cc(\midi_pot18,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0.001,500);
+a=val.linlin(0,127,0,500);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\buffer,a)});
 },18);
@@ -613,7 +617,7 @@ if(~synth.isPlaying,{~synth.set(\buffer,a)});
 (
 MIDIdef.cc(\midi_pot19,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,100,1000);
+a=val.linlin(0,127,0,1000);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\level,a)});
 },19);
@@ -634,13 +638,21 @@ a.postln;
 if(~synth.isPlaying,{~synth.set(\tone_axis,a)});
 },21);
 );
-				(
+(
 MIDIdef.cc(\midi_pot22,{ |val, num, chan, src|
 var a;
 a=val.linlin(0,127,0,16256*~orange).round(1).asInteger;
 a.postln;
 if(~synth.isPlaying,{~synth.set(\ran,a)});
 },22);
+);
+(
+MIDIdef.cc(\midi_pot23,{ |val, num, chan, src|
+var a;
+a=val.linlin(0,127,0,100);
+a.postln;
+if(~synth.isPlaying,{~synth.set(\rect_level,a)});
+},23);
 )
 )
 		);

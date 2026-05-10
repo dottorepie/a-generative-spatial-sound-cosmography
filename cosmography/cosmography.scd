@@ -32,9 +32,9 @@ Tdef(\drone, {
 //Buffer.freeAll;
 ///feed buffers, xyz from b-format or mono
 (
-~c1 = Buffer.readChannel(s,"/Users/amimid/Documents/Literary/Uni Docs/CMRC/performance/28:11:2025_drone/KSYMEnsemble_Garufalis2025.wav",channels:0 );
-~c2 = Buffer.readChannel(s,"/Users/amimid/Documents/Literary/Uni Docs/CMRC/performance/28:11:2025_drone/KSYMEnsemble_Garufalis2025.wav",channels:1 );
-//~c3 = Buffer.readChannel(s,"/Users/amimid/Desktop/marine.wav",channels:0 );
+~c1 = Buffer.readChannel(s,"/Users/amimid/Music/SuperCollider Recordings/SC_260509_123352.wav",channels:1 );
+~c2 = Buffer.readChannel(s,"/Users/amimid/Music/SuperCollider Recordings/SC_260509_123352.wav",channels:2 );
+~c3 = Buffer.readChannel(s,"/Users/amimid/Music/SuperCollider Recordings/SC_260509_123352.wav",channels:3 );
 );
 
 /////tetrahedron
@@ -228,7 +228,9 @@ ph9=(ph8+ph).wrap(pi.neg,pi);
 //feed=(WhiteNoise.ar(buffer));    ///noise
 feed1=(PlayBuf.ar(1, ~c1.bufnum, BufRateScale.kr(~c1.bufnum), loop: 1, doneAction:0)*buffer);   ////buffer
 feed2=(PlayBuf.ar(1, ~c2.bufnum, BufRateScale.kr(~c2.bufnum), loop: 1, doneAction:0)*buffer);
-feed3=(feed1+feed2)/2.sqrt;
+//feed3=(feed1+feed2)/2.sqrt;
+feed3=(PlayBuf.ar(1, ~c3.bufnum, BufRateScale.kr(~c3.bufnum), loop: 1, doneAction:0)*buffer);
+
 
 ///mult chain// beware of 32-bit underflow and value 0 smash
 sig1=
@@ -254,7 +256,7 @@ sig2=
 (LPF.ar((Osc.ar(~wt.bufnum,freq2*oct7,phase:phasey+ph3,mul:level).abs*SinOsc.ar(freq2*oct7,phase:phasey+ph3)),freq2*heavy,amp2*oct7.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq2*oct8,phase:phasey+ph2,mul:level).abs*SinOsc.ar(freq2*oct8,phase:phasey+ph2)),freq2*heavy,amp2*oct8.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq2*oct9,phase:phasey+ph1,mul:level).abs*SinOsc.ar(freq2*oct9,phase:phasey+ph1)),freq2*heavy,amp2*oct9.reciprocal))).abs+mass)*
-(LPF.ar((Osc.ar(~wt.bufnum,freq2,phase:phasey+ph,mul:level).abs*SinOsc.ar(freq2,phase:phasey+ph)),freq2*heavy,amp2))+mass)*comp)+
+(LPF.ar((Osc.ar(~wt.bufnum,freq2,phase:phasey+ph,mul:level).abs*SinOsc.ar(freq2,phase:phasey+ph)),freq2*heavy,amp2)))*comp)+
 (BPF.ar(feed2,freq2,band,band.sqrt.reciprocal*amp2)))
 );
 sig3=
@@ -267,7 +269,7 @@ sig3=
 (LPF.ar((Osc.ar(~wt.bufnum,freq3*oct7,phase:phasez+ph3,mul:level).abs*SinOsc.ar(freq3*oct7,phase:phasez+ph3)),freq3*heavy,amp3*oct7.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq3*oct8,phase:phasez+ph2,mul:level).abs*SinOsc.ar(freq3*oct8,phase:phasez+ph2)),freq3*heavy,amp3*oct8.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq3*oct9,phase:phasez+ph1,mul:level).abs*SinOsc.ar(freq3*oct9,phase:phasez+ph1)),freq3*heavy,amp3*oct9.reciprocal))).abs+mass)*
-(LPF.ar((Osc.ar(~wt.bufnum,freq3,phase:phasez+ph,mul:level).abs*SinOsc.ar(freq3,phase:phasez+ph)),freq3*heavy,amp3))+mass)*comp)+
+(LPF.ar((Osc.ar(~wt.bufnum,freq3,phase:phasez+ph,mul:level).abs*SinOsc.ar(freq3,phase:phasez+ph)),freq3*heavy,amp3)))*comp)+
 (BPF.ar(feed3,freq3,band,band.sqrt.reciprocal*amp3)))
 );
 
@@ -397,8 +399,8 @@ InFeedback.ar(4)-
 InFeedback.ar(5));
 );
 
-Out.ar(0,DecodeB2.ar(2, bw, bx, by,0));
-			//Out.ar(0,BFDecode1.ar(bw, bx, by, bz,[polytope.theta,polytope.theta+0.5pi], [polytope.phi,polytope.phi]));
+//Out.ar(0,DecodeB2.ar(2, bw, bx, by,0));
+			Out.ar(0,BFDecode1.ar(bw, bx, by, bz,[polytope.theta,polytope.theta+0.5pi], [polytope.phi,polytope.phi]));
 
 ////stereo
 /*(
