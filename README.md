@@ -1,6 +1,8 @@
 # an-instrumentally-generative-spatial-sound-cosmography, or a heavy metal fx and digital synth
  SuperCollider
 
+ //for standalone put init file content in SC startup file
+
 ///basic synthesis components derived from work on previous repository:
 
 -cosmic sound engine envelope///
