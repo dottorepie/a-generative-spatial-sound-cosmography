@@ -92,7 +92,7 @@ var nn=1.neg;
 (
 SynthDef.new(\synth,{
 
-arg gain=1,drive=0,c=0,az=0,el=0,scale=0,lowend=64,level=100,speaker_size=0.15,tone_axis=0,ran=0,rect_level=1,harmonic,1,
+arg gain=1,drive=0,c=0,az=0,el=0,scale=0,lowend=64,level=100,speaker_size=0.15,tone_axis=0,ran=0,rect_level=1,harmonic=1,
 				room=0.5,mix=0.5,pan_mod=0.01,spread=1,limit=0.8,fu=32,dyn=1,band=0.000001,comp=10.pow(35),buffer=1,sphharm=1;
 
 var expansion,heavy,fundamental,sph_mod,polytope,bessel_ripple,magx,magy,magz,sph,mod_timbre,mass=~mass;
@@ -658,7 +658,7 @@ if(~synth.isPlaying,{~synth.set(\rect_level,a)});
 (
 MIDIdef.cc(\midi_pot24,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,1,10);
+a=val.linlin(0,127,1,10).round(1).asInteger;
 a.postln;
 if(~synth.isPlaying,{~synth.set(\harmonic,a)});
 },24);
