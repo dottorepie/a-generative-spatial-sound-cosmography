@@ -222,14 +222,14 @@ ph7=(ph6+ph).wrap(pi.neg,pi);
 ph8=(ph7+ph).wrap(pi.neg,pi);
 ph9=(ph8+ph).wrap(pi.neg,pi);
 
-//feed1=(SoundIn.ar(0,buffer));    ///input
+feed1=feed2=feed3=(SoundIn.ar(0,buffer));    ///input
 //feed2=(SoundIn.ar(1,buffer));
 //feed3=(feed1+feed2)/2.sqrt;
 //feed=(WhiteNoise.ar(buffer));    ///noise
-feed1=(PlayBuf.ar(1, ~c1.bufnum, BufRateScale.kr(~c1.bufnum), loop: 1, doneAction:0)*(buffer/10));   ////buffer
-feed2=(PlayBuf.ar(1, ~c2.bufnum, BufRateScale.kr(~c2.bufnum), loop: 1, doneAction:0)*(buffer/10));
+//feed1=(PlayBuf.ar(1, ~c1.bufnum, BufRateScale.kr(~c1.bufnum), loop: 1, doneAction:0)*(buffer/10));   ////buffer
+//feed2=(PlayBuf.ar(1, ~c2.bufnum, BufRateScale.kr(~c2.bufnum), loop: 1, doneAction:0)*(buffer/10));
 //feed3=(feed1+feed2)/2.sqrt;
-feed3=(PlayBuf.ar(1, ~c3.bufnum, BufRateScale.kr(~c3.bufnum), loop: 1, doneAction:0)*(buffer/10));
+//feed3=(PlayBuf.ar(1, ~c3.bufnum, BufRateScale.kr(~c3.bufnum), loop: 1, doneAction:0)*(buffer/10));
 
 
 ///mult chain// beware of 32-bit underflow and value 0 smash
