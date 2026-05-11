@@ -697,7 +697,7 @@ if(~synth.isPlaying,{~synth.set(\fu,b)});
 (
 MIDIdef.cc(\midi_pot17,{ |val, num, chan, src|
 var a,b;
-b=val.linlin(0,127,0,10000000);
+b=val.linlin(0,127,0,1000);
 //b=10.pow(a);
 b.postln;
 if(~synth.isPlaying,{~synth.set(\comp,b)});
