@@ -20,10 +20,10 @@ s.boot;
 ///(44100/1024)*463
 )
 
-
+Buffer.freeAll;
 (
 (
-~r = Buffer.readChannel(s,"/Users/amimid/Documents/sound art/cosmography/untitled folder/marine.wav",channels:0 );
+~r = Buffer.readChannel(s,channels:0 );
 );
 
 (
@@ -38,7 +38,7 @@ s.boot;
 );
 
 (
-~bins=256;
+~bins=430;
 {
 var steps = ~bins;
 ~nVals = steps.collect { |i|
@@ -64,7 +64,7 @@ chain1 = chain.pvcollect(frames,
 {|mag, phase, index| [mag, phase]; }, frombin: ~nVals.[n], tobin: ~nVals.[n], zeroothers: 1);
 
 sig=IFFT(chain1);
-Out.ar(0,VBAP.ar(4,sig,~vbap_buf.bufnum,polytope.theta.raddeg,polytope.phi.raddeg,spread));
+Out.ar(0,VBAP.ar(4,sig*0.1,~vbap_buf.bufnum,polytope.theta.raddeg,polytope.phi.raddeg,spread));
 
 n=n+1;
 }
@@ -73,7 +73,7 @@ n=n+1;
 )
 
 (
-~synth=Synth.new(\quad,[\spread,10]);
-//s.record(numChannels:4)
+~synth=Synth.new(\quad,[\spread,30]);
+s.record(numChannels:4,duration:(1*60)+60)
 )
 
