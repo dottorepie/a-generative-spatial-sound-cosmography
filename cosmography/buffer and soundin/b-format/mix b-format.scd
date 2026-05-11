@@ -16,10 +16,10 @@ s.recChannels = 4;
 Tdef(\x, {
 Buffer.freeAll;
 (
-~c1 = Buffer.readChannel(s,"/Users/amimid/Music/SuperCollider Recordings/SC_250808_235309.aiff",channels:0 );//flu
-~c2 = Buffer.readChannel(s,"/Users/amimid/Music/SuperCollider Recordings/SC_250808_235309.aiff",channels:1 );//bru
-~c3 = Buffer.readChannel(s,"/Users/amimid/Music/SuperCollider Recordings/SC_250808_235309.aiff",channels:2 );//bld
-~c4 = Buffer.readChannel(s,"/Users/amimid/Music/SuperCollider Recordings/SC_250808_235309.aiff",channels:3 );//frd
+~c1 = Buffer.readChannel(s,,channels:0 );//flu
+~c2 = Buffer.readChannel(s,,channels:1 );//bru
+~c3 = Buffer.readChannel(s,,channels:2 );//bld
+~c4 = Buffer.readChannel(s,,channels:3 );//frd
 );
 ///w=flu+frd+bld+bru
 //x=flu+frd-bld-bru
@@ -54,7 +54,7 @@ Buffer.freeAll;
 );
 
 
-s.record(numChannels:4,duration:((25*60)+10));
+s.record(numChannels:4);
 )
 	((45*60)+15).wait; "aaaaaaaaaaaaaazz".scramble.postln;
 
