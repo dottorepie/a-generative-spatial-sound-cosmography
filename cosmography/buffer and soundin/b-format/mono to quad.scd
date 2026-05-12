@@ -23,7 +23,7 @@ s.boot;
 Buffer.freeAll;
 (
 (
-~r = Buffer.readChannel(s,channels:0 );
+~r = Buffer.readChannel(s,,channels:0 );
 );
 
 (
