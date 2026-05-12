@@ -1,78 +1,56 @@
-~r = Buffer.readChannel(s,"/Users/amimid/Music/SuperCollider Recordings/SC_260511_104839.aiff",channels:0 );
-
-
-(
-~fftsize=8192;
-~hop=0.25;
-~win=0;
-);
-
-~f=Buffer.alloc(s,~r.duration.calcPVRecSize(~fftsize,~hop))
-
-(
-{
-	var sig,chain,localbuf;
-	sig= PlayBuf.ar(1, ~r.bufnum, BufRateScale.kr(~r.bufnum), loop: 0, doneAction:2);
-	localbuf=LocalBuf.new(~fftsize);
-	chain=FFT(localbuf,sig,~hop,~win);
-	chain=PV_RecordBuf(chain,~f,run:1,hop:~hop,wintype:~win);
-	0;
-	}.play;
-)
-
-(
-~rev={
-	var sig,chain,localbuf;
-	localbuf=LocalBuf.new(~fftsize);
-	chain=PV_PlayBuf(localbuf,~f,\rate.kr(1),loop:1);
-	sig=IFFT(chain,~win);
-}.play;
-)
-
-~rev.set(\rate,0);
-~rev.set(\rate,1);
 
 ///////////////////////
 
-
 (
-~fftsize = 2048;
-~hop = 0.25;
-~win = 0;
+~r = Buffer.readChannel(s,"/Users/amimid/Documents/cosmography/untitled folder/marine.wav", channels:[0]
+);
+
+~fftsize = 8192;
 
 ~freezeSynth = {
-    var in, chain, buf, freeze, trigFreq;
 
-    // realtime signal
-	in = PlayBuf.ar(1, ~r.bufnum, BufRateScale.kr(~r.bufnum), loop: 1, doneAction:0);
+    var in;
+    var chain1, chain2, chain3;
+    var buf1, buf2, buf3;
+    var sig;
 
-    // local FFT buffer
-    buf = LocalBuf(~fftsize);
+    in = PlayBuf.ar(1, ~r.bufnum, BufRateScale.kr(~r.bufnum),  loop:1) * 0.2;
 
-    // analysis
-    chain = FFT(buf, in, ~hop, ~win);
+    // separate FFT memories
 
-    // frequency of switching
-    trigFreq = \switchFreq.kr(2);
+    buf1 = LocalBuf(~fftsize);
+    buf2 = LocalBuf(~fftsize);
+    buf3 = LocalBuf(~fftsize);
 
-    /*
-    toggle 0/1 continuously
+    chain1 = FFT(buf1, in);
+    chain2 = FFT(buf2, in);
+    chain3 = FFT(buf3, in);
 
-    0 = normal live spectral update
-    1 = freeze current spectrum
-    */
+    // each freezes differently
 
-    freeze = LFPulse.kr(trigFreq, 0, 0.5);
+    chain1 = PV_Freeze(
+        chain1,
+		Amplitude.kr(in,mul:LFNoise1.kr(6))-\switchFreq.kr(1)
+    );
 
-    // freeze/unfreeze spectrum
-    chain = PV_Freeze(chain, freeze);
+    chain2 = PV_Freeze(
+        chain2,
+Amplitude.kr(in,mul:LFNoise1.kr(8))-\switchFreq.kr(1)
+    );
 
-    // back to audio
-    IFFT(chain, ~win);
+    chain3 = PV_Freeze(
+        chain3,
+		(Amplitude.kr(in,mul:LFNoise1.kr(9))-\switchFreq.kr(1)).poll
+    );
 
+    sig =
+        (IFFT(chain1) * 0.3) +
+        (IFFT(chain2) * 0.3) +
+        (IFFT(chain3) * 0.3);
+
+    sig ! 2;
 
 }.play;
 )
-~freezeSynth.set(\switchFreq, 0.01);
 
-
+~freezeSynth.set(\switchFreq,0.00001.neg);
