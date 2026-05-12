@@ -316,17 +316,25 @@ sig1=
 (LPF.ar((Osc.ar(~wt.bufnum,freq1,phase:phasex+ph,mul:level).abs*SinOsc.ar(freq1,phase:phasex+ph)),freq1*heavy,amp1)))*comp)+
 (rect_level*LPF.ar((Osc.ar(~wt.bufnum,freq1,phase:phasex+ph,mul:level).abs*SinOsc.ar(freq1,phase:phasex+ph)),freq1*heavy,amp1))+
 (
-(BPF.ar(feed11,freq1,band,band.sqrt.reciprocal*amp1*buffer*bg1))+
-(BPF.ar(feed12,freq1,band,band.sqrt.reciprocal*amp1*buffer*bg2))+
-(BPF.ar(feed13,freq1,band,band.sqrt.reciprocal*amp1*buffer*bg3))+
-(BPF.ar(feed14,freq1,band,band.sqrt.reciprocal*amp1*buffer*bg4))+
-(BPF.ar(feed15,freq1,band,band.sqrt.reciprocal*amp1*buffer*bg5))+
-(BPF.ar(feed16,freq1,band,band.sqrt.reciprocal*amp1*buffer*bg6))+
-(BPF.ar(feed17,freq1,band,band.sqrt.reciprocal*amp1*buffer*bg7))+
-(BPF.ar(feed18,freq1,band,band.sqrt.reciprocal*amp1*buffer*bg8))+
-(BPF.ar(feed19,freq1,band,band.sqrt.reciprocal*amp1*buffer*bg9))
-				))
-);
+Select.ar(band.round(1).asInteger,[BPF.ar(feed11,freq1,band,band.sqrt.reciprocal*amp1*buffer*bg1),
+feed11*buffer*bg1])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed12,freq1,band,band.sqrt.reciprocal*amp1*buffer*bg2),
+feed12*buffer*bg2])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed13,freq1,band,band.sqrt.reciprocal*amp1*buffer*bg3),
+feed13*buffer*bg3])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed14,freq1,band,band.sqrt.reciprocal*amp1*buffer*bg4),
+feed14*buffer*bg4])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed15,freq1,band,band.sqrt.reciprocal*amp1*buffer*bg5),
+feed15*buffer*bg5])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed16,freq1,band,band.sqrt.reciprocal*amp1*buffer*bg6),
+feed16*buffer*bg6])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed17,freq1,band,band.sqrt.reciprocal*amp1*buffer*bg7),
+feed17*buffer*bg7])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed18,freq1,band,band.sqrt.reciprocal*amp1*buffer*bg8),
+feed18*buffer*bg8])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed19,freq1,band,band.sqrt.reciprocal*amp1*buffer*bg9),
+feed19*buffer*bg9])
+)));
 sig2=
 ((((((((((((
 				/*	((((
@@ -342,16 +350,25 @@ sig2=
 (LPF.ar((Osc.ar(~wt.bufnum,freq2,phase:phasey+ph,mul:level).abs*SinOsc.ar(freq2,phase:phasey+ph)),freq2*heavy,amp2)))*comp)+
 (rect_level*LPF.ar((Osc.ar(~wt.bufnum,freq2,phase:phasey+ph,mul:level).abs*SinOsc.ar(freq2,phase:phasey+ph)),freq2*heavy,amp2))+
 (
-(BPF.ar(feed21,freq2,band,band.sqrt.reciprocal*amp2*buffer*bg1))+
-(BPF.ar(feed22,freq2,band,band.sqrt.reciprocal*amp2*buffer*bg2))+
-(BPF.ar(feed23,freq2,band,band.sqrt.reciprocal*amp2*buffer*bg3))+
-(BPF.ar(feed24,freq2,band,band.sqrt.reciprocal*amp2*buffer*bg4))+
-(BPF.ar(feed25,freq2,band,band.sqrt.reciprocal*amp2*buffer*bg5))+
-(BPF.ar(feed26,freq2,band,band.sqrt.reciprocal*amp2*buffer*bg6))+
-(BPF.ar(feed27,freq2,band,band.sqrt.reciprocal*amp2*buffer*bg7))+
-(BPF.ar(feed28,freq2,band,band.sqrt.reciprocal*amp2*buffer*bg8))+
-(BPF.ar(feed29,freq2,band,band.sqrt.reciprocal*amp2*buffer*bg9))
-				))
+Select.ar(band.round(1).asInteger,[BPF.ar(feed21,freq2,band,band.sqrt.reciprocal*amp2*buffer*bg1),
+feed21*buffer*bg1])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed22,freq2,band,band.sqrt.reciprocal*amp2*buffer*bg2),
+feed22*buffer*bg2])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed23,freq2,band,band.sqrt.reciprocal*amp2*buffer*bg3),
+feed23*buffer*bg3])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed24,freq2,band,band.sqrt.reciprocal*amp2*buffer*bg4),
+feed24*buffer*bg4])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed25,freq2,band,band.sqrt.reciprocal*amp2*buffer*bg5),
+feed25*buffer*bg5])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed26,freq2,band,band.sqrt.reciprocal*amp2*buffer*bg6),
+feed26*buffer*bg6])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed27,freq2,band,band.sqrt.reciprocal*amp2*buffer*bg7),
+feed27*buffer*bg7])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed28,freq2,band,band.sqrt.reciprocal*amp2*buffer*bg8),
+feed28*buffer*bg8])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed29,freq2,band,band.sqrt.reciprocal*amp2*buffer*bg9),
+feed29*buffer*bg9])
+))
 );
 sig3=
 ((((((((((((
@@ -368,25 +385,34 @@ sig3=
 (LPF.ar((Osc.ar(~wt.bufnum,freq3,phase:phasez+ph,mul:level).abs*SinOsc.ar(freq3,phase:phasez+ph)),freq3*heavy,amp3)))*comp)+
 (rect_level*LPF.ar((Osc.ar(~wt.bufnum,freq3,phase:phasez+ph,mul:level).abs*SinOsc.ar(freq3,phase:phasez+ph)),freq3*heavy,amp3))+
 (
-(BPF.ar(feed31,freq3,band,band.sqrt.reciprocal*amp3*buffer*bg1))+
-(BPF.ar(feed32,freq3,band,band.sqrt.reciprocal*amp3*buffer*bg2))+
-(BPF.ar(feed33,freq3,band,band.sqrt.reciprocal*amp3*buffer*bg3))+
-(BPF.ar(feed34,freq3,band,band.sqrt.reciprocal*amp3*buffer*bg4))+
-(BPF.ar(feed35,freq3,band,band.sqrt.reciprocal*amp3*buffer*bg5))+
-(BPF.ar(feed36,freq3,band,band.sqrt.reciprocal*amp3*buffer*bg6))+
-(BPF.ar(feed37,freq3,band,band.sqrt.reciprocal*amp3*buffer*bg7))+
-(BPF.ar(feed38,freq3,band,band.sqrt.reciprocal*amp3*buffer*bg8))+
-(BPF.ar(feed39,freq3,band,band.sqrt.reciprocal*amp3*buffer*bg9))
-				))
+Select.ar(band.round(1).asInteger,[BPF.ar(feed31,freq3,band,band.sqrt.reciprocal*amp3*buffer*bg1),
+feed31*buffer*bg1])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed32,freq3,band,band.sqrt.reciprocal*amp3*buffer*bg2),
+feed32*buffer*bg2])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed33,freq3,band,band.sqrt.reciprocal*amp3*buffer*bg3),
+feed33*buffer*bg3])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed34,freq3,band,band.sqrt.reciprocal*amp3*buffer*bg4),
+feed34*buffer*bg4])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed35,freq3,band,band.sqrt.reciprocal*amp3*buffer*bg5),
+feed35*buffer*bg5])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed36,freq3,band,band.sqrt.reciprocal*amp3*buffer*bg6),
+feed36*buffer*bg6])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed37,freq3,band,band.sqrt.reciprocal*amp3*buffer*bg7),
+feed37*buffer*bg7])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed38,freq3,band,band.sqrt.reciprocal*amp3*buffer*bg8),
+feed38*buffer*bg8])+
+Select.ar(band.round(1).asInteger,[BPF.ar(feed39,freq3,band,band.sqrt.reciprocal*amp3*buffer*bg9),
+feed39*buffer*bg9])
+))
 );
 
 sig1=(sig1*heavy).softclip;
 sig2=(sig2*heavy).softclip;
 sig3=(sig3*heavy).softclip;
 
-control1=SinOsc.ar(freq1,phase:phasex+ph,mul:amp1)+(sig1/10);
-control2=SinOsc.ar(freq2,phase:phasey+ph,mul:amp2)+(sig2/10);
-control3=SinOsc.ar(freq3,phase:phasez+ph,mul:amp3)+(sig3/10);
+control1=(sig1/1);
+control2=(sig2/1);
+control3=(sig3/1);
 threshold1=(((343/speaker_size)/fundamental).reciprocal.ampdb/2.sqrt).dbamp;
 threshold2=(((343/speaker_size)/fundamental).reciprocal.ampdb/2.sqrt).dbamp;
 threshold3=(((343/speaker_size)/fundamental).reciprocal.ampdb/2.sqrt).dbamp;
@@ -584,7 +610,7 @@ if(~synth.isPlaying,{~synth.set(\drive,a)});
 (
 MIDIdef.cc(\midi_pot3,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0.00001,10);
+a=val.linexp(0,127,0.000001,1);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\band,a)});
 },3);
@@ -632,7 +658,7 @@ if(~synth.isPlaying,{~synth.set(\c,a)});
 (
 MIDIdef.cc(\midi_pot9,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,1,3);
+a=val.linexp(0,127,1,3);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\dyn,a)});
 },9);
@@ -648,7 +674,7 @@ if(~synth.isPlaying,{~synth.set(\speaker_size,a)});
 (
 MIDIdef.cc(\midi_pot11,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0,1);
+a=val.linexp(0,127,0.1,1);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\room,a)});
 },11);
@@ -672,7 +698,7 @@ if(~synth.isPlaying,{~synth.set(\pan_mod,a)});
 (
 MIDIdef.cc(\midi_pot14,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,1,0.1);
+a=val.linexp(0,127,1,0.1);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\spread,a)});
 },14);
@@ -680,7 +706,7 @@ if(~synth.isPlaying,{~synth.set(\spread,a)});
 (
 MIDIdef.cc(\midi_pot15,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,1,0.001);
+a=val.linexp(0,127,1,0.001);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\limit,a)});
 },15);
@@ -697,7 +723,7 @@ if(~synth.isPlaying,{~synth.set(\fu,b)});
 (
 MIDIdef.cc(\midi_pot17,{ |val, num, chan, src|
 var a,b;
-b=val.linlin(0,127,0,1000);
+b=val.linexp(0,127,0.00001,10000);
 //b=10.pow(a);
 b.postln;
 if(~synth.isPlaying,{~synth.set(\comp,b)});
@@ -706,7 +732,7 @@ if(~synth.isPlaying,{~synth.set(\comp,b)});
 (
 MIDIdef.cc(\midi_pot18,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0,600);
+a=val.linexp(0,127,0.001,100);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\buffer,a)});
 },18);
@@ -714,7 +740,7 @@ if(~synth.isPlaying,{~synth.set(\buffer,a)});
 (
 MIDIdef.cc(\midi_pot19,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0,1000);
+a=val.linexp(0,127,0.00001,1000);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\level,a)});
 },19);
@@ -746,7 +772,7 @@ if(~synth.isPlaying,{~synth.set(\ran,a)});
 (
 MIDIdef.cc(\midi_pot23,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0,100);
+a=val.linexp(0,127,0.00001,100);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\rect_level,a)});
 },23);
@@ -762,7 +788,7 @@ if(~synth.isPlaying,{~synth.set(\harmonic,a)});
 (
 MIDIdef.cc(\midi_slider1,{ |val, num, chan, src|
 var bfg;
-bfg=val.linlin(0,127,0.001,1);
+bfg=val.linexp(0,127,0.001,1);
 bfg.postln;
 if(~synth.isPlaying,{~synth.set(\bg1,bfg)});
 },25);
@@ -770,7 +796,7 @@ if(~synth.isPlaying,{~synth.set(\bg1,bfg)});
 (
 MIDIdef.cc(\midi_slider2,{ |val, num, chan, src|
 var bfg;
-bfg=val.linlin(0,127,0.001,1);
+bfg=val.linexp(0,127,0.001,1);
 bfg.postln;
 if(~synth.isPlaying,{~synth.set(\bg2,bfg)});
 },26);
@@ -778,7 +804,7 @@ if(~synth.isPlaying,{~synth.set(\bg2,bfg)});
 (
 MIDIdef.cc(\midi_slider3,{ |val, num, chan, src|
 var bfg;
-bfg=val.linlin(0,127,0.001,1);
+bfg=val.linexp(0,127,0.001,1);
 bfg.postln;
 if(~synth.isPlaying,{~synth.set(\bg3,bfg)});
 },27);
@@ -786,7 +812,7 @@ if(~synth.isPlaying,{~synth.set(\bg3,bfg)});
 (
 MIDIdef.cc(\midi_slider4,{ |val, num, chan, src|
 var bfg;
-bfg=val.linlin(0,127,0.001,1);
+bfg=val.linexp(0,127,0.001,1);
 bfg.postln;
 if(~synth.isPlaying,{~synth.set(\bg4,bfg)});
 },28);
@@ -794,7 +820,7 @@ if(~synth.isPlaying,{~synth.set(\bg4,bfg)});
 (
 MIDIdef.cc(\midi_slider5,{ |val, num, chan, src|
 var bfg;
-bfg=val.linlin(0,127,0.001,1);
+bfg=val.linexp(0,127,0.001,1);
 bfg.postln;
 if(~synth.isPlaying,{~synth.set(\bg5,bfg)});
 },29);
@@ -802,7 +828,7 @@ if(~synth.isPlaying,{~synth.set(\bg5,bfg)});
 (
 MIDIdef.cc(\midi_slider6,{ |val, num, chan, src|
 var bfg;
-bfg=val.linlin(0,127,0.001,1);
+bfg=val.linexp(0,127,0.001,1);
 bfg.postln;
 if(~synth.isPlaying,{~synth.set(\bg6,bfg)});
 },30);
@@ -810,7 +836,7 @@ if(~synth.isPlaying,{~synth.set(\bg6,bfg)});
 (
 MIDIdef.cc(\midi_slider7,{ |val, num, chan, src|
 var bfg;
-bfg=val.linlin(0,127,0.001,1);
+bfg=val.linexp(0,127,0.001,1);
 bfg.postln;
 if(~synth.isPlaying,{~synth.set(\bg7,bfg)});
 },31);
@@ -818,7 +844,7 @@ if(~synth.isPlaying,{~synth.set(\bg7,bfg)});
 (
 MIDIdef.cc(\midi_slider8,{ |val, num, chan, src|
 	var bfg;
-bfg=val.linlin(0,127,0.001,1);
+bfg=val.linexp(0,127,0.001,1);
 bfg.postln;
 if(~synth.isPlaying,{~synth.set(\bg8,bfg)});
 },32);
@@ -826,7 +852,7 @@ if(~synth.isPlaying,{~synth.set(\bg8,bfg)});
 (
 MIDIdef.cc(\midi_slider9,{ |val, num, chan, src|
 var bfg;
-bfg=val.linlin(0,127,0.001,1);
+bfg=val.linexp(0,127,0.001,1);
 bfg.postln;
 if(~synth.isPlaying,{~synth.set(\bg9,bfg)});
 },49);
