@@ -486,7 +486,7 @@ if(~synth.isPlaying,{~synth.set(\drive,a)});
 (
 MIDIdef.cc(\midi_pot3,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0.00001,10);
+a=val.linexp(0,127,0.000001,1);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\band,a)});
 },3);
@@ -534,7 +534,7 @@ if(~synth.isPlaying,{~synth.set(\c,a)});
 (
 MIDIdef.cc(\midi_pot9,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,1,3).round(1/4);
+a=val.linexp(0,127,1,3);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\dyn,a)});
 },9);
@@ -550,7 +550,7 @@ if(~synth.isPlaying,{~synth.set(\speaker_size,a)});
 (
 MIDIdef.cc(\midi_pot11,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0,1);
+a=val.linexp(0,127,0.1,1);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\room,a)});
 },11);
@@ -574,7 +574,7 @@ if(~synth.isPlaying,{~synth.set(\pan_mod,a)});
 (
 MIDIdef.cc(\midi_pot14,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,1,0.1);
+a=val.linexp(0,127,1,0.1);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\spread,a)});
 },14);
@@ -582,7 +582,7 @@ if(~synth.isPlaying,{~synth.set(\spread,a)});
 (
 MIDIdef.cc(\midi_pot15,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,1,0.001);
+a=val.linexp(0,127,1,0.001);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\limit,a)});
 },15);
@@ -599,7 +599,7 @@ if(~synth.isPlaying,{~synth.set(\fu,b)});
 (
 MIDIdef.cc(\midi_pot17,{ |val, num, chan, src|
 var a,b;
-b=val.linlin(0,127,0,10000000);
+b=val.linexp(0,127,0.00001,10000);
 //b=10.pow(a);
 b.postln;
 if(~synth.isPlaying,{~synth.set(\comp,b)});
@@ -608,7 +608,7 @@ if(~synth.isPlaying,{~synth.set(\comp,b)});
 (
 MIDIdef.cc(\midi_pot18,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0,300);
+a=val.linexp(0,127,0.001,100);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\buffer,a)});
 },18);
@@ -616,7 +616,7 @@ if(~synth.isPlaying,{~synth.set(\buffer,a)});
 (
 MIDIdef.cc(\midi_pot19,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0,1000);
+a=val.linexp(0,127,0.00001,1000);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\level,a)});
 },19);
@@ -648,7 +648,7 @@ if(~synth.isPlaying,{~synth.set(\ran,a)});
 (
 MIDIdef.cc(\midi_pot23,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0,100);
+a=val.linexp(0,127,0.00001,100);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\rect_level,a)});
 },23);
@@ -660,10 +660,12 @@ a=val.linlin(0,127,1,10).round(1).asInteger;
 a.postln;
 if(~synth.isPlaying,{~synth.set(\harmonic,a)});
 },24);
-)
+);
+
 
 );
-		);2.wait;
+
+);2.wait;
 
 			(
 			{
