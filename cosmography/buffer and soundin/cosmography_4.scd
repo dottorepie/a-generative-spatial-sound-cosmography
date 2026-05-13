@@ -148,7 +148,7 @@ var feed31,feed32,feed33,feed34,feed35,feed36,feed37,feed38,feed39;
 var chainwet1,chainwet2,chainwet3,follower1,follower2,follower3;
 var frames=~fftsize, chain1,chain2,chain3,bins,env1,env2,env3,gate1,gate2,gate3;
 var dry1,dry2,dry3,decay,chain11,chain22,chain33,sig11,sig22,sig33;
-var n=0,verb1,verb2,verb3,material_m,material_p1,material_p2,material_p3,threshold;
+var n=0,verb1,verb2,verb3,threshold;
 
 pan=2.pow(pan_mod.lag(0.001)/16256);
 ph = (2pi-(2pi/s));
@@ -438,10 +438,6 @@ chainwet1 =  FFT(LocalBuf(frames), sig1);
 chainwet2 =  FFT(LocalBuf(frames), sig2);
 chainwet3 =  FFT(LocalBuf(frames), sig3);
 
-material_p1=Complex(1,sph.x).theta*2;
-material_p2=Complex(1,sph.y).theta*2;
-material_p3=Complex(1,sph.z).theta*2;
-material_m=sph.rho;
 dry1=sig1;
 dry2=sig2;
 dry3=sig3;
@@ -450,7 +446,7 @@ follower2=Amplitude.kr(dry2,343.reciprocal*room.linlin(0,1,1,100),343.reciprocal
 follower3=Amplitude.kr(dry3,343.reciprocal*room.linlin(0,1,1,100),343.reciprocal*room.linlin(0,1,1,100),fl);
 decay=(sph.rho*room.linlin(0,1,1,2))*mix.linlin(0,1,1,2);
 threshold=(mix.linlin(0,1,1,0.001))/sph.rho;  ////////trigger reflection threshold
-gate1=(follower1>threshold);
+gate1=(follower1>threshold).poll;
 gate2=(follower2>threshold);
 gate3=(follower3>threshold);
 env1=Decay2.kr(gate1,0.01, decay) * mix;
@@ -468,7 +464,6 @@ sig22=(verb2*mix)+(dry2*mix.linlin(0,1,1,0));
 sig33=(verb3*mix)+(dry3*mix.linlin(0,1,1,0));
 
 gain=gain*dyn;
-
 g_ch1 = (
 (Spherical(sph_x,(polytope.theta).wrap(pi,pi.neg),(polytope.phi).wrap(~elevation[2],~elevation[1])).x *
 Spherical(sph_x,~azimuth[0],~elevation[0]).x) +
@@ -623,9 +618,9 @@ spread:spread.reciprocal));
 //~mass=10.pow(45.neg);
 	//	~mass=0;
 (
-~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0,\el,0,\scale,0,\harmonic,1,
+~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0,\el,0,\scale,0,\harmonic,1,\fl,7.5,
 				\bg1,1,\bg2,1,\bg3,1,\bg4,1,\bg5,1,\bg6,1,\bg7,1,\bg8,1,\bg9,1,
-				\lowend,64,\level,600,\dyn,1,\comp,1,\buffer,10,\tone_axis,1,\ran,16256,\rect_level,2,
+				\lowend,64,\level,600,\dyn,1,\comp,1,\buffer,1,\tone_axis,1,\ran,16256,\rect_level,2,
 \sphharm,0,\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,10]).register);
 
 		///midi control
@@ -716,7 +711,7 @@ if(~synth.isPlaying,{~synth.set(\speaker_size,a)});
 (
 MIDIdef.cc(\midi_pot11,{ |val, num, chan, src|
 var a;
-a=val.linexp(0,127,0.1,1);
+a=val.linexp(0,127,0.001,1);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\room,a)});
 },11);
@@ -724,7 +719,7 @@ if(~synth.isPlaying,{~synth.set(\room,a)});
 (
 MIDIdef.cc(\midi_pot12,{ |val, num, chan, src|
 var a;
-a=val.linlin(0,127,0,1);
+a=val.linexp(0,127,0.001,1);
 a.postln;
 if(~synth.isPlaying,{~synth.set(\mix,a)});
 },12);
