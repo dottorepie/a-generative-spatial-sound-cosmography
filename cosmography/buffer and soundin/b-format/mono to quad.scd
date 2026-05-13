@@ -51,7 +51,7 @@ var steps = ~bins;
 SynthDef.new(\quad, {
 arg spread;
 var frames=~frames, polytope, sig, in, chain, chain1,bins;
-var g=((1+5.sqrt)/2),s=(1+2.sqrt),az=0,el=0,n=0;
+var g=((1+5.sqrt)/2),s=(1+2.sqrt),az=pi.rand2,el=0.5pi.rand2,n=0;
 
 bins=~bins;
  in = PlayBuf.ar(1, ~r.bufnum, BufRateScale.kr(~r.bufnum), loop: 0, doneAction:0);
