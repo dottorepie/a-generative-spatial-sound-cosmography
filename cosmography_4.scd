@@ -172,11 +172,11 @@ polytope=Spherical(1,az.lag(0.001),el.lag(0.001));
 tonal_polytope=Spherical(step,polytope.theta,polytope.phi);
 //mag_sphharm=c.lag(0.01).linlin(0,(16256*orange),1,5).round(1).asInteger;
 mag_sphharm=harmonic.lag(0.01);
-m_sphharm=Spherical(mag_sphharm,az.lag(0.001),el.lag(0.001));
+//m_sphharm=Spherical(mag_sphharm,az.lag(0.001),el.lag(0.001));
 sph_mod=2.pow(sphharm.lag(0.001)/16256);
-mx=m_sphharm.x.abs;
-my=m_sphharm.y.abs;
-mz=m_sphharm.z.abs;
+mx=mag_sphharm;
+my=mag_sphharm;
+mz=mag_sphharm;
 waveAmp=gain;
 waveSpeed=expansion;
 waveFreq=expansion.reciprocal;
@@ -206,15 +206,9 @@ phase_mod_x=(Complex(1,mod_x).theta*4);
 phase_mod_y=(Complex(1,mod_y).theta*4);
 phase_mod_z=(Complex(1,mod_z).theta*2);
 
-mod_anglex=(LPF.ar((Osc.ar(~wt.bufnum,sph_mod,phase:phase_mod_x,mul:100).abs*
-SinOsc.ar(sph_mod,phase:phase_mod_x)),
-sph_mod*heavy)).range(pi.neg,pi);
-mod_angley=(LPF.ar((Osc.ar(~wt.bufnum,sph_mod,phase:phase_mod_y,mul:100).abs*
-SinOsc.ar(sph_mod,phase:phase_mod_y)),
-sph_mod*heavy)).range(pi.neg,pi);
-mod_anglez=(LPF.ar((Osc.ar(~wt.bufnum,sph_mod,phase:phase_mod_z,mul:100).abs*
-SinOsc.ar(sph_mod,phase:phase_mod_z)),
-sph_mod*heavy)).range(35.264390.degrad,35.264390.degrad.neg);
+mod_anglex=SinOsc.ar(sph_mod,phase:phase_mod_x).range(pi.neg,pi);
+mod_angley=SinOsc.ar(sph_mod,phase:phase_mod_y).range(pi.neg,pi);
+mod_anglez=SinOsc.ar(sph_mod,phase:phase_mod_z).range(35.264390.degrad,35.264390.degrad.neg);
 
 magx=((Complex(cos(((polytope.theta+mod_anglex)*mx).wrap(pi.neg,pi)),
 cos((((polytope.theta+mod_anglex)*mx)).wrap(pi.neg,pi))).rho/(2.sqrt))*
