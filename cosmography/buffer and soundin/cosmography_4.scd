@@ -3,7 +3,7 @@ Server.killAll
 (
 (
 s.options.numWireBufs = 1024*2;
-s.options.numOutputBusChannels=9;
+s.options.numOutputBusChannels=6;
 s.options.numInputBusChannels=2;
 s.options.memSize = 8192*16;
 s.options.blockSize = 128;
@@ -27,7 +27,7 @@ s.meter;
 ~tempo=1;
 ~orange=3;
 ~mass=0;
-~fftsize = 64*32;
+~fftsize = 64*128;
 TempoClock.default.tempo_(~tempo);
 
 Tdef(\drone, {
@@ -65,12 +65,14 @@ Tdef(\drone, {
 );
 
 ///animation control buffers
+		(
 ~controlBus1 = Bus.control(s, 1);
 ~controlBus2 = Bus.control(s, 1);
 ~controlBus3 = Bus.control(s, 1);
 ~controlBus4 = Bus.control(s, 1);
 ~controlBus5 = Bus.control(s, 1);
 ~controlBus6 = Bus.control(s, 1);
+		);
 
 /////tetrahedron
 		(
@@ -105,6 +107,7 @@ wt = signal.asWavetable;
 );
 
 /////scales
+		(
 ~note=10;
 (
 {
@@ -119,24 +122,16 @@ var nn=1.neg;
 }.value;
 );
 ~sc=[~scalee,~scaleee];
+		);
 
-	/////fft
-(
-~bins=90;
-{
-var steps = ~bins;
-~nVals = steps.collect { |i|
-i.linexp(0, steps-1, 0.18, 463).round};
-~nVals.asInteger;}.value;
-);
 
 /////sound engine
 (
 SynthDef.new(\synth,{
 
 arg gain=1,drive=0,c=0,az=0,el=0,scale=0,lowend=64,level=100,speaker_size=0.15,tone_axis=0,ran=0,rect_level=1,harmonic=1,
-				bg1=1,bg2=1,bg3=1,bg4=1,bg5=1,bg6=1,bg7=1,bg8=1,bg9=1,
-				room=0.5,mix=0.5,pan_mod=0.01,spread=1,limit=0.8,fu=32,dyn=1,band=0.000001,comp=10.pow(35),buffer=1,sphharm=1;
+				bg1=1,bg2=1,bg3=1,bg4=1,bg5=1,bg6=1,bg7=1,bg8=1,bg9=1,fl=40,
+				room=0.5,mix=0.5,pan_mod=0.01,spread=1,limit=0.8,fu=32,dyn=1,band=0.000001,comp=1,buffer=1,sphharm=1;
 
 var expansion,heavy,fundamental,sph_mod,polytope,bessel_ripple,magx,magy,magz,sph,mod_timbre,mass=~mass;
 var ton1,ton2,ton3,tonal_x,tonal_y,tonal_z,mod_x,mod_y,mod_z,phase_mod_x,phase_mod_y,phase_mod_z;
@@ -150,6 +145,10 @@ var tonaldegree_x,tonaldegree_y,tonaldegree_z,feed1,feed2,feed3,bw,bx,by,bz,sste
 var feed11,feed12,feed13,feed14,feed15,feed16,feed17,feed18,feed19;
 var feed21,feed22,feed23,feed24,feed25,feed26,feed27,feed28,feed29;
 var feed31,feed32,feed33,feed34,feed35,feed36,feed37,feed38,feed39;
+var chainwet1,chainwet2,chainwet3,follower1,follower2,follower3;
+var frames=~fftsize, chain1,chain2,chain3,bins,env1,env2,env3,gate1,gate2,gate3;
+var dry1,dry2,dry3,decay,chain11,chain22,chain33,sig11,sig22,sig33;
+var n=0,verb1,verb2,verb3,material_m,material_p1,material_p2,material_p3,threshold;
 
 pan=2.pow(pan_mod.lag(0.001)/16256);
 ph = (2pi-(2pi/s));
@@ -219,20 +218,20 @@ sph_mod*heavy)).range(35.264390.degrad,35.264390.degrad.neg);
 
 magx=((Complex(cos(((polytope.theta+mod_anglex)*mx).wrap(pi.neg,pi)),
 cos((((polytope.theta+mod_anglex)*mx)).wrap(pi.neg,pi))).rho/(2.sqrt))*
-(Complex(cos((polytope.phi).wrap((pi/2).neg,(pi/2))),cos((polytope.phi).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)));
+(Complex(cos((polytope.phi).wrap((pi/2).neg,(pi/2))),cos((polytope.phi).wrap((pi/2).neg,(pi/2)))).rho));
 
 magy=((Complex(sin(((polytope.theta+mod_angley)*my).wrap(pi.neg,pi)),
 sin(((polytope.theta+mod_angley)*my).wrap(pi.neg,pi))).rho/(2.sqrt))*
-(Complex(cos((polytope.phi).wrap((pi/2).neg,(pi/2))),cos((polytope.phi).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)));
+(Complex(cos((polytope.phi).wrap((pi/2).neg,(pi/2))),cos((polytope.phi).wrap((pi/2).neg,(pi/2)))).rho));
 
 magz=((Complex(cos(((polytope.phi+mod_anglez)*mz).wrap((pi/2).neg,(pi/2))),
-cos(((polytope.phi)*mz).wrap((pi/2).neg,(pi/2)))).rho/(2.sqrt)));
+cos(((polytope.phi)*mz).wrap((pi/2).neg,(pi/2)))).rho));
 
 sph_x=(Cartesian(magx,0,0).rho);
 sph_y=(Cartesian(0,magy,0).rho);
 sph_z=(Cartesian(0,0,magz).rho);
 sph_mag=(Cartesian(sph_x,sph_y,sph_z));
-sph=Spherical(sph_mag.rho,polytope.theta,polytope.phi);
+sph=Spherical(sph_mag.rho/2.sqrt,polytope.theta,polytope.phi);
 polx=Spherical(sph_x*timbre,polytope.theta,polytope.phi);
 poly=Spherical(sph_y*timbre,polytope.theta,polytope.phi);
 polz=Spherical(sph_z*timbre,polytope.theta,polytope.phi);
@@ -277,8 +276,8 @@ ph7=(ph6+ph).wrap(pi.neg,pi);
 ph8=(ph7+ph).wrap(pi.neg,pi);
 ph9=(ph8+ph).wrap(pi.neg,pi);
 
-//feed1=(SoundIn.ar(0,buffer));    ///input
-//feed2=(SoundIn.ar(1,buffer));
+//feed1=(SoundInFeedback.ar(0,buffer));    ///input
+//feed2=(SoundInFeedback.ar(1,buffer));
 //feed3=(feed1+feed2)/2.sqrt;
 //feed=(WhiteNoise.ar(buffer));    ///noise
 feed11=(PlayBuf.ar(1, ~c11.bufnum, BufRateScale.kr(~c11.bufnum), loop: 1, doneAction:0));   ////buffer
@@ -435,59 +434,38 @@ sig1=Compander.ar(sig1,control1,threshold1,1.2,1/3,0.03,0.15)+BrownNoise.ar(0.00
 sig2=Compander.ar(sig2,control2,threshold2,1.2,1/3,0.03,0.15)+BrownNoise.ar(0.00001);
 sig3=Compander.ar(sig3,control3,threshold3,1.2,1/3,0.03,0.15)+BrownNoise.ar(0.00001);
 
-chaindry1 = FFT(LocalBuf(frames), sig1);
-chaindry2 = FFT(LocalBuf(frames), sig2);
-chaindry3 = FFT(LocalBuf(frames), sig3);
-chainwet1 =  FFT(LocalBuf(frames), in);
-chainwet2 =  FFT(LocalBuf(frames), in);
-chainwet3 =  FFT(LocalBuf(frames), in);
+chainwet1 =  FFT(LocalBuf(frames), sig1);
+chainwet2 =  FFT(LocalBuf(frames), sig2);
+chainwet3 =  FFT(LocalBuf(frames), sig3);
 
-(
-SynthDef.new(\verb, {
-arg spread,room=1,mix=0,fl=40;
-var chaindry,chainwet,follower;
-var frames=~fftsize, polytope, sig, in, chain, chain1,bins,reverfb,env,gate,dry,decay,chain11;
-var g=((1+5.sqrt)/2),s=(1+2.sqrt),az=0,el=0,n=0,verb,material_m,material_p,threshold,chainn;
-
-bins=~bins;
- in = PlayBuf.ar(1, ~r.bufnum, BufRateScale.kr(~r.bufnum), loop: 0, doneAction:0);
-chaindry = FFT(LocalBuf(frames), in);
-chainwet =  FFT(LocalBuf(frames), in);
-
-~bins.do{
-
-az = (az+(2pi-(2pi/s))).wrap(pi.neg,pi);
-el = (el+(pi-(pi/s))).wrap(0.5pi.neg,0.5pi);
-polytope=Spherical(1,az,el);
-
-material_p=Complex(1,polytope.x).theta*2;   ///////////////////////reflection materiality
-material_m=polytope.rho;
-
-chain11 = chaindry.pvcollect(frames,
-{|mag, phase, index| [mag, phase]; }, frombin: ~nVals.[n], tobin: ~nVals.[n], zeroothers: 1);
-
-dry=IFFT(chain11);      //////////////////////////////dry signal
-follower=Amplitude.kr(dry,343.reciprocal*room.linlin(0,1,1,100),343.reciprocal*room.linlin(0,1,1,100),fl);
-decay=(polytope.rho*room.linlin(0,1,1,2))*mix.linlin(0,1,1,2);
-threshold=(mix.linlin(0,1,1,0.001))/polytope.rho;  ////////trigger reflection threshold
-gate=(follower>threshold);   ///////trigger for spectral freeze and reverb decay envelope
-//env=Decay2.kr(gate,0.01, decay) * mix;
-env=EnvGen.kr(Env.perc(0.01,decay,mix),gate);
-
-chain1 = PV_Freeze(chainwet.pvcollect(frames,
-{|mag, phase, index| [mag*material_m, phase+material_p]; }, frombin: ~nVals.[n], tobin: ~nVals.[n], zeroothers: 1),gate);
-
-verb=IFFT(chain1);      ////////////////////////spectral freeze on reflection
-
-sig=(verb*mix)+(dry*mix.linlin(0,1,1,0));
-
-Out.ar(0,Pan2.ar(FreeVerb.ar(sig,mix,room),polytope.x,spread));
-//Out.ar(0,VBAP.ar(4,sig*0.01,~vbap_buf.bufnum,polytope.theta.raddeg,polytope.phi.raddeg,spread));
-
-n=n+1;
-}
-}).add;
-)
+material_p1=Complex(1,sph.x).theta*2;
+material_p2=Complex(1,sph.y).theta*2;
+material_p3=Complex(1,sph.z).theta*2;
+material_m=sph.rho;
+dry1=sig1;
+dry2=sig2;
+dry3=sig3;
+follower1=Amplitude.kr(dry1,343.reciprocal*room.linlin(0,1,1,100),343.reciprocal*room.linlin(0,1,1,100),fl);
+follower2=Amplitude.kr(dry2,343.reciprocal*room.linlin(0,1,1,100),343.reciprocal*room.linlin(0,1,1,100),fl);
+follower3=Amplitude.kr(dry3,343.reciprocal*room.linlin(0,1,1,100),343.reciprocal*room.linlin(0,1,1,100),fl);
+decay=(sph.rho*room.linlin(0,1,1,2))*mix.linlin(0,1,1,2);
+threshold=(mix.linlin(0,1,1,0.001))/sph.rho;  ////////trigger reflection threshold
+gate1=(follower1>threshold);
+gate2=(follower2>threshold);
+gate3=(follower3>threshold);
+env1=Decay2.kr(gate1,0.01, decay) * mix;
+env2=Decay2.kr(gate2,0.01, decay) * mix;
+env3=Decay2.kr(gate3,0.01, decay) * mix;
+//env=EnvGen.kr(Env.perc(0.01,decay,mix),gate);
+chain1 = PV_Freeze(chainwet1,gate1);
+chain2 = PV_Freeze(chainwet2,gate2);
+chain3 = PV_Freeze(chainwet3,gate3);
+verb1=IFFT(chain1);
+verb2=IFFT(chain2);
+verb3=IFFT(chain3);
+sig11=(verb1*mix)+(dry1*mix.linlin(0,1,1,0));
+sig22=(verb2*mix)+(dry2*mix.linlin(0,1,1,0));
+sig33=(verb3*mix)+(dry3*mix.linlin(0,1,1,0));
 
 gain=gain*dyn;
 
@@ -531,40 +509,40 @@ g_ch4 = g_ch4.pow(spread);
 (
 Out.ar(2,
 Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig1*g_ch1*pan1,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
+FreeVerb.ar(sig11*g_ch1*pan1,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
 Out.ar(3,
 Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig1*g_ch2*pan2,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
+FreeVerb.ar(sig11*g_ch2*pan2,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
 Out.ar(4,
 Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig1*g_ch3*pan3,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
+FreeVerb.ar(sig11*g_ch3*pan3,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
 Out.ar(5,
 Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig1*g_ch4*pan4,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
+FreeVerb.ar(sig11*g_ch4*pan4,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
 Out.ar(2,
 Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig2*g_ch1*pan1,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
+FreeVerb.ar(sig22*g_ch1*pan1,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
 Out.ar(3,
 Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig2*g_ch2*pan2,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
+FreeVerb.ar(sig22*g_ch2*pan2,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
 Out.ar(4,
 Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig2*g_ch3*pan3,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
+FreeVerb.ar(sig22*g_ch3*pan3,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
 Out.ar(5,
 Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig2*g_ch4*pan4,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
+FreeVerb.ar(sig22*g_ch4*pan4,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
 Out.ar(2,
 Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig3*g_ch1*pan1,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
+FreeVerb.ar(sig33*g_ch1*pan1,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
 Out.ar(3,
 Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig3*g_ch2*pan2,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
+FreeVerb.ar(sig33*g_ch2*pan2,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
 Out.ar(4,
 Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig3*g_ch3*pan3,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
+FreeVerb.ar(sig33*g_ch3*pan3,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
 Out.ar(5,
 Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig3*g_ch4*pan4,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
+FreeVerb.ar(sig33*g_ch4*pan4,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.01));
 );
 
 ///b-format stereo defuser
@@ -641,9 +619,9 @@ spread:spread.reciprocal));
 }).add
 );
 
-30.wait;
+3.wait;
 //~mass=10.pow(45.neg);
-		~mass=0;
+	//	~mass=0;
 (
 ~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0,\el,0,\scale,0,\harmonic,1,
 				\bg1,1,\bg2,1,\bg3,1,\bg4,1,\bg5,1,\bg6,1,\bg7,1,\bg8,1,\bg9,1,
