@@ -227,9 +227,9 @@ sin(((polytope.theta+mod_angley)*my).wrap(pi.neg,pi))).rho/(2.sqrt))*
 magz=((Complex(cos(((polytope.phi+mod_anglez)*mz).wrap((pi/2).neg,(pi/2))),
 cos(((polytope.phi)*mz).wrap((pi/2).neg,(pi/2)))).rho));
 
-sph_x=(Cartesian(magx,0,0).rho);
-sph_y=(Cartesian(0,magy,0).rho);
-sph_z=(Cartesian(0,0,magz).rho);
+sph_x=(Cartesian(magx/2.sqrt,0,0).rho);
+sph_y=(Cartesian(0,magy/2.sqrt,0).rho);
+sph_z=(Cartesian(0,0,magz/2.sqrt).rho);
 sph_mag=(Cartesian(sph_x,sph_y,sph_z));
 sph=Spherical(sph_mag.rho/2.sqrt,polytope.theta,polytope.phi);
 polx=Spherical(sph_x*timbre,polytope.theta,polytope.phi);
@@ -444,9 +444,9 @@ dry3=sig3;
 follower1=Amplitude.kr(dry1,343.reciprocal*room.linlin(0,1,1,100),343.reciprocal*room.linlin(0,1,1,100),fl);
 follower2=Amplitude.kr(dry2,343.reciprocal*room.linlin(0,1,1,100),343.reciprocal*room.linlin(0,1,1,100),fl);
 follower3=Amplitude.kr(dry3,343.reciprocal*room.linlin(0,1,1,100),343.reciprocal*room.linlin(0,1,1,100),fl);
-decay=(sph.rho*room.linlin(0,1,1,2))*mix.linlin(0,1,1,2);
-threshold=(mix.linlin(0,1,1,0.001))/sph.rho;  ////////trigger reflection threshold
-gate1=(follower1>threshold).poll;
+decay=(sph.rho*room.linlin(0.001,1,1,2))*mix.linlin(0.001,1,1,2);
+threshold=(mix.linlin(0.001,1,1,0.001))/sph.rho;  ////////trigger reflection threshold
+gate1=(follower1>threshold);
 gate2=(follower2>threshold);
 gate3=(follower3>threshold);
 env1=Decay2.kr(gate1,0.01, decay) * mix;
@@ -459,9 +459,9 @@ chain3 = PV_Freeze(chainwet3,gate3);
 verb1=IFFT(chain1);
 verb2=IFFT(chain2);
 verb3=IFFT(chain3);
-sig11=(verb1*mix)+(dry1*mix.linlin(0,1,1,0));
-sig22=(verb2*mix)+(dry2*mix.linlin(0,1,1,0));
-sig33=(verb3*mix)+(dry3*mix.linlin(0,1,1,0));
+sig11=(verb1*mix)+(dry1*mix.linlin(0.001,1,1,0.001));
+sig22=(verb2*mix)+(dry2*mix.linlin(0.001,1,1,0.001));
+sig33=(verb3*mix)+(dry3*mix.linlin(0.001,1,1,0.001));
 
 gain=gain*dyn;
 g_ch1 = (
@@ -624,278 +624,278 @@ spread:spread.reciprocal));
 \sphharm,0,\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,10]).register);
 
 		///midi control
-(
-MIDIClient.init;
-MIDIIn.connectAll;
-(
-(
-MIDIdef.cc(\midi_pot1,{ |val, num, chan, src|
-var a;
-a=val.linlin(0,127,0,1);
-a.postln;
-if(~synth.isPlaying,{~synth.set(\gain,a)});
-},1);
-);
-(
-MIDIdef.cc(\midi_pot2,{ |val, num, chan, src|
-var a;
-a=val.linlin(0,127,(16256).neg,(16256*3)).round(1).asInteger;
-a.postln;
-if(~synth.isPlaying,{~synth.set(\drive,a)});
-},2);
-);
-(
-MIDIdef.cc(\midi_pot3,{ |val, num, chan, src|
-var a;
-a=val.linexp(0,127,0.000001,1);
-a.postln;
-if(~synth.isPlaying,{~synth.set(\band,a)});
-},3);
-);
-(
-MIDIdef.cc(\midi_pot4,{ |val, num, chan, src|
-var a;
-a=val.linlin(0,127,pi.neg,pi);
-a.postln;
-if(~synth.isPlaying,{~synth.set(\az,a)});
-},4);
-);
-(
-MIDIdef.cc(\midi_pot5,{ |val, num, chan, src|
-var a;
-a=val.linlin(0,127,0.5pi.neg,0.5pi);
-a.postln;
-if(~synth.isPlaying,{~synth.set(\el,a)});
-},5);
-);
-(
-MIDIdef.cc(\midi_pot6,{ |val, num, chan, src|
-var a;
-a=val.linlin(0,127,0,1).round(1).asInteger;
-a.postln;
-if(~synth.isPlaying,{~synth.set(\scale,a)});
-},6);
-);
-(
-MIDIdef.cc(\midi_pot7,{ |val, num, chan, src|
-var a;
-a=val.linlin(0,127,32,128);
-a.postln;
-if(~synth.isPlaying,{~synth.set(\lowend,a)});
-},7);
-);
-(
-MIDIdef.cc(\midi_pot8,{ |val, num, chan, src|
-var a;
-a=val.linlin(0,127,0,16256*~orange).round(1).asInteger;
-a.postln;
-if(~synth.isPlaying,{~synth.set(\c,a)});
-},8);
-);
-(
-MIDIdef.cc(\midi_pot9,{ |val, num, chan, src|
-var a;
-a=val.linexp(0,127,1,3);
-a.postln;
-if(~synth.isPlaying,{~synth.set(\dyn,a)});
-},9);
-);
-(
-MIDIdef.cc(\midi_pot10,{ |val, num, chan, src|
-var a;
-a=val.linlin(0,127,0.05,0.3);
-a.postln;
-if(~synth.isPlaying,{~synth.set(\speaker_size,a)});
-},10);
-);
-(
-MIDIdef.cc(\midi_pot11,{ |val, num, chan, src|
-var a;
-a=val.linexp(0,127,0.001,1);
-a.postln;
-if(~synth.isPlaying,{~synth.set(\room,a)});
-},11);
-);
-(
-MIDIdef.cc(\midi_pot12,{ |val, num, chan, src|
-var a;
-a=val.linexp(0,127,0.001,1);
-a.postln;
-if(~synth.isPlaying,{~synth.set(\mix,a)});
-},12);
-);
-(
-MIDIdef.cc(\midi_pot13,{ |val, num, chan, src|
-var a;
-	a=val.linlin(0,127,(16256*10).neg,(16256*5)).round(1).asInteger;
-a.postln;
-if(~synth.isPlaying,{~synth.set(\pan_mod,a)});
-},13);
-);
-(
-MIDIdef.cc(\midi_pot14,{ |val, num, chan, src|
-var a;
-a=val.linexp(0,127,1,0.1);
-a.postln;
-if(~synth.isPlaying,{~synth.set(\spread,a)});
-},14);
-);
-(
-MIDIdef.cc(\midi_pot15,{ |val, num, chan, src|
-var a;
-a=val.linexp(0,127,1,0.001);
-a.postln;
-if(~synth.isPlaying,{~synth.set(\limit,a)});
-},15);
-);
-(
-MIDIdef.cc(\midi_pot16,{ |val, num, chan, src|
-var a,b;
-a=val.linlin(0,127,2,9).round(1).asInteger;
-b=2.pow(a);
-b.postln;
-if(~synth.isPlaying,{~synth.set(\fu,b)});
-},16);
-);
-(
-MIDIdef.cc(\midi_pot17,{ |val, num, chan, src|
-var a,b;
-b=val.linexp(0,127,0.00001,10000);
-//b=10.pow(a);
-b.postln;
-if(~synth.isPlaying,{~synth.set(\comp,b)});
-},17);
-);
-(
-MIDIdef.cc(\midi_pot18,{ |val, num, chan, src|
-var a;
-a=val.linexp(0,127,0.001,100);
-a.postln;
-if(~synth.isPlaying,{~synth.set(\buffer,a)});
-},18);
-);
-(
-MIDIdef.cc(\midi_pot19,{ |val, num, chan, src|
-var a;
-a=val.linexp(0,127,0.00001,1000);
-a.postln;
-if(~synth.isPlaying,{~synth.set(\level,a)});
-},19);
-);
-(
-MIDIdef.cc(\midi_pot20,{|val, num, chan, src|
-var a;
-a=val.linlin(0,127,(16256*12).neg,(16256*6)).round(1).asInteger;
-a.postln;
-if(~synth.isPlaying,{~synth.set(\sphharm,a)});
-},20);
-);
-(
-MIDIdef.cc(\midi_pot21,{ |val, num, chan, src|
-var a;
-a=val.linlin(0,127,0,2).round(1).asInteger;
-a.postln;
-if(~synth.isPlaying,{~synth.set(\tone_axis,a)});
-},21);
-);
-(
-MIDIdef.cc(\midi_pot22,{ |val, num, chan, src|
-var a;
-a=val.linlin(0,127,0,16256*~orange).round(1).asInteger;
-a.postln;
-if(~synth.isPlaying,{~synth.set(\ran,a)});
-},22);
-);
-(
-MIDIdef.cc(\midi_pot23,{ |val, num, chan, src|
-var a;
-a=val.linexp(0,127,0.00001,100);
-a.postln;
-if(~synth.isPlaying,{~synth.set(\rect_level,a)});
-},23);
-);
-(
-MIDIdef.cc(\midi_pot24,{ |val, num, chan, src|
-var a;
-a=val.linlin(0,127,1,10).round(1).asInteger;
-a.postln;
-if(~synth.isPlaying,{~synth.set(\harmonic,a)});
-},24);
-);
-(
-MIDIdef.cc(\midi_slider1,{ |val, num, chan, src|
-var bfg;
-bfg=val.linexp(0,127,0.001,1);
-bfg.postln;
-if(~synth.isPlaying,{~synth.set(\bg1,bfg)});
-},25);
-);
-(
-MIDIdef.cc(\midi_slider2,{ |val, num, chan, src|
-var bfg;
-bfg=val.linexp(0,127,0.001,1);
-bfg.postln;
-if(~synth.isPlaying,{~synth.set(\bg2,bfg)});
-},26);
-);
-(
-MIDIdef.cc(\midi_slider3,{ |val, num, chan, src|
-var bfg;
-bfg=val.linexp(0,127,0.001,1);
-bfg.postln;
-if(~synth.isPlaying,{~synth.set(\bg3,bfg)});
-},27);
-);
-(
-MIDIdef.cc(\midi_slider4,{ |val, num, chan, src|
-var bfg;
-bfg=val.linexp(0,127,0.001,1);
-bfg.postln;
-if(~synth.isPlaying,{~synth.set(\bg4,bfg)});
-},28);
-);
-(
-MIDIdef.cc(\midi_slider5,{ |val, num, chan, src|
-var bfg;
-bfg=val.linexp(0,127,0.001,1);
-bfg.postln;
-if(~synth.isPlaying,{~synth.set(\bg5,bfg)});
-},29);
-);
-(
-MIDIdef.cc(\midi_slider6,{ |val, num, chan, src|
-var bfg;
-bfg=val.linexp(0,127,0.001,1);
-bfg.postln;
-if(~synth.isPlaying,{~synth.set(\bg6,bfg)});
-},30);
-);
-(
-MIDIdef.cc(\midi_slider7,{ |val, num, chan, src|
-var bfg;
-bfg=val.linexp(0,127,0.001,1);
-bfg.postln;
-if(~synth.isPlaying,{~synth.set(\bg7,bfg)});
-},31);
-);
-(
-MIDIdef.cc(\midi_slider8,{ |val, num, chan, src|
-	var bfg;
-bfg=val.linexp(0,127,0.001,1);
-bfg.postln;
-if(~synth.isPlaying,{~synth.set(\bg8,bfg)});
-},32);
-);
-(
-MIDIdef.cc(\midi_slider9,{ |val, num, chan, src|
-var bfg;
-bfg=val.linexp(0,127,0.001,1);
-bfg.postln;
-if(~synth.isPlaying,{~synth.set(\bg9,bfg)});
-},49);
-));
+		(
+			MIDIClient.init;
+			MIDIIn.connectAll;
+			(
+				(
+					MIDIdef.cc(\midi_pot1,{ |val, num, chan, src|
+						var a;
+						a=val.linlin(0,127,0,1);
+						a.postln;
+						if(~synth.isPlaying,{~synth.set(\gain,a)});
+					},1);
+				);
+				(
+					MIDIdef.cc(\midi_pot2,{ |val, num, chan, src|
+						var a;
+						a=val.linlin(0,127,(16256).neg,(16256*3)).round(1).asInteger;
+						a.postln;
+						if(~synth.isPlaying,{~synth.set(\drive,a)});
+					},2);
+				);
+				(
+					MIDIdef.cc(\midi_pot3,{ |val, num, chan, src|
+						var a;
+						a=val.linexp(0,127,0.000001,1);
+						a.postln;
+						if(~synth.isPlaying,{~synth.set(\band,a)});
+					},3);
+				);
+				(
+					MIDIdef.cc(\midi_pot4,{ |val, num, chan, src|
+						var a;
+						a=val.linlin(0,127,pi.neg,pi);
+						a.postln;
+						if(~synth.isPlaying,{~synth.set(\az,a)});
+					},4);
+				);
+				(
+					MIDIdef.cc(\midi_pot5,{ |val, num, chan, src|
+						var a;
+						a=val.linlin(0,127,0.5pi.neg,0.5pi);
+						a.postln;
+						if(~synth.isPlaying,{~synth.set(\el,a)});
+					},5);
+				);
+				(
+					MIDIdef.cc(\midi_pot6,{ |val, num, chan, src|
+						var a;
+						a=val.linlin(0,127,0,1).round(1).asInteger;
+						a.postln;
+						if(~synth.isPlaying,{~synth.set(\scale,a)});
+					},6);
+				);
+				(
+					MIDIdef.cc(\midi_pot7,{ |val, num, chan, src|
+						var a;
+						a=val.linlin(0,127,32,128);
+						a.postln;
+						if(~synth.isPlaying,{~synth.set(\lowend,a)});
+					},7);
+				);
+				(
+					MIDIdef.cc(\midi_pot8,{ |val, num, chan, src|
+						var a;
+						a=val.linlin(0,127,0,16256*~orange).round(1).asInteger;
+						a.postln;
+						if(~synth.isPlaying,{~synth.set(\c,a)});
+					},8);
+				);
+				(
+					MIDIdef.cc(\midi_pot9,{ |val, num, chan, src|
+						var a;
+						a=val.linexp(0,127,1,3);
+						a.postln;
+						if(~synth.isPlaying,{~synth.set(\dyn,a)});
+					},9);
+				);
+				(
+					MIDIdef.cc(\midi_pot10,{ |val, num, chan, src|
+						var a;
+						a=val.linlin(0,127,0.05,0.3);
+						a.postln;
+						if(~synth.isPlaying,{~synth.set(\speaker_size,a)});
+					},10);
+				);
+				(
+					MIDIdef.cc(\midi_pot11,{ |val, num, chan, src|
+						var a;
+						a=val.linexp(0,127,0.001,1);
+						a.postln;
+						if(~synth.isPlaying,{~synth.set(\room,a)});
+					},11);
+				);
+				(
+					MIDIdef.cc(\midi_pot12,{ |val, num, chan, src|
+						var a;
+						a=val.linexp(0,127,0.001,1);
+						a.postln;
+						if(~synth.isPlaying,{~synth.set(\mix,a)});
+					},12);
+				);
+				(
+					MIDIdef.cc(\midi_pot13,{ |val, num, chan, src|
+						var a;
+						a=val.linlin(0,127,(16256*10).neg,(16256*5)).round(1).asInteger;
+						a.postln;
+						if(~synth.isPlaying,{~synth.set(\pan_mod,a)});
+					},13);
+				);
+				(
+					MIDIdef.cc(\midi_pot14,{ |val, num, chan, src|
+						var a;
+						a=val.linexp(0,127,1,0.1);
+						a.postln;
+						if(~synth.isPlaying,{~synth.set(\spread,a)});
+					},14);
+				);
+				(
+					MIDIdef.cc(\midi_pot15,{ |val, num, chan, src|
+						var a;
+						a=val.linexp(0,127,1,0.001);
+						a.postln;
+						if(~synth.isPlaying,{~synth.set(\limit,a)});
+					},15);
+				);
+				(
+					MIDIdef.cc(\midi_pot16,{ |val, num, chan, src|
+						var a,b;
+						a=val.linlin(0,127,2,9).round(1).asInteger;
+						b=2.pow(a);
+						b.postln;
+						if(~synth.isPlaying,{~synth.set(\fu,b)});
+					},16);
+				);
+				(
+					MIDIdef.cc(\midi_pot17,{ |val, num, chan, src|
+						var a,b;
+						b=val.linexp(0,127,0.00001,10000);
+						//b=10.pow(a);
+						b.postln;
+						if(~synth.isPlaying,{~synth.set(\comp,b)});
+					},17);
+				);
+				(
+					MIDIdef.cc(\midi_pot18,{ |val, num, chan, src|
+						var a;
+						a=val.linexp(0,127,0.001,100);
+						a.postln;
+						if(~synth.isPlaying,{~synth.set(\buffer,a)});
+					},18);
+				);
+				(
+					MIDIdef.cc(\midi_pot19,{ |val, num, chan, src|
+						var a;
+						a=val.linexp(0,127,0.00001,1000);
+						a.postln;
+						if(~synth.isPlaying,{~synth.set(\level,a)});
+					},19);
+				);
+				(
+					MIDIdef.cc(\midi_pot20,{|val, num, chan, src|
+						var a;
+						a=val.linlin(0,127,(16256*12).neg,(16256*6)).round(1).asInteger;
+						a.postln;
+						if(~synth.isPlaying,{~synth.set(\sphharm,a)});
+					},20);
+				);
+				(
+					MIDIdef.cc(\midi_pot21,{ |val, num, chan, src|
+						var a;
+						a=val.linlin(0,127,0,2).round(1).asInteger;
+						a.postln;
+						if(~synth.isPlaying,{~synth.set(\tone_axis,a)});
+					},21);
+				);
+				(
+					MIDIdef.cc(\midi_pot22,{ |val, num, chan, src|
+						var a;
+						a=val.linlin(0,127,0,16256*~orange).round(1).asInteger;
+						a.postln;
+						if(~synth.isPlaying,{~synth.set(\ran,a)});
+					},22);
+				);
+				(
+					MIDIdef.cc(\midi_pot23,{ |val, num, chan, src|
+						var a;
+						a=val.linexp(0,127,0.00001,100);
+						a.postln;
+						if(~synth.isPlaying,{~synth.set(\rect_level,a)});
+					},23);
+				);
+				(
+					MIDIdef.cc(\midi_pot24,{ |val, num, chan, src|
+						var a;
+						a=val.linlin(0,127,1,10).round(1).asInteger;
+						a.postln;
+						if(~synth.isPlaying,{~synth.set(\harmonic,a)});
+					},24);
+				);
+				(
+					MIDIdef.cc(\midi_slider1,{ |val, num, chan, src|
+						var bfg;
+						bfg=val.linexp(0,127,0.001,1);
+						bfg.postln;
+						if(~synth.isPlaying,{~synth.set(\bg1,bfg)});
+					},25);
+				);
+				(
+					MIDIdef.cc(\midi_slider2,{ |val, num, chan, src|
+						var bfg;
+						bfg=val.linexp(0,127,0.001,1);
+						bfg.postln;
+						if(~synth.isPlaying,{~synth.set(\bg2,bfg)});
+					},26);
+				);
+				(
+					MIDIdef.cc(\midi_slider3,{ |val, num, chan, src|
+						var bfg;
+						bfg=val.linexp(0,127,0.001,1);
+						bfg.postln;
+						if(~synth.isPlaying,{~synth.set(\bg3,bfg)});
+					},27);
+				);
+				(
+					MIDIdef.cc(\midi_slider4,{ |val, num, chan, src|
+						var bfg;
+						bfg=val.linexp(0,127,0.001,1);
+						bfg.postln;
+						if(~synth.isPlaying,{~synth.set(\bg4,bfg)});
+					},28);
+				);
+				(
+					MIDIdef.cc(\midi_slider5,{ |val, num, chan, src|
+						var bfg;
+						bfg=val.linexp(0,127,0.001,1);
+						bfg.postln;
+						if(~synth.isPlaying,{~synth.set(\bg5,bfg)});
+					},29);
+				);
+				(
+					MIDIdef.cc(\midi_slider6,{ |val, num, chan, src|
+						var bfg;
+						bfg=val.linexp(0,127,0.001,1);
+						bfg.postln;
+						if(~synth.isPlaying,{~synth.set(\bg6,bfg)});
+					},30);
+				);
+				(
+					MIDIdef.cc(\midi_slider7,{ |val, num, chan, src|
+						var bfg;
+						bfg=val.linexp(0,127,0.001,1);
+						bfg.postln;
+						if(~synth.isPlaying,{~synth.set(\bg7,bfg)});
+					},31);
+				);
+				(
+					MIDIdef.cc(\midi_slider8,{ |val, num, chan, src|
+						var bfg;
+						bfg=val.linexp(0,127,0.001,1);
+						bfg.postln;
+						if(~synth.isPlaying,{~synth.set(\bg8,bfg)});
+					},32);
+				);
+				(
+					MIDIdef.cc(\midi_slider9,{ |val, num, chan, src|
+						var bfg;
+						bfg=val.linexp(0,127,0.001,1);
+						bfg.postln;
+						if(~synth.isPlaying,{~synth.set(\bg9,bfg)});
+					},49);
+			));
 
-); 2.wait;
+		); 2.wait;
 			(
 ~orange=3;
 ~bspeed=1;
