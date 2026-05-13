@@ -540,6 +540,14 @@ FreeVerb.ar(sig33*g_ch4*pan4,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.0
 //y=flu-frd+bld-bru
 //z=flu-frd-bld+bru
 
+///three channel
+(
+Out.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig11,mix.lag(0.01),room.lag(0.01),mul:gain*sph_x)),limit,0.01));
+Out.ar(7,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig22,mix.lag(0.01),room.lag(0.01),mul:gain*sph_y)),limit,0.01));
+Out.ar(8,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig33,mix.lag(0.01),room.lag(0.01),mul:gain*sph_z)),limit,0.01));
+)
+
+
 				(
 bw=(
 InFeedback.ar(2)+
@@ -577,12 +585,6 @@ FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*sph_y)),limit,0.01),pan3
 Out.ar(0,
 Limiter.ar(LeakDC.ar(
 FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*sph_z)),limit,0.01)!2);
-)*/
-///three channel
-/*(
-Out.ar(4,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain*sph_x)),limit,0.01));
-Out.ar(5,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain*sph_y)),limit,0.01));
-Out.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain*sph_z)),limit,0.01));
 )*/
 ////3d vbap expansion
 /*(
@@ -1618,7 +1620,7 @@ thisThread.randSeed = ~val;
 	0.degrad,72.degrad,144.degrad,144.neg.degrad,72.neg.degrad,36.degrad,108.degrad,180.degrad,108.neg.degrad,36.neg.degrad,
 	0.degrad,72.degrad,144.degrad,144.neg.degrad,72.neg.degrad,36.degrad,108.degrad,180.degrad,108.neg.degrad,36.neg.degrad,0.degrad];
 
-~elevation=[90.neg.degrad,52.6.neg.degrad,52.6.neg.degrad,52.6.neg.degrad,52.6.neg.degrad,52.6.neg.degrad,26.6.neg.degrad,26.6.neg.degrad,26.6.neg.degrad,26.6.neg.degrad,26.6.neg.degrad,10.8.neg.degrad,10.8.neg.degrad,10.8.neg.degrad,10.8.neg.degrad,10.8.neg.degrad,52.6.degrad,52.6.degrad,52.6.degrad,52.6.degrad,52.6.degrad,26.6.degrad,26.6.degrad,26.6.degrad,26.6.degrad,26.6.degrad,10.8.degrad,10.8.degrad,10.8.degrad,10.8.degrad,10.8.degrad,90.degrad];
+~elevation=[90.neg.degrad,52.6.neg.degrad,52.6.neg.degrad,52.6.neg.degrad,52.6.neg.degrad,52.6.neg.degrad,26.6.neg.degrad,26.6.neg.degrad,26.6.neg.degrad,26.6.neg.degrad,26.6.neg.degrad,  10.8.neg.degrad,10.8.neg.degrad,10.8.neg.degrad,10.8.neg.degrad,10.8.neg.degrad,52.6.degrad,52.6.degrad,52.6.degrad,52.6.degrad,52.6.degrad,26.6.degrad,26.6.degrad,26.6.degrad,26.6.degrad,26.6.degrad,10.8.degrad,10.8.degrad,10.8.degrad,10.8.degrad,10.8.degrad,90.degrad];
 
 )
 

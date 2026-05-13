@@ -3,7 +3,7 @@ Server.killAll
 (
 (
 s.options.numWireBufs = 1024*2;
-s.options.numOutputBusChannels=6;
+s.options.numOutputBusChannels=9;
 s.options.numInputBusChannels=2;
 s.options.memSize = 8192*16;
 s.options.blockSize = 128;
@@ -562,28 +562,14 @@ InFeedback.ar(3)-
 InFeedback.ar(4)-
 InFeedback.ar(5));
 );
-
+/////xyz out
+Out.ar(6,bx);
+Out.ar(7,by);
+Out.ar(8,bz);
+////stereo
 //Out.ar(0,DecodeB2.ar(2, bw, bx, by,0)*spread.linlin(0.1,1,0.5,1));
 Out.ar(0,BFDecode1.ar(bw, bx, by, bz,[polytope.theta,polytope.theta+0.5pi], [polytope.phi,polytope.phi])*spread.linlin(0.1,1,0.5,1));
 
-////stereo
-/*(
-Out.ar(0,Pan2.ar(
-Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*sph_x)),limit,0.01),pan1));
-Out.ar(0,Pan2.ar(
-Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*sph_y)),limit,0.01),pan3));
-Out.ar(0,
-Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*sph_z)),limit,0.01)!2);
-)*/
-///three channel
-/*(
-Out.ar(4,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain*sph_x)),limit,0.01));
-Out.ar(5,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain*sph_y)),limit,0.01));
-Out.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain*sph_z)),limit,0.01));
-)*/
 ////3d vbap expansion
 /*(
 Out.ar(0,VBAP.ar(4,
