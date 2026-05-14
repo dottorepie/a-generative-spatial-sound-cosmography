@@ -8,6 +8,7 @@ var az,el,polytope,mag,xp=0,yp=0,dimx,dimy,c,nx,ny,nz;
 var bright,brightx,brighty,bval,bvall,pposx,pposy,posx,posy;
 var c1,c2,c3,cx,cy,cz,cdimx,cdimy,cdimz;
 var bvalx,bvaly,bvalz,bvalx_0,bvaly_0,bvalz_0;
+var valx,valy;
 //Window.closeAll;
 
 ~amp1 = 0;
@@ -87,6 +88,8 @@ el=polytope.phi;
 //c = mag.linlin(0,mag,0,size).round(1).asInteger;
 dimx=az.linlin(0,pi,0,size).round(1).asInteger;
 dimy=el.linlin(-0.5pi, 0.5pi, 0, size).round(1).asInteger;
+valx=az.linlin(0,pi,0,1);
+valy=el.linlin(-0.5pi, 0.5pi, 0, 1);
 //cdimx=Spherical(bright,az,el).x.linlin(1.neg,1,0,size).round(1).asInteger;
 //cdimy=Spherical(bright,az,el).y.linlin(1.neg,1,0,size).round(1).asInteger;
 //cdimz=Spherical(bright,az,el).z.linlin(1.neg,1,0,size).round(1).asInteger;
@@ -95,8 +98,8 @@ dimy=el.linlin(-0.5pi, 0.5pi, 0, size).round(1).asInteger;
 //c3 =Spherical(1,az,el).z.linlin(1.neg,1,0,0.5);
 nx=1.neg;
 ny=1.neg;
-brightx=size.collect{nx=nx+1; if((nx==dimx),1,0)};
-brighty=size.collect{ny=ny+1; if((ny==dimy),1,0)};
+brightx=size.collect{nx=nx+1; if((nx==dimx),valx,0)};
+brighty=size.collect{ny=ny+1; if((ny==dimy),valy,0)};
 //nx = 1.neg;
 //ny = 1.neg;
 //pposx=size.collect{nx=nx+1; if((nx==dimx),500,dimx)};
@@ -117,18 +120,20 @@ scale.do{
 //bvalx_0=(cx.[yp]);
 //bvaly_0=(cy.[yp]);
 //bvalz_0=(cz.[yp]);
-bval=(brighty.[yp]);
+//bval=(brighty.[yp]);
 scale.do{
-bvall=bval+brightx.[xp];
+bval=Complex(brightx.[xp],brighty.[yp]).rho;
+//bvall=bval+brightx.[xp];
 //bvalx=(bvalx_0+cx.[xp]);
 //bvaly=(bvaly_0+cy.[xp]);
 //bvalz=(bvalz_0+cz.[xp]);
-Pen.fillColor = Color.new(bvall,bvall,bvall);
+Pen.fillColor = Color.new(bval,bval,bval);
 Pen.fillRect(Rect.new((posx.[xp]),(posy.[yp]),px,px));
 xp=xp+px;
 };
 yp=yp+px; 	xp=0;
 };
+
 yp=0;
 }
 );
