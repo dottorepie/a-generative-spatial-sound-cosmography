@@ -19,7 +19,7 @@ win = Window("RGB Audio", Rect(100, 10, size,size));
 ~view = UserView(win, Rect(0,0,size,size)).background_(Color.black);
 
 SynthDef(\painting, {
-arg lg=0.001,level=10;
+arg lg=0.001,level=100;
 var amp1 = (InFeedback.ar(6)*level).lag(lg);
 var amp2 = (InFeedback.ar(7)*level).lag(lg);
 var amp3 = (InFeedback.ar(8)*level).lag(lg);
@@ -82,7 +82,7 @@ el=polytope.phi;
 mag=polytope.rho;
 dimx=az.linlin(0,pi,0,size).round(1).asInteger;
 dimy = el.linlin(-0.5pi, 0.5pi, 0, size).round(1).asInteger;
-bright = mag.linlin(0,mag,1,2);
+bright = mag.linexp(0,mag,0.5,0.0001);
 mag=polytope.rho;
 nx = 1.neg;
 ny = 1.neg;
@@ -94,8 +94,8 @@ posy=(size).collect{ny=ny+1};
 //~posy=size.collect{yp=yp+1}; yp=0;
 size.do{
 size.do{
-bval=pposx.[xp]+pposy.[yp];
-Pen.fillColor = Color.new(0.5.rand*bval,0.5.rand*bval,0.5.rand*bval);
+bval=(pposx.[xp]+pposy.[yp]);
+Pen.fillColor = Color.new(bval,bval,bval);
 Pen.fillRect(Rect.new(posx.[xp],posy.[yp],1,1));
 xp=xp+1;
 };
@@ -106,13 +106,18 @@ yp=0;
 );
 { while { run } {~view.background_(Color.black); ~view.refresh; (1/100).wait } }.fork(AppClock);
 win.front;
+(
+~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0,\el,0,\scale,0,\harmonic,1,\fl,7.5,
+				\bg1,0.001,\bg2,0.001,\bg3,0.001,\bg4,0.001,\bg5,0.001,\bg6,0.001,\bg7,0.001,\bg8,0.001,\bg9,0.001,
+				\lowend,64,\level,600,\dyn,1,\comp,1,\buffer,1,\tone_axis,1,\ran,16256,\rect_level,2,
+\sphharm,0,\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,10]).register)
+~synthp = Synth(\painting).register;
 )
 
-~a = Synth(\painting).register;
-~a.set(\gain1,5)
-~a.set(\gain2,1000)
-~a.set(\lag,0.1)
-~a.set(\lag,0.1)
-~a.free
-~x.[0]
+~synthp.set(\gain1,5)
+~synthp.set(\gain2,1000)
+~synthp.set(\lag,0.1)
+~synthp.set(\lag,0.1)
+~synthp.free
+
 
