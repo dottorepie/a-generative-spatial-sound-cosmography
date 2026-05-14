@@ -2,7 +2,7 @@
 ////////////////////////////////////////////painter
 
 (
-var win,wx=0,wy=0,g=((1+5.sqrt)/2),s=(1+2.sqrt),size=1000,px=5,scale=size/scale;
+var win,wx=0,wy=0,g=((1+5.sqrt)/2),s=(1+2.sqrt),size=1000,px=5,scale=size/px;
 var az,el,polytope,mag,xp=0,yp=0,dimx,dimy,c,nx,ny,nz;
 var c1,c2,c3,cx,cy,cz,cdimx,cdimy,cdimz;
 var run=true,pposx,pposy,posx,posy,bvalx,bvaly,bvalz,bvalx_0,bvaly_0,bvalz_0;
@@ -92,8 +92,9 @@ c2 =Spherical(1,az,el).y.linlin(1.neg,1,0,0.5);
 c3 =Spherical(1,az,el).z.linlin(1.neg,1,0,0.5);
 nx = 1.neg;
 ny = 1.neg;
-pposx=size.collect{nx=nx+1; if(nx==dimx,c,nx)};
-pposy=size.collect{ny=ny+1; if(ny==dimy,c,ny)};
+
+pposx=size.collect{nx=nx+1; if((nx==dimx)and:(nx==(dimx+px)),c,nx)};
+pposy=size.collect{ny=ny+1; if((ny==dimy)and:(ny==(dimy+px)),c,ny)};
 nx=1.neg;
 ny=1.neg;
 nz=1.neg;
