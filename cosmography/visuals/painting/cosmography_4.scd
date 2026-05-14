@@ -428,9 +428,15 @@ sig1=Compander.ar(sig1,control1,threshold1,1.2,1/3,0.03,0.15)+BrownNoise.ar(0.00
 sig2=Compander.ar(sig2,control2,threshold2,1.2,1/3,0.03,0.15)+BrownNoise.ar(0.00001);
 sig3=Compander.ar(sig3,control3,threshold3,1.2,1/3,0.03,0.15)+BrownNoise.ar(0.00001);
 
-chainwet1 =  FFT(LocalBuf(frames), sig1);
-chainwet2 =  FFT(LocalBuf(frames), sig2);
-chainwet3 =  FFT(LocalBuf(frames), sig3);
+/////xyz out
+Out.ar(6,sig1);
+Out.ar(7,sig2);
+Out.ar(8,sig3);
+
+////verb
+chainwet1 =  FFT(LocalBuf(frames), InFeedback.ar(6));
+chainwet2 =  FFT(LocalBuf(frames), InFeedback.ar(7));
+chainwet3 =  FFT(LocalBuf(frames), InFeedback.ar(8));
 
 dry1=sig1;
 dry2=sig2;
@@ -562,10 +568,7 @@ InFeedback.ar(3)-
 InFeedback.ar(4)-
 InFeedback.ar(5));
 );
-/////xyz out
-Out.ar(6,bx);
-Out.ar(7,by);
-Out.ar(8,bz);
+
 ////stereo
 //Out.ar(0,DecodeB2.ar(2, bw, bx, by,0)*spread.linlin(0.1,1,0.5,1));
 Out.ar(0,BFDecode1.ar(bw, bx, by, bz,[polytope.theta,polytope.theta+0.5pi], [polytope.phi,polytope.phi])*spread.linlin(0.1,1,0.5,1));
