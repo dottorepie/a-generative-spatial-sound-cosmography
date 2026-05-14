@@ -2,10 +2,10 @@
 ////////////////////////////////////////////painter
 
 (
-var win,wx=0,wy=0,g=((1+5.sqrt)/2),s=(1+2.sqrt),size=400,scale=150;
-var az,el,polytope,mag,xp=0,yp=0,dimx,dimy,bright,nx,ny,nz;
+var win,wx=0,wy=0,g=((1+5.sqrt)/2),s=(1+2.sqrt),size=1000,scale=400,px=10;
+var az,el,polytope,mag,xp=0,yp=0,dimx,dimy,c,nx,ny,nz;
 var c1,c2,c3,cx,cy,cz,cdimx,cdimy,cdimz;
-var run=true,pposx,pposy,posx,posy,bval,bval_0,bvalx,bvaly,bvalz,bvalx_0,bvaly_0,bvalz_0;
+var run=true,pposx,pposy,posx,posy,bvalx,bvaly,bvalz,bvalx_0,bvaly_0,bvalz_0;
 //Window.closeAll;
 
 ~amp1 = 0;
@@ -81,43 +81,41 @@ polytope=	Cartesian(~amp1,~amp2,~amp3);
 az=polytope.theta;
 el=polytope.phi;
 mag=polytope.rho;
-dimx=az.linlin(0,pi,0,size).round(1).asInteger;
-dimy = el.linlin(-0.5pi, 0.5pi, 0, size).round(1).asInteger;
-cdimx=Spherical(1,az,el).x.linlin(1.neg,1,0,size).round(1).asInteger;
-cdimy=Spherical(1,az,el).y.linlin(1.neg,1,0,size).round(1).asInteger;
-cdimz=Spherical(1,az,el).z.linlin(1.neg,1,0,size).round(1).asInteger;
-bright = mag.linlin(0,mag,0.0001,1);
-c1 =Spherical(1,az,el).x.linlin(1.neg,1,0,1);
-c2 =Spherical(1,az,el).x.linlin(1.neg,1,0,1);
-c3 =Spherical(1,az,el).x.linlin(1.neg,1,0,1);
+dimx=az.linlin(0,pi,0,scale).round(1).asInteger;
+dimy = el.linlin(-0.5pi, 0.5pi, 0, scale).round(1).asInteger;
+cdimx=Spherical(1,az,el).x.linlin(1.neg,1,0,scale).round(1).asInteger;
+cdimy=Spherical(1,az,el).y.linlin(1.neg,1,0,scale).round(1).asInteger;
+cdimz=Spherical(1,az,el).z.linlin(1.neg,1,0,scale).round(1).asInteger;
+c = mag.linlin(0,mag,0,scale).round(1).asInteger;
+c1 =Spherical(1,az,el).x.linlin(1.neg,1,0,0.5);
+c2 =Spherical(1,az,el).y.linlin(1.neg,1,0,0.5);
+c3 =Spherical(1,az,el).z.linlin(1.neg,1,0,0.5);
 nx = 1.neg;
 ny = 1.neg;
-pposx=size.collect{nx=nx+1; if(nx==dimx,bright,0)};
-pposy=size.collect{ny=ny+1; if(ny==dimy,bright,0)};
+pposx=scale.collect{nx=nx+1; if(nx==dimx,c,nx)};
+pposy=scale.collect{ny=ny+1; if(ny==dimy,c,ny)};
 nx=1.neg;
 ny=1.neg;
 nz=1.neg;
-cx=size.collect{nx=nx+1; if(nx==cdimx,c1,0)};
-cy=size.collect{ny=ny+1; if(ny==cdimy,c2,0)};
-cz=size.collect{nz=nz+1; if(nz==cdimz,c3,0)};
+cx=scale.collect{nx=nx+1; if(nx==cdimx,c1,0.5.rand)};
+cy=scale.collect{ny=ny+1; if(ny==cdimy,c2,0.5.rand)};
+cz=scale.collect{nz=nz+1; if(nz==cdimz,c3,0.5.rand)};
 nx = 1.neg;
 ny = 1.neg;
-posx=size.collect{nx=nx+1};
-posy=size.collect{ny=ny+1};
-//~posx=size.collect{xp=xp+1}; xp=0;
-//~posy=size.collect{yp=yp+1}; yp=0;
-size.do{
-bval_0=(pposy.[yp]);
+posx=scale.collect{nx=nx+1};
+posy=scale.collect{ny=ny+1};
+//~posx=scale.collect{xp=xp+1}; xp=0;
+//~posy=scale.collect{yp=yp+1}; yp=0;
+scale.do{
 bvalx_0=(cx.[yp]);
 bvaly_0=(cy.[yp]);
 bvalz_0=(cz.[yp]);
-size.do{
-bval=(bval_0+pposx.[xp]);
+scale.do{
 bvalx=(bvalx_0+cx.[xp]);
 bvaly=(bvaly_0+cy.[xp]);
 bvalz=(bvalz_0+cz.[xp]);
-Pen.fillColor = Color.new(bvalx,bvaly,bvalz,1);
-Pen.fillRect(Rect.new(posx.[xp],posy.[yp],1,1));
+Pen.fillColor = Color.new(bvalx,bvaly,bvalz);
+Pen.fillRect(Rect.new((pposx.[xp]),(pposy.[yp]),px,px));
 xp=xp+1;
 };
 yp=yp+1; 	xp=0;
