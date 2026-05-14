@@ -206,8 +206,8 @@ phase_mod_x=(Complex(1,mod_x).theta*4);
 phase_mod_y=(Complex(1,mod_y).theta*4);
 phase_mod_z=(Complex(1,mod_z).theta*2);
 
-mod_anglex=SinOsc.ar(sph_mod,phase:phase_mod_x).range(pi.neg,pi);
-mod_angley=SinOsc.ar(sph_mod,phase:phase_mod_y).range(pi.neg,pi);
+mod_anglex=SinOsc.ar(sph_mod,phase:phase_mod_x).range(0,pi);
+mod_angley=SinOsc.ar(sph_mod,phase:phase_mod_y).range(0,pi);
 mod_anglez=SinOsc.ar(sph_mod,phase:phase_mod_z).range(35.264390.degrad,35.264390.degrad.neg);
 
 magx=((Complex(cos(((polytope.theta+mod_anglex)*mx).wrap(pi.neg,pi)),
@@ -226,9 +226,9 @@ sph_y=(Cartesian(0,magy/2.sqrt,0).rho);
 sph_z=(Cartesian(0,0,magz/2.sqrt).rho);
 sph_mag=(Cartesian(sph_x,sph_y,sph_z));
 sph=Spherical(sph_mag.rho/2.sqrt,polytope.theta,polytope.phi);
-polx=Spherical(sph_x*timbre,polytope.theta,polytope.phi);
-poly=Spherical(sph_y*timbre,polytope.theta,polytope.phi);
-polz=Spherical(sph_z*timbre,polytope.theta,polytope.phi);
+polx=Spherical((sph_x*timbre).round(1),polytope.theta,polytope.phi);
+poly=Spherical((sph_y*timbre).round(1),polytope.theta,polytope.phi);
+polz=Spherical((sph_z*timbre).round(1),polytope.theta,polytope.phi);
 
 tonaldegree_x = Select.kr(tone_axis, [polx.x, poly.x, polz.x]);
 tonaldegree_y = Select.kr(tone_axis, [polx.y, poly.y, polz.y]);
