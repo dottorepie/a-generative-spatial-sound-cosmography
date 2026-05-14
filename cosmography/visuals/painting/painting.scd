@@ -5,7 +5,7 @@
 var win,wx=0,wy=0,g=((1+5.sqrt)/2),s=(1+2.sqrt);
 var size=500,px=1,scale=500,run=true;
 var az,el,polytope,mag,xp=0,yp=0,dimx,dimy,c,nx,ny,nz;
-var bright,brightx,brighty,bval,bvall,pposx,pposy,posx,posy;
+var bright,brightx,brighty,bval,pposx,pposy,posx,posy;
 var c1,c2,c3,cx,cy,cz,cdimx,cdimy,cdimz;
 var bvalx,bvaly,bvalz,bvalx_0,bvaly_0,bvalz_0;
 var valx,valy;
@@ -98,10 +98,6 @@ valy=el.linlin(-0.5pi, 0.5pi, 0, 1);
 //c3 =Spherical(1,az,el).z.linlin(1.neg,1,0,0.5);
 nx=1.neg;
 ny=1.neg;
-brightx=size.collect{nx=nx+1; if((nx==dimx),valx,0)};
-brighty=size.collect{ny=ny+1; if((ny==dimy),valy,0)};
-//nx = 1.neg;
-//ny = 1.neg;
 //pposx=size.collect{nx=nx+1; if((nx==dimx),500,dimx)};
 //pposy=size.collect{ny=ny+1; if((ny==dimy),500,dimy)};
 //nx=1.neg;
@@ -120,10 +116,10 @@ scale.do{
 //bvalx_0=(cx.[yp]);
 //bvaly_0=(cy.[yp]);
 //bvalz_0=(cz.[yp]);
-//bval=(brighty.[yp]);
 scale.do{
-bval=Complex(brightx.[xp],brighty.[yp]).rho;
-//bvall=bval+brightx.[xp];
+brightx= if((xp==dimx.rand),1,0);
+brighty= if((yp==dimy.rand),1,0);
+bval=brightx+brighty;
 //bvalx=(bvalx_0+cx.[xp]);
 //bvaly=(bvaly_0+cy.[xp]);
 //bvalz=(bvalz_0+cz.[xp]);
