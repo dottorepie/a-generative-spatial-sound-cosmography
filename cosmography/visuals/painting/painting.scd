@@ -18,10 +18,10 @@ win = Window("RGB Audio", Rect(10, 10, size,size));
 ~view = UserView(win, Rect(0,0,size,size)).background_(Color.black);
 
 SynthDef(\painting, {
-arg lg=0.01;
-var amp1 = (InFeedback.ar(6).abs).lag(lg);
-var amp2 = (InFeedback.ar(7).abs).lag(lg);
-var amp3 = (InFeedback.ar(8).abs).lag(lg);
+arg lg=0.001,level=1000;
+var amp1 = (InFeedback.ar(6)*level).lag(lg);
+var amp2 = (InFeedback.ar(7)*level).lag(lg);
+var amp3 = (InFeedback.ar(8)*level).lag(lg);
 //	var amp4 = (InFeedback.ar(5).abs*gain1).lag(lag);
 //	var amp5 = (InFeedback.ar(6)*gain2).lag(lag);
 //	var amp6 = (InFeedback.ar(7)*gain2).lag(lag);
@@ -71,6 +71,7 @@ OSCdef(\ampt7, { |msg|
 	~amp7 = msg[3];
 	defer { ~v1.refresh };
 }, '/amp7');*/
+~view.animate=true;
 
 (
 ~view.drawFunc = {
@@ -78,8 +79,8 @@ polytope=	Cartesian(~amp1,~amp2,~amp3);
 az=polytope.theta;
 el=polytope.phi;
 mag=polytope.rho;
-dimx=az.linlin(0,pi,0,size);
-dimy=el.linlin(0.5pi,0.5pi.neg,0,size);
+dimx=az.linlin(0,pi,0,size).round(1).asInteger;
+dimy = el.linlin(-0.5pi, 0.5pi, 0, size).round(1).asInteger;
 bright = mag.linlin(0,mag,1,2);
 mag=polytope.rho;
 nx = 1.neg;
@@ -89,8 +90,9 @@ ny = 1.neg;
 
 (size).do{
 (size).do{
-Pen.fillColor = Color.new(0.5.rand*bright,0.5.rand*bright,0.5.rand*bright);
-Pen.fillRect(Rect.new(~x.[xp],~y.[yp],1,1));
+Pen.fillColor = Color.new(0.5.rand,0.5.rand,0.5.rand);
+//Pen.fillRect(Rect.new(~x.[xp],~y.[yp],1,1));
+Pen.fillRect(Rect.new(dimx,dimy,30,30));
 xp=xp+1;
 };
 yp=yp+1; 	xp=0;
