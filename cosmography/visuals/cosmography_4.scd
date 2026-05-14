@@ -635,7 +635,7 @@ spread:spread.reciprocal));
 				(
 					MIDIdef.cc(\midi_pot4,{ |val, num, chan, src|
 						var a;
-						a=val.linlin(0,127,pi.neg,pi);
+						a=val.linlin(0,127,0,pi);
 						a.postln;
 						if(~synth.isPlaying,{~synth.set(\az,a)});
 					},4);
@@ -882,7 +882,7 @@ spread:spread.reciprocal));
  ~bfreq=2;
 ~bamp=3;
 ~time=120;
-~count=[2,2,2,4,2,6];
+~count=[2,2,2,2,2,2];
 ({
 var ot=0,dota,pla=0;
 var data;
@@ -1371,7 +1371,7 @@ az6=0;el6=0;
 	az=~az.[pla];
 	el=~el.[pla];
 	//mag=1000;
-			mag=(Cartesian(~magxb.[pla],~magyb.[pla],~magzb.[pla]).rho)/2.sqrt;
+			mag=(Cartesian(~magx.[pla],~magy.[pla],~magz.[pla]).rho)/2.sqrt;
 	//	mag=mag+(Cartesian(~magqx.[pla],0,0).rho);
 	pla=pla+1;
 			//mk=(mk+(1-(1/1.6180339887499))).wrap(0,1);

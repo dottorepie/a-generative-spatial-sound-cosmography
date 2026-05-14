@@ -3,7 +3,7 @@
 
 (
 var win,wx=0,wy=0,g=((1+5.sqrt)/2),s=(1+2.sqrt),size=400,scale=150;
-var az,el,polytope,mag,xp=0,yp=0;
+var az,el,polytope,mag,xp=0,yp=0,dimx,dimy;
 var nx=1.neg,ny=1.neg;
 //Window.closeAll;
 
@@ -72,7 +72,7 @@ OSCdef(\ampt7, { |msg|
 	~amp7 = msg[3];
 	defer { ~v1.refresh };
 }, '/amp7');*/
-
+Cartesian(1.neg,0,0).theta
 (
 ~view.drawFunc = {
 
