@@ -3,7 +3,7 @@ Server.killAll
 (
 (
 s.options.numWireBufs = 1024*2;
-s.options.numOutputBusChannels=6;
+s.options.numOutputBusChannels=9;
 s.options.numInputBusChannels=2;
 s.options.memSize = 8192*16;
 s.options.blockSize = 128;
@@ -20,8 +20,8 @@ s.options.maxNodes = 1024 * 2;
 (
 s.waitForBoot{
 
-s.freqscope;
-s.scope;
+//s.freqscope;
+//s.scope;
 //s.makeWindow;
 s.meter;
 ~tempo=1;
@@ -172,11 +172,11 @@ polytope=Spherical(1,az.lag(0.001),el.lag(0.001));
 tonal_polytope=Spherical(step,polytope.theta,polytope.phi);
 //mag_sphharm=c.lag(0.01).linlin(0,(16256*orange),1,5).round(1).asInteger;
 mag_sphharm=harmonic.lag(0.01);
-m_sphharm=Spherical(mag_sphharm,az.lag(0.001),el.lag(0.001));
+//m_sphharm=Spherical(mag_sphharm,az.lag(0.001),el.lag(0.001));
 sph_mod=2.pow(sphharm.lag(0.001)/16256);
-mx=m_sphharm.x.abs;
-my=m_sphharm.y.abs;
-mz=m_sphharm.z.abs;
+mx=mag_sphharm;
+my=mag_sphharm;
+mz=mag_sphharm;
 waveAmp=gain;
 waveSpeed=expansion;
 waveFreq=expansion.reciprocal;
@@ -206,15 +206,9 @@ phase_mod_x=(Complex(1,mod_x).theta*4);
 phase_mod_y=(Complex(1,mod_y).theta*4);
 phase_mod_z=(Complex(1,mod_z).theta*2);
 
-mod_anglex=(LPF.ar((Osc.ar(~wt.bufnum,sph_mod,phase:phase_mod_x,mul:100).abs*
-SinOsc.ar(sph_mod,phase:phase_mod_x)),
-sph_mod*heavy)).range(pi.neg,pi);
-mod_angley=(LPF.ar((Osc.ar(~wt.bufnum,sph_mod,phase:phase_mod_y,mul:100).abs*
-SinOsc.ar(sph_mod,phase:phase_mod_y)),
-sph_mod*heavy)).range(pi.neg,pi);
-mod_anglez=(LPF.ar((Osc.ar(~wt.bufnum,sph_mod,phase:phase_mod_z,mul:100).abs*
-SinOsc.ar(sph_mod,phase:phase_mod_z)),
-sph_mod*heavy)).range(35.264390.degrad,35.264390.degrad.neg);
+mod_anglex=SinOsc.ar(sph_mod,phase:phase_mod_x).range(0,pi);
+mod_angley=SinOsc.ar(sph_mod,phase:phase_mod_y).range(0,pi);
+mod_anglez=SinOsc.ar(sph_mod,phase:phase_mod_z).range(35.264390.degrad,35.264390.degrad.neg);
 
 magx=((Complex(cos(((polytope.theta+mod_anglex)*mx).wrap(pi.neg,pi)),
 cos((((polytope.theta+mod_anglex)*mx)).wrap(pi.neg,pi))).rho/(2.sqrt))*
@@ -232,9 +226,9 @@ sph_y=(Cartesian(0,magy/2.sqrt,0).rho);
 sph_z=(Cartesian(0,0,magz/2.sqrt).rho);
 sph_mag=(Cartesian(sph_x,sph_y,sph_z));
 sph=Spherical(sph_mag.rho/2.sqrt,polytope.theta,polytope.phi);
-polx=Spherical(sph_x*timbre,polytope.theta,polytope.phi);
-poly=Spherical(sph_y*timbre,polytope.theta,polytope.phi);
-polz=Spherical(sph_z*timbre,polytope.theta,polytope.phi);
+polx=Spherical((sph_x*timbre).round(1),polytope.theta,polytope.phi);
+poly=Spherical((sph_y*timbre).round(1),polytope.theta,polytope.phi);
+polz=Spherical((sph_z*timbre).round(1),polytope.theta,polytope.phi);
 
 tonaldegree_x = Select.kr(tone_axis, [polx.x, poly.x, polz.x]);
 tonaldegree_y = Select.kr(tone_axis, [polx.y, poly.y, polz.y]);
@@ -434,9 +428,15 @@ sig1=Compander.ar(sig1,control1,threshold1,1.2,1/3,0.03,0.15)+BrownNoise.ar(0.00
 sig2=Compander.ar(sig2,control2,threshold2,1.2,1/3,0.03,0.15)+BrownNoise.ar(0.00001);
 sig3=Compander.ar(sig3,control3,threshold3,1.2,1/3,0.03,0.15)+BrownNoise.ar(0.00001);
 
-chainwet1 =  FFT(LocalBuf(frames), sig1);
-chainwet2 =  FFT(LocalBuf(frames), sig2);
-chainwet3 =  FFT(LocalBuf(frames), sig3);
+/////xyz out
+Out.ar(6,sig1);
+Out.ar(7,sig2);
+Out.ar(8,sig3);
+
+////verb
+chainwet1 =  FFT(LocalBuf(frames), InFeedback.ar(6));
+chainwet2 =  FFT(LocalBuf(frames), InFeedback.ar(7));
+chainwet3 =  FFT(LocalBuf(frames), InFeedback.ar(8));
 
 dry1=sig1;
 dry2=sig2;
@@ -569,27 +569,10 @@ InFeedback.ar(4)-
 InFeedback.ar(5));
 );
 
+////stereo
 //Out.ar(0,DecodeB2.ar(2, bw, bx, by,0)*spread.linlin(0.1,1,0.5,1));
 Out.ar(0,BFDecode1.ar(bw, bx, by, bz,[polytope.theta,polytope.theta+0.5pi], [polytope.phi,polytope.phi])*spread.linlin(0.1,1,0.5,1));
 
-////stereo
-/*(
-Out.ar(0,Pan2.ar(
-Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain1*sph_x)),limit,0.01),pan1));
-Out.ar(0,Pan2.ar(
-Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain2*sph_y)),limit,0.01),pan3));
-Out.ar(0,
-Limiter.ar(LeakDC.ar(
-FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain3*sph_z)),limit,0.01)!2);
-)*/
-///three channel
-/*(
-Out.ar(4,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig1,mix.lag(0.01),room.lag(0.01),mul:gain*sph_x)),limit,0.01));
-Out.ar(5,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig2,mix.lag(0.01),room.lag(0.01),mul:gain*sph_y)),limit,0.01));
-Out.ar(6,Limiter.ar(LeakDC.ar(FreeVerb.ar(sig3,mix.lag(0.01),room.lag(0.01),mul:gain*sph_z)),limit,0.01));
-)*/
 ////3d vbap expansion
 /*(
 Out.ar(0,VBAP.ar(4,
@@ -619,7 +602,7 @@ spread:spread.reciprocal));
 	//	~mass=0;
 (
 ~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0,\el,0,\scale,0,\harmonic,1,\fl,7.5,
-				\bg1,1,\bg2,1,\bg3,1,\bg4,1,\bg5,1,\bg6,1,\bg7,1,\bg8,1,\bg9,1,
+				\bg1,0.001,\bg2,0.001,\bg3,0.001,\bg4,0.001,\bg5,0.001,\bg6,0.001,\bg7,0.001,\bg8,0.001,\bg9,0.001,
 				\lowend,64,\level,600,\dyn,1,\comp,1,\buffer,1,\tone_axis,1,\ran,16256,\rect_level,2,
 \sphharm,0,\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,10]).register);
 
@@ -655,7 +638,7 @@ spread:spread.reciprocal));
 				(
 					MIDIdef.cc(\midi_pot4,{ |val, num, chan, src|
 						var a;
-						a=val.linlin(0,127,pi.neg,pi);
+						a=val.linlin(0,127,0,pi);
 						a.postln;
 						if(~synth.isPlaying,{~synth.set(\az,a)});
 					},4);
@@ -769,7 +752,7 @@ spread:spread.reciprocal));
 				(
 					MIDIdef.cc(\midi_pot18,{ |val, num, chan, src|
 						var a;
-						a=val.linexp(0,127,0.001,100);
+						a=val.linexp(0,127,0.001,400);
 						a.postln;
 						if(~synth.isPlaying,{~synth.set(\buffer,a)});
 					},18);
@@ -902,7 +885,7 @@ spread:spread.reciprocal));
  ~bfreq=2;
 ~bamp=3;
 ~time=120;
-~count=[2,2,2,4,2,6];
+~count=[2,2,2,2,2,2];
 ({
 var ot=0,dota,pla=0;
 var data;
@@ -953,7 +936,7 @@ b.background = Color.clear;
 		scale=~controlBus1.getSynchronous.linexp(0,(16256*~orange),(16256),1);
 	scale1=~controlBus2.getSynchronous.linexp(0,(16256*~orange),992,1);
 	scale2=~controlBus3.getSynchronous.linexp(1,3,496,1);
-	rotation=~controlBus4.getSynchronous.linlin((16256*10).neg,(16256*5),0.0001,28);
+	rotation=~controlBus4.getSynchronous.linlin((16256*10).neg,(16256*5),0.0001,20);
 		harm=~controlBus5.getSynchronous;
 		temp=~controlBus1.getSynchronous.linexp(0,(16256*~orange),1,0);
 			space=~controlBus1.getSynchronous.linexp(0,(16256*~orange),0,1);
@@ -1391,7 +1374,7 @@ az6=0;el6=0;
 	az=~az.[pla];
 	el=~el.[pla];
 	//mag=1000;
-			mag=(Cartesian(~magxb.[pla],~magyb.[pla],~magzb.[pla]).rho)/2.sqrt;
+			mag=(Cartesian(~magx.[pla],~magy.[pla],~magz.[pla]).rho)/2.sqrt;
 	//	mag=mag+(Cartesian(~magqx.[pla],0,0).rho);
 	pla=pla+1;
 			//mk=(mk+(1-(1/1.6180339887499))).wrap(0,1);
