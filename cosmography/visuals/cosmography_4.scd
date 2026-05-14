@@ -20,8 +20,8 @@ s.options.maxNodes = 1024 * 2;
 (
 s.waitForBoot{
 
-s.freqscope;
-s.scope;
+//s.freqscope;
+//s.scope;
 //s.makeWindow;
 s.meter;
 ~tempo=1;
@@ -599,7 +599,7 @@ spread:spread.reciprocal));
 	//	~mass=0;
 (
 ~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0,\el,0,\scale,0,\harmonic,1,\fl,7.5,
-				\bg1,1,\bg2,1,\bg3,1,\bg4,1,\bg5,1,\bg6,1,\bg7,1,\bg8,1,\bg9,1,
+				\bg1,0.001,\bg2,0.001,\bg3,0.001,\bg4,0.001,\bg5,0.001,\bg6,0.001,\bg7,0.001,\bg8,0.001,\bg9,0.001,
 				\lowend,64,\level,600,\dyn,1,\comp,1,\buffer,1,\tone_axis,1,\ran,16256,\rect_level,2,
 \sphharm,0,\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,10]).register);
 
