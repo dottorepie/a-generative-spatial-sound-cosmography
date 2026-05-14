@@ -82,12 +82,12 @@ el=polytope.phi;
 mag=polytope.rho;
 dimx=az.linlin(0,pi,0,size).round(1).asInteger;
 dimy = el.linlin(-0.5pi, 0.5pi, 0, size).round(1).asInteger;
-bright = mag.linexp(0,mag,1,0.0001);
+bright = mag.linexp(0,mag,0.0001,1);
 mag=polytope.rho;
 nx = 1.neg;
 ny = 1.neg;
-pposx=size.collect{nx=nx+1; if(nx==dimx,bright,1)};
-pposy=size.collect{ny=ny+1; if(ny==dimy,bright,1)};
+pposx=size.collect{nx=nx+1; if(nx==dimx,bright,0)};
+pposy=size.collect{ny=ny+1; if(ny==dimy,bright,0)};
 nx = 1.neg;
 ny = 1.neg;
 posx=size.collect{nx=nx+1};
@@ -96,7 +96,7 @@ posy=size.collect{ny=ny+1};
 //~posy=size.collect{yp=yp+1}; yp=0;
 size.do{
 size.do{
-bval=(pposx.[xp]+pposy.[yp])/2.sqrt;
+bval=(pposx.[xp]+pposy.[yp]);
 Pen.fillColor = Color.new(bval,bval,bval);
 Pen.fillRect(Rect.new(posx.[xp],posy.[yp],1,1));
 xp=xp+1;
