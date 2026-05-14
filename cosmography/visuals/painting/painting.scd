@@ -43,17 +43,17 @@ SendReply.ar(Impulse.ar(60), '/amp3', amp3);
 
 OSCdef(\ampt1, { |msg|
 ~amp1 = msg[3];
-//defer { ~view.refresh };
+defer { ~view.refresh };
 }, '/amp1');
 
 OSCdef(\ampt2, { |msg|
 ~amp2 = msg[3];
-//defer { ~view.refresh };
+defer { ~view.refresh };
 }, '/amp2');
 
 OSCdef(\ampt3, { |msg|
 ~amp3 = msg[3];
-//defer { ~view.refresh };
+defer { ~view.refresh };
 }, '/amp3');
 
 /*OSCdef(\ampt4, { |msg|
@@ -132,13 +132,13 @@ yp=yp+px; 	xp=0;
 yp=0;
 }
 );
-{ while { run } {~view.background_(Color.black); ~view.refresh; (1/4).wait } }.fork(AppClock);
+//{ while { run } {~view.background_(Color.black); ~view.refresh; (1/4).wait } }.fork(AppClock);
 win.front;
 (
-~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0.3pi,\el,0.12pi,\scale,0,\harmonic,1,\fl,7.5,
+~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0,\el,0,\scale,0,\harmonic,1,\fl,7.5,
 				\bg1,0.001,\bg2,0.001,\bg3,0.001,\bg4,0.001,\bg5,0.001,\bg6,0.001,\bg7,0.001,\bg8,0.001,\bg9,0.001,
-				\lowend,64,\level,600,\dyn,1,\comp,1,\buffer,0.01,\tone_axis,1,\ran,16256,\rect_level,100,
-\sphharm,15*16256.neg,\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,1*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,10]).register);
+				\lowend,64,\level,600,\dyn,1,\comp,1,\buffer,1,\tone_axis,1,\ran,16256,\rect_level,2,
+\sphharm,0,\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,10]).register);
 ~synthp = Synth(\painting).register;
 )
 
