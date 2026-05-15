@@ -3,7 +3,7 @@ Server.killAll
 (
 (
 s.options.numWireBufs = 1024*2;
-s.options.numOutputBusChannels=9;
+s.options.numOutputBusChannels=12;
 s.options.numInputBusChannels=2;
 s.options.memSize = 8192*16;
 s.options.blockSize = 128;
@@ -542,8 +542,7 @@ FreeVerb.ar(sig33*g_ch4*pan4,mix.lag(0.001),room.lag(0.001),mul:gain)),limit,0.0
 //x=flu+frd-bld-bru
 //y=flu-frd+bld-bru
 //z=flu-frd-bld+bru
-
-				(
+(
 bw=(
 InFeedback.ar(2)+
 InFeedback.ar(3)+
@@ -565,7 +564,10 @@ InFeedback.ar(3)-
 InFeedback.ar(4)-
 InFeedback.ar(5));
 );
-
+/////xyz out
+Out.ar(9,bx);
+Out.ar(10,by);
+Out.ar(11,bz);
 ////stereo
 //Out.ar(0,DecodeB2.ar(2, bw, bx, by,0)*spread.linlin(0.1,1,0.5,1));
 Out.ar(0,BFDecode1.ar(bw, bx, by, bz,[polytope.theta,polytope.theta+0.5pi], [polytope.phi,polytope.phi])*spread.linlin(0.1,1,0.5,1));
@@ -600,7 +602,7 @@ spread:spread.reciprocal));
 (
 ~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0,\el,0,\scale,0,\harmonic,1,\fl,7.5,
 				\bg1,0.001,\bg2,0.001,\bg3,0.001,\bg4,0.001,\bg5,0.001,\bg6,0.001,\bg7,0.001,\bg8,0.001,\bg9,0.001,
-				\lowend,64,\level,600,\dyn,1,\comp,10000,\buffer,1,\tone_axis,1,\ran,16256,\rect_level,2,
+				\lowend,64,\level,600,\dyn,1,\comp,1,\buffer,1,\tone_axis,1,\ran,16256,\rect_level,2,
 \sphharm,0,\speaker_size,0.15,\room,0.5,\mix,0.3,\pan_mod,16*16256.neg,\spread,1,\limit,0.8,\fu,64,\band,10]).register);
 
 		///midi control
