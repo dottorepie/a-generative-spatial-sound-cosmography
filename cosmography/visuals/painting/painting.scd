@@ -2,12 +2,10 @@
 ////////////////////////////////////////////painter
 
 (
-var win,wx=0,wy=0,g=((1+5.sqrt)/2),s=(1+2.sqrt);
-var size=300,px=1,scale=300,run=true;
+var win,wx=0,wy=0,g=((1+5.sqrt)/2),s=(1+2.sqrt),rval=0;
+var size=300,px=10,scale=300,run=true;
 var az,el,polytope,mag,xp=0,yp=0,dimx,dimy,c,nx,ny,nz;
-var bright,brightx,brighty,bval,rval,pposx,pposy,posx,posy;
-var c1,c2,c3,cx,cy,cz,cdimx,cdimy,cdimz;
-var bvalx,bvaly,bvalz,bvalx_0,bvaly_0,bvalz_0;
+var bright,brightx,brighty,bval,pposx,pposy,posx,posy,c1,c2,c3;
 var valx,valy;
 //Window.closeAll;
 
@@ -84,52 +82,36 @@ polytope=	Cartesian(~amp1,~amp2,~amp3).asSpherical;
 az=polytope.theta;
 el=polytope.phi;
 //mag=polytope.rho;
-//bright=mag.linlin(0,mag,1,2);
-//c = mag.linlin(0,mag,0,size).round(1).asInteger;
+//bright=mag.linlin(0,mag,0.00001,1);
+//c = mag.linlin(0.00001,1,0,size).round(1).asInteger;
 dimx=az.linlin(0,pi,0,size).round(1).asInteger;
 dimy=el.linlin(-0.5pi, 0.5pi, 0, size).round(1).asInteger;
 valx=az.linlin(0,pi,0,1);
 valy=el.linlin(-0.5pi, 0.5pi, 0, 1);
-//cdimx=Spherical(bright,az,el).x.linlin(1.neg,1,0,size).round(1).asInteger;
-//cdimy=Spherical(bright,az,el).y.linlin(1.neg,1,0,size).round(1).asInteger;
-//cdimz=Spherical(bright,az,el).z.linlin(1.neg,1,0,size).round(1).asInteger;
-//c1 =Spherical(1,az,el).x.linlin(1.neg,1,0,0.5);
-//c2 =Spherical(1,az,el).y.linlin(1.neg,1,0,0.5);
-//c3 =Spherical(1,az,el).z.linlin(1.neg,1,0,0.5);
-//nx=1.neg;
-//ny=1.neg;
-//nz=1.neg;
-//cx=size.collect{nx=nx+1; if(nx==cdimx,c1,0.9.rand)};
-//cy=size.collect{ny=ny+1; if(ny==cdimy,c2,0.9.rand)};
-//cz=size.collect{nz=nz+1; if(nz==cdimz,c3,0.9.rand)};
+c1 =polytope.x.linexp(polytope.x.neg,polytope.x,0.0001,1);
+c2 =polytope.y.linexp(polytope.y.neg,polytope.y,0.0001,1);
+c3 =polytope.z.linexp(polytope.z.neg,polytope.z,0.0001,1);
 nx=1.neg;
 ny=1.neg;
-posx=size.collect{nx=nx+1};
-posy=size.collect{ny=ny+1};
+posx=scale.collect{nx=nx+1};
+posy=scale.collect{ny=ny+1};
 //thisThread.randSeed = rval;
 scale.do{
-//bvalx_0=(cx.[yp]);
-//bvaly_0=(cy.[yp]);
-//bvalz_0=(cz.[yp]);
 scale.do{
-rval=scale.rand;
+rval=size.rand;
 brightx= if((xp==(dimx-rval).abs),1,0);
 brighty= if((yp==(dimy-rval).abs),1,0);
 bval=brightx+brighty;
-//bvalx=(bvalx_0+cx.[xp]);
-//bvaly=(bvaly_0+cy.[xp]);
-//bvalz=(bvalz_0+cz.[xp]);
-Pen.fillColor = Color.new(bval,bval,bval);
+Pen.fillColor = Color.new(c1,c2,c3,bval);
 Pen.fillRect(Rect.new((posx.[xp]),(posy.[yp]),px,px));
-xp=xp+px;
+xp=xp+1;
 };
-yp=yp+px; 	xp=0;
+yp=yp+1; 	xp=0;
 };
-
 yp=0;
 }
 );
-{ while { run } {~view.background_(Color.black); ~view.refresh; (1/40).wait } }.fork(AppClock);
+{ while { run } {~view.background_(Color.black); ~view.refresh; (1/120).wait } }.fork(AppClock);
 win.front;
 (
 ~synth=Synth.new(\synth,[\gain,1,\drive,0,\c,0,\az,0,\el,0,\scale,0,\harmonic,1,\fl,7.5,
@@ -140,7 +122,8 @@ win.front;
 )
 
 
-~synthp.set(\lg,1)
+~synthp.set(\lg,5)
+~synthp.set(\level,5)
 ~synthp.free
 
 
