@@ -3,10 +3,10 @@
 
 (
 var win,wx=0,wy=0,g=((1+5.sqrt)/2),s=(1+2.sqrt),rval=0,rvalc=0;
-var size=300,px=8,run=true;
+var size=300,px=4,run=true;
 var az,el,polytope,mag,xp=0,yp=0,dimx,dimy,c,n;
 var bright,brightx,brighty,bval,pos,c1,c2,c3;
-var valx,valy,limit=32,rval1=0,rval2=0;
+var valx,valy,limit=64,rval1=0,rval2=0;
 //Window.closeAll;
 
 ~amp1 = 0;
@@ -16,7 +16,7 @@ var valx,valy,limit=32,rval1=0,rval2=0;
 //~amp5 = 0;
 //~amp6= 0;
 //~amp7= 0;
-
+Window.closeAll;
 win = Window("RGB Audio", Rect(100, 10, size,size));
 ~view = UserView(win, Rect(0,0,size,size)).background_(Color.black);
 
@@ -82,21 +82,25 @@ polytope=	Cartesian(~amp1,~amp2,~amp3).asSpherical;
 az=polytope.theta;
 el=polytope.phi;
 mag=polytope.rho;
-rval2=mag.linlin(0,1,0,1);
-c=mag.linlin(0,1,0,limit).round(1).asInteger;
-dimx=az.linlin(0,pi,0,size).round(1).asInteger;
-dimy=el.linlin(-0.5pi, 0.5pi, 0, size).round(1).asInteger;
-c1 =Spherical(1,az,el).x.linlin(0,1,0,1);
-c2 =Spherical(1,az,el).y.linlin(0,1,0,1);
-c3 =Spherical(1,az,el).z.linlin(0,1,0,1);
+rval2=mag.linlin(0,2.sqrt,0,1);
+c=mag.linlin(0,2.sqrt,0,limit).round(1).asInteger;
+//dimx=az.linlin(pi.neg,pi,0,size).round(1).asInteger;
+//dimy=el.linlin(-0.5pi, 0.5pi, 0, size).round(1).asInteger;
+dimx=exp(Complex(0,1)*az);
+dimy=exp(Complex(0,1)*el);
+dimx=(dimx*size).round(1).asInteger;
+dimy=(dimy*size).round(1).asInteger;
+c1 =Spherical(1,az,el).x;
+c2 =Spherical(1,az,el).y;
+c3 =Spherical(1,az,el).z;
 n=1.neg;
 pos=size.collect{n=n+1};
 size.do{
 size.do{
-bright=xp.linlin(0,size,0,1)/yp.linlin(0,size,0,1);
+bright=Complex(xp.linlin(0,size,0,2.sqrt.reciprocal),yp.linlin(0,size,0,2.sqrt.reciprocal)).rho;
 rval=c.rand2;
 rvalc=0.2.rand2;
-rval1=rval2;
+rval1=0;
 brightx= if((xp==(dimx+rval).wrap(0,size)),(bright+rval1).wrap(0,1),0);
 brighty= if((yp==(dimy+rval).wrap(0,size)),(bright+rval1).wrap(0,1),0);
 bval=brightx+brighty;
@@ -120,7 +124,7 @@ win.front;
 )
 
 
-~synthp.set(\lg,0.01)
+~synthp.set(\lg,1)
 ~synthp.free
 
 //thisThread.randSeed = rval;

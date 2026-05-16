@@ -637,7 +637,7 @@ spread:spread.reciprocal));
 				(
 					MIDIdef.cc(\midi_pot4,{ |val, num, chan, src|
 						var a;
-						a=val.linlin(0,127,0,pi);
+						a=val.linlin(0,127,pi.neg,pi);
 						a.postln;
 						if(~synth.isPlaying,{~synth.set(\az,a)});
 					},4);
