@@ -106,7 +106,7 @@ var tonaldegree_x,tonaldegree_y,tonaldegree_z,feed1,feed2,feed3,bw,bx,by,bz,sste
 pan=2.pow(pan_mod.lag(0.001)/16256);
 ph = (2pi-(2pi/s));
 heavy=2.pow(drive.lag(0.001)/16256);
-level=level*heavy;
+mass=heavy/comp;
 dyn1=dyn*2;
 dyn2=dyn*3;
 dyn3=dyn*4;
@@ -300,8 +300,6 @@ sig3=HPF.ar(sig3, lowend);
 sig1=Compander.ar(sig1,control1,threshold1,1.2,1/3,0.03,0.15)+BrownNoise.ar(0.00001);
 sig2=Compander.ar(sig2,control2,threshold2,1.2,1/3,0.03,0.15)+BrownNoise.ar(0.00001);
 sig3=Compander.ar(sig3,control3,threshold3,1.2,1/3,0.03,0.15)+BrownNoise.ar(0.00001);
-
-gain=gain*dyn;
 
 g_ch1 = (
 (Spherical(sph_x,(polytope.theta).wrap(pi,pi.neg),(polytope.phi).wrap(~elevation[2],~elevation[1])).x *
