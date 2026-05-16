@@ -13,8 +13,8 @@ var mag1=1,mag2=1,mag3=1,mag4=1,mag5=1,mag6=1,mag7=1;
 
 //	spread = if(m_z < 1) { 1 / m_z } { m_z };
 
-	16.do{
-azimuth=32.collect{
+	8.do{
+azimuth=8.collect{
 			az1 = (az1+(2pi-(2pi/silver_r))).wrap(pi.neg,pi);
 		   el1 = (el1+(pi-(pi/silver_r))).wrap((pi/2).neg,(pi/2));
 
@@ -189,7 +189,7 @@ OSCdef(\ampt7, { |msg|
 	defer { ~v1.refresh };
 }, '/amp7');*/
 //~view.animate=true;
-~iter=(32*16);
+~iter=(8*8);
 (
 ~view.drawFunc = {
 Pen.translate(size/2,size/2);
@@ -226,15 +226,15 @@ brighty= if((yp==(dimy+rval).wrap(0,size)),(valy).wrap(0,1),0);
 bval=brightx+brighty;
 sph=Spherical(sizee,az,el).asCartesian.asArray;
 ~data=[sph];
+xp=xp+1;yp=yp+1;
+};
+xp=0;yp=0;
 plot = ScatterView3d(~view, Rect(0,0, size,size), ~data,
 [-1000, 1000].asSpec,[-1000, 1000].asSpec,[-1000, 1000].asSpec);
 plot .drawMethod = \fillRect;
 plot .symbolSize = px;
 plot .symbolColor = Color.new((c1+rvalc).wrap(0,1),(c2+rvalc).wrap(0,1),(c3+rvalc).wrap(0,1),bval);
 plot .background = Color.black;
-xp=xp+1;yp=yp+1;
-};
-xp=0;yp=0;
 plot.rot(ot,ot,ot);
 ot=ot+1.degrad;
 };
