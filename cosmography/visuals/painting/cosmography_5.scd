@@ -316,7 +316,7 @@ sig1=
 (LPF.ar((Osc.ar(~wt.bufnum,freq1*oct8,phase:phasex+ph2,mul:level).abs*SinOsc.ar(freq1*oct8,phase:phasex+ph2)),freq1*heavy,amp1*oct8.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq1*oct9,phase:phasex+ph1,mul:level).abs*SinOsc.ar(freq1*oct9,phase:phasex+ph1)),freq1*heavy,amp1*oct9.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq1,phase:phasex+ph,mul:level).abs*SinOsc.ar(freq1,phase:phasex+ph)),freq1*heavy,amp1)))*comp)*comp)+
-(rect_level*LPF.ar((Osc.ar(~wt.bufnum,freq1,phase:phasex+ph,mul:level).abs*SinOsc.ar(freq1,phase:phasex+ph)),freq1*heavy,amp1))+
+(rect_level*LPF.ar((Osc.ar(~wt.bufnum,freq1,phase:phasex,mul:level).abs*SinOsc.ar(freq1,phase:phasex+ph)),freq1*heavy,amp1))+
 (
 Select.ar(band.round(1).asInteger,[BPF.ar(feed11,freq1*2,band,band.sqrt.reciprocal*amp1*buffer*bg1),
 feed11*buffer*bg1])+
@@ -349,7 +349,7 @@ sig2=
 (LPF.ar((Osc.ar(~wt.bufnum,freq2*oct8,phase:phasey+ph2,mul:level).abs*SinOsc.ar(freq2*oct8,phase:phasey+ph2)),freq2*heavy,amp2*oct8.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq2*oct9,phase:phasey+ph1,mul:level).abs*SinOsc.ar(freq2*oct9,phase:phasey+ph1)),freq2*heavy,amp2*oct9.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq2,phase:phasey+ph,mul:level).abs*SinOsc.ar(freq2,phase:phasey+ph)),freq2*heavy,amp2)))*comp)+
-(rect_level*LPF.ar((Osc.ar(~wt.bufnum,freq2,phase:phasey+ph,mul:level).abs*SinOsc.ar(freq2,phase:phasey+ph)),freq2*heavy,amp2))+
+(rect_level*LPF.ar((Osc.ar(~wt.bufnum,freq2,phase:phasey,mul:level).abs*SinOsc.ar(freq2,phase:phasey+ph)),freq2*heavy,amp2))+
 (
 Select.ar(band.round(1).asInteger,[BPF.ar(feed21,freq2*2,band,band.sqrt.reciprocal*amp2*buffer*bg1),
 feed21*buffer*bg1])+
@@ -383,7 +383,7 @@ sig3=
 (LPF.ar((Osc.ar(~wt.bufnum,freq3*oct8,phase:phasez+ph2,mul:level).abs*SinOsc.ar(freq3*oct8,phase:phasez+ph2)),freq3*heavy,amp3*oct8.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq3*oct9,phase:phasez+ph1,mul:level).abs*SinOsc.ar(freq3*oct9,phase:phasez+ph1)),freq3*heavy,amp3*oct9.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq3,phase:phasez+ph,mul:level).abs*SinOsc.ar(freq3,phase:phasez+ph)),freq3*heavy,amp3)))*comp)+
-(rect_level*LPF.ar((Osc.ar(~wt.bufnum,freq3,phase:phasez+ph,mul:level).abs*SinOsc.ar(freq3,phase:phasez+ph)),freq3*heavy,amp3))+
+(rect_level*LPF.ar((Osc.ar(~wt.bufnum,freq3,phase:phasez,mul:level).abs*SinOsc.ar(freq3,phase:phasez+ph)),freq3*heavy,amp3))+
 (
 Select.ar(band.round(1).asInteger,[BPF.ar(feed31,freq3*2,band,band.sqrt.reciprocal*amp3*buffer*bg1),
 feed31*buffer*bg1])+
@@ -569,8 +569,8 @@ Out.ar(9,bx);
 Out.ar(10,by);
 Out.ar(11,bz);
 ////stereo
-//Out.ar(0,DecodeB2.ar(2, bw, bx, by,0)*spread.linlin(0.1,1,0.5,1));
-Out.ar(0,BFDecode1.ar(bw, bx, by, bz,[polytope.theta,polytope.theta+0.5pi], [polytope.phi,polytope.phi])*spread.linlin(0.1,1,0.5,1));
+//Out.ar(0,DecodeB2.ar(2, bw, bx, by,0)*spread.linlin(0.01,1,0.5,1));
+Out.ar(0,BFDecode1.ar(bw, bx, by, bz,[polytope.theta,polytope.theta+0.5pi], [polytope.phi,polytope.phi])*spread.linlin(0.01,1,0.5,1));
 
 ////3d vbap expansion
 /*(
@@ -613,7 +613,7 @@ spread:spread.reciprocal));
 				(
 					MIDIdef.cc(\midi_pot1,{ |val, num, chan, src|
 						var a;
-						a=val.linlin(0,127,0,1);
+						a=val.linexp(0,127,0.00001,10);
 						a.postln;
 						if(~synth.isPlaying,{~synth.set(\gain,a)});
 					},1);
@@ -717,7 +717,7 @@ spread:spread.reciprocal));
 				(
 					MIDIdef.cc(\midi_pot14,{ |val, num, chan, src|
 						var a;
-						a=val.linexp(0,127,1,0.1);
+						a=val.linexp(0,127,1,0.01);
 						a.postln;
 						if(~synth.isPlaying,{~synth.set(\spread,a)});
 					},14);
@@ -742,8 +742,8 @@ spread:spread.reciprocal));
 (
 MIDIdef.cc(\midi_pot17,{ |val, num, chan, src|
 var a,b;
-a=val.linexp(0,127,3,10);
-b=10.pow(a);
+b=val.linexp(0,127,10.pow(1.neg),10.pow(10));
+//b=10.pow(a);
 b.postln;
 if(~synth.isPlaying,{~synth.set(\comp,b)});
 },17);
