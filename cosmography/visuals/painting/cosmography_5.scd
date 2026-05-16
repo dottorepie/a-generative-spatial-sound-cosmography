@@ -153,7 +153,7 @@ var n=0,verb1,verb2,verb3,threshold;
 pan=2.pow(pan_mod.lag(0.001)/16256);
 ph = (2pi-(2pi/s));
 heavy=2.pow(drive.lag(0.001)/16256);
-level=level*heavy;
+mass=heavy/level/comp;
 dyn1=dyn.lag(0.01)*2;
 dyn2=dyn.lag(0.01)*3;
 dyn3=dyn.lag(0.01)*4;
@@ -269,6 +269,7 @@ ph6=(ph5+ph).wrap(pi.neg,pi);
 ph7=(ph6+ph).wrap(pi.neg,pi);
 ph8=(ph7+ph).wrap(pi.neg,pi);
 ph9=(ph8+ph).wrap(pi.neg,pi);
+ph=ph1=ph2=ph3=ph4=ph5=ph6=ph7=ph8=ph9=0;
 
 //feed1=(SoundInFeedback.ar(0,buffer));    ///input
 //feed2=(SoundInFeedback.ar(1,buffer));
@@ -460,7 +461,7 @@ sig11=(verb1*mix)+(dry1*mix.linlin(0.001,1,1,0.001));
 sig22=(verb2*mix)+(dry2*mix.linlin(0.001,1,1,0.001));
 sig33=(verb3*mix)+(dry3*mix.linlin(0.001,1,1,0.001));
 
-gain=gain*dyn;
+//gain=gain*dyn;
 g_ch1 = (
 (Spherical(sph_x,(polytope.theta).wrap(pi,pi.neg),(polytope.phi).wrap(~elevation[2],~elevation[1])).x *
 Spherical(sph_x,~azimuth[0],~elevation[0]).x) +
