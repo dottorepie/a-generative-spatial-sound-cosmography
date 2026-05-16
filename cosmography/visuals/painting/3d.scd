@@ -13,8 +13,8 @@ var mag1=1,mag2=1,mag3=1,mag4=1,mag5=1,mag6=1,mag7=1;
 
 //	spread = if(m_z < 1) { 1 / m_z } { m_z };
 
-	8.do{
-azimuth=8.collect{
+	16.do{
+azimuth=32.collect{
 			az1 = (az1+(2pi-(2pi/silver_r))).wrap(pi.neg,pi);
 		   el1 = (el1+(pi-(pi/silver_r))).wrap((pi/2).neg,(pi/2));
 
@@ -120,8 +120,8 @@ var size=1000,px=4,run=true,angle1=0,angle2=0;
 var az,el,polytope,mag,xp=0,yp=0,dimx,dimy,c,n;
 var bright,brightx,brighty,bval,pos,c1,c2,c3;
 var valx=0,valy,limit=100,rval1=0,rval2=0;
-var sph,az1,el1,plot;
-var  ot=0,sizee=400;
+var sph,az1,el1,plot,data;
+var  ot=0,sizee=400,pl=0;
 
 ~amp1 = 0;
 ~amp2 = 0;
@@ -189,7 +189,15 @@ OSCdef(\ampt7, { |msg|
 	defer { ~v1.refresh };
 }, '/amp7');*/
 //~view.animate=true;
-~iter=(8*8);
+~data=[];
+data = (32*16).collect{
+
+	az=~az.[pl];
+	el=~el.[pl];
+	pl=pl+1;
+		sph=Spherical(sizee,az,el).asCartesian.asArray;
+};
+	~data=~data++data;
 (
 ~view.drawFunc = {
 Pen.translate(size/2,size/2);
@@ -197,48 +205,24 @@ polytope=	Cartesian(~amp1,~amp2,~amp3).asSpherical;
 az=polytope.theta;
 el=polytope.phi;
 mag=polytope.rho;
-c=mag.linlin(0,1,0,limit).round(1).asInteger;
-//dimx=az.linlin(pi.neg,pi,0,size).round(1).asInteger;
-//dimy=el.linlin(-0.5pi, 0.5pi, 0, size).round(1).asInteger;
-dimx=exp(Complex(0,1)*az);
-dimy=exp(Complex(0,1)*(el*2));
-dimx=(dimx*size).round(1).asInteger;
-dimy=(dimy*size).round(1).asInteger;
+
 c1 =Spherical(1,az,el).x;
 c2 =Spherical(1,az,el).y;
 c3 =Spherical(1,az,el).z;
-n=1.neg;
-pos=~iter.collect{n=n+1};
-angle1=0;
-angle2=0;
-~iter.do{
-el1=~el.[yp];
-az1=~az.[xp];
-bright=Complex(xp.linlin(0,size,0,2.sqrt.reciprocal),yp.linlin(0,size,0,2.sqrt.reciprocal)).theta;
-angle1=(angle1+(2pi/(2pi/g))).wrap(0,2pi);
-angle2=(angle2+(2pi/(2pi/g))).wrap(0,2pi).linlin(0,2pi,0,1);
-valx=exp(Complex(0,1)*angle1*bright).real;
-valy=exp(Complex(0,1)*angle1*bright).imag;
-rval=c.rand2;
-rvalc=angle2.rand;
-brightx= if((xp==(dimx+rval).wrap(0,size)),(valx).wrap(0,1),0);
-brighty= if((yp==(dimy+rval).wrap(0,size)),(valy).wrap(0,1),0);
-bval=brightx+brighty;
+
+bright=Complex(az.linlin(pi.neg,pi,0,2.sqrt.reciprocal),el.linlin(0.5pi.neg,05pi,0,2.sqrt.reciprocal)).theta;
+
 sph=Spherical(sizee,az,el).asCartesian.asArray;
-~data=[sph];
-xp=xp+1;yp=yp+1;
-};
-xp=0;yp=0;
 plot = ScatterView3d(~view, Rect(0,0, size,size), ~data,
 [-1000, 1000].asSpec,[-1000, 1000].asSpec,[-1000, 1000].asSpec);
 plot .drawMethod = \fillRect;
 plot .symbolSize = px;
-plot .symbolColor = Color.new((c1+rvalc).wrap(0,1),(c2+rvalc).wrap(0,1),(c3+rvalc).wrap(0,1),bval);
-plot .background = Color.black;
+plot .symbolColor = Color.new((c1+0).wrap(0,1),(c2+0).wrap(0,1),(c3+0).wrap(0,1),1);
+plot .background =Color.black;
 plot.rot(ot,ot,ot);
-ot=ot+1.degrad;
+ot=ot+bright;
 };
-{ while { run } {~view.background_(Color.black); ~view.refresh; (1/8).wait } }.fork(AppClock);
+{ while { run } {~view.background_(Color.black); ~view.refresh; (1/60).wait } }.fork(AppClock);
 win.front;
 );
 (
