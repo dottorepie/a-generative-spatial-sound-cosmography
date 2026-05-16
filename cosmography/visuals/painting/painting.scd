@@ -3,10 +3,10 @@
 
 (
 var win,wx=0,wy=0,g=((1+5.sqrt)/2),s=(1+2.sqrt),rval=0,rvalc=0;
-var size=300,px=4,run=true;
+var size=300,px=4,run=true,angle1=0,angle2=0;
 var az,el,polytope,mag,xp=0,yp=0,dimx,dimy,c,n;
 var bright,brightx,brighty,bval,pos,c1,c2,c3;
-var valx,valy,limit=64,rval1=0,rval2=0;
+var valx=0,valy,limit=100,rval1=0,rval2=0;
 //Window.closeAll;
 
 ~amp1 = 0;
@@ -82,12 +82,11 @@ polytope=	Cartesian(~amp1,~amp2,~amp3).asSpherical;
 az=polytope.theta;
 el=polytope.phi;
 mag=polytope.rho;
-rval2=mag.linlin(0,2.sqrt,0,1);
-c=mag.linlin(0,2.sqrt,0,limit).round(1).asInteger;
+c=mag.linlin(0,1,0,limit).round(1).asInteger;
 //dimx=az.linlin(pi.neg,pi,0,size).round(1).asInteger;
 //dimy=el.linlin(-0.5pi, 0.5pi, 0, size).round(1).asInteger;
 dimx=exp(Complex(0,1)*az);
-dimy=exp(Complex(0,1)*el);
+dimy=exp(Complex(0,1)*(el*2));
 dimx=(dimx*size).round(1).asInteger;
 dimy=(dimy*size).round(1).asInteger;
 c1 =Spherical(1,az,el).x;
@@ -95,14 +94,19 @@ c2 =Spherical(1,az,el).y;
 c3 =Spherical(1,az,el).z;
 n=1.neg;
 pos=size.collect{n=n+1};
+angle1=0;
+angle2=0;
 size.do{
 size.do{
-bright=Complex(xp.linlin(0,size,0,2.sqrt.reciprocal),yp.linlin(0,size,0,2.sqrt.reciprocal)).rho;
+bright=Complex(xp.linlin(0,size,0,2.sqrt.reciprocal),yp.linlin(0,size,0,2.sqrt.reciprocal)).theta;
+angle1=(angle1+(2pi/(2pi/g))).wrap(0,2pi);
+angle2=(angle2+(2pi/(2pi/g))).wrap(0,2pi).linlin(0,2pi,0,1);
+valx=exp(Complex(0,1)*angle1*bright).real;
+valy=exp(Complex(0,1)*angle1*bright).imag;
 rval=c.rand2;
-rvalc=0.2.rand2;
-rval1=0;
-brightx= if((xp==(dimx+rval).wrap(0,size)),(bright+rval1).wrap(0,1),0);
-brighty= if((yp==(dimy+rval).wrap(0,size)),(bright+rval1).wrap(0,1),0);
+rvalc=angle2.rand;
+brightx= if((xp==(dimx+rval).wrap(0,size)),(valx).wrap(0,1),0);
+brighty= if((yp==(dimy+rval).wrap(0,size)),(valy).wrap(0,1),0);
 bval=brightx+brighty;
 Pen.fillColor = Color.new((c1+rvalc).wrap(0,1),(c2+rvalc).wrap(0,1),(c3+rvalc).wrap(0,1),bval);
 Pen.fillRect(Rect.new((pos.[xp]),(pos.[yp]),px,px));
@@ -113,7 +117,7 @@ yp=yp+1; 	xp=0;
 yp=0;
 }
 );
-{ while { run } {~view.background_(Color.black); ~view.refresh; (1/60).wait } }.fork(AppClock);
+{ while { run } {~view.background_(Color.black); ~view.refresh; (1/8).wait } }.fork(AppClock);
 win.front;
 (
 ~synth=Synth.new(\synth,[\gain,10,\drive,0,\c,0,\az,pi.rand,\el,0,\size,0,\harmonic,1,\fl,7.5,
