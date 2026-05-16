@@ -613,7 +613,7 @@ spread:spread.reciprocal));
 				(
 					MIDIdef.cc(\midi_pot1,{ |val, num, chan, src|
 						var a;
-						a=val.linexp(0,127,0.00001,10);
+						a=val.linexp(0,127,0.00001,20);
 						a.postln;
 						if(~synth.isPlaying,{~synth.set(\gain,a)});
 					},1);
