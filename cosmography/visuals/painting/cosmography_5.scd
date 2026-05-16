@@ -19,7 +19,6 @@ s.options.maxNodes = 1024 * 2;
 
 (
 s.waitForBoot{
-
 //s.freqscope;
 //s.scope;
 //s.makeWindow;
@@ -307,12 +306,12 @@ feed39=(PlayBuf.ar(1, ~c39.bufnum, BufRateScale.kr(~c39.bufnum), loop: 1, doneAc
 ///mult chain// beware of 32-bit underflow and value 0 smash
 sig1=
 (((((((((((
-					/*((((((((
+					((((((((
 (LPF.ar((Osc.ar(~wt.bufnum,freq1*oct2,phase:phasex+ph8,mul:level).abs*SinOsc.ar(freq1*oct2,phase:phasex+ph8)),freq1*heavy,amp1*oct2.reciprocal)).abs*
 (LPF.ar((Osc.ar(~wt.bufnum,freq1*oct3,phase:phasex+ph7,mul:level).abs*SinOsc.ar(freq1*oct3,phase:phasex+ph7)),freq1*heavy,amp1*oct3.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq1*oct4,phase:phasex+ph6,mul:level).abs*SinOsc.ar(freq1*oct4,phase:phasex+ph6)),freq1*heavy,amp1*oct4.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq1*oct5,phase:phasex+ph5,mul:level).abs*SinOsc.ar(freq1*oct5,phase:phasex+ph5)),freq1*heavy,amp1*oct5.reciprocal))).abs+mass)*
-(LPF.ar((Osc.ar(~wt.bufnum,freq1*oct6,phase:phasex+ph4,mul:level).abs*SinOsc.ar(freq1*oct6,phase:phasex+ph4)),freq1*heavy,amp1*oct6.reciprocal))).abs+mass)**/
+(LPF.ar((Osc.ar(~wt.bufnum,freq1*oct6,phase:phasex+ph4,mul:level).abs*SinOsc.ar(freq1*oct6,phase:phasex+ph4)),freq1*heavy,amp1*oct6.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq1*oct7,phase:phasex+ph3,mul:level).abs*SinOsc.ar(freq1*oct7,phase:phasex+ph3)),freq1*heavy,amp1*oct7.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq1*oct8,phase:phasex+ph2,mul:level).abs*SinOsc.ar(freq1*oct8,phase:phasex+ph2)),freq1*heavy,amp1*oct8.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq1*oct9,phase:phasex+ph1,mul:level).abs*SinOsc.ar(freq1*oct9,phase:phasex+ph1)),freq1*heavy,amp1*oct9.reciprocal))).abs+mass)*
@@ -340,12 +339,12 @@ feed19*buffer*bg9])
 )));
 sig2=
 ((((((((((
-					/*((((((((
+					((((((((
 (LPF.ar((Osc.ar(~wt.bufnum,freq2*oct2,phase:phasey+ph8,mul:level).abs*SinOsc.ar(freq2*oct2,phase:phasey+ph8)),freq2*heavy,amp2*oct2.reciprocal)).abs*
 (LPF.ar((Osc.ar(~wt.bufnum,freq2*oct3,phase:phasey+ph7,mul:level).abs*SinOsc.ar(freq2*oct3,phase:phasey+ph7)),freq2*heavy,amp2*oct3.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq2*oct4,phase:phasey+ph6,mul:level).abs*SinOsc.ar(freq2*oct4,phase:phasey+ph6)),freq2*heavy,amp2*oct4.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq2*oct5,phase:phasey+ph5,mul:level).abs*SinOsc.ar(freq2*oct5,phase:phasey+ph5)),freq2*heavy,amp2*oct5.reciprocal))).abs+mass)*
-(LPF.ar((Osc.ar(~wt.bufnum,freq2*oct6,phase:phasey+ph4,mul:level).abs*SinOsc.ar(freq2*oct6,phase:phasey+ph4)),freq2*heavy,amp2*oct6.reciprocal))).abs+mass)**/
+(LPF.ar((Osc.ar(~wt.bufnum,freq2*oct6,phase:phasey+ph4,mul:level).abs*SinOsc.ar(freq2*oct6,phase:phasey+ph4)),freq2*heavy,amp2*oct6.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq2*oct7,phase:phasey+ph3,mul:level).abs*SinOsc.ar(freq2*oct7,phase:phasey+ph3)),freq2*heavy,amp2*oct7.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq2*oct8,phase:phasey+ph2,mul:level).abs*SinOsc.ar(freq2*oct8,phase:phasey+ph2)),freq2*heavy,amp2*oct8.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq2*oct9,phase:phasey+ph1,mul:level).abs*SinOsc.ar(freq2*oct9,phase:phasey+ph1)),freq2*heavy,amp2*oct9.reciprocal))).abs+mass)*
@@ -374,12 +373,12 @@ feed29*buffer*bg9])
 );
 sig3=
 ((((((((((
-					/*((((((((
+					((((((((
 (LPF.ar((Osc.ar(~wt.bufnum,freq3*oct2,phase:phasez+ph8,mul:level).abs*SinOsc.ar(freq3*oct2,phase:phasez+ph8)),freq3*heavy,amp3*oct2.reciprocal)).abs*
 (LPF.ar((Osc.ar(~wt.bufnum,freq3*oct3,phase:phasez+ph7,mul:level).abs*SinOsc.ar(freq3*oct3,phase:phasez+ph7)),freq3*heavy,amp3*oct3.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq3*oct4,phase:phasez+ph6,mul:level).abs*SinOsc.ar(freq3*oct4,phase:phasez+ph6)),freq3*heavy,amp3*oct4.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq3*oct5,phase:phasez+ph5,mul:level).abs*SinOsc.ar(freq3*oct5,phase:phasez+ph5)),freq3*heavy,amp3*oct5.reciprocal))).abs+mass)*
-(LPF.ar((Osc.ar(~wt.bufnum,freq3*oct6,phase:phasez+ph4,mul:level).abs*SinOsc.ar(freq3*oct6,phase:phasez+ph4)),freq3*heavy,amp3*oct6.reciprocal))).abs+mass)**/
+(LPF.ar((Osc.ar(~wt.bufnum,freq3*oct6,phase:phasez+ph4,mul:level).abs*SinOsc.ar(freq3*oct6,phase:phasez+ph4)),freq3*heavy,amp3*oct6.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq3*oct7,phase:phasez+ph3,mul:level).abs*SinOsc.ar(freq3*oct7,phase:phasez+ph3)),freq3*heavy,amp3*oct7.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq3*oct8,phase:phasez+ph2,mul:level).abs*SinOsc.ar(freq3*oct8,phase:phasez+ph2)),freq3*heavy,amp3*oct8.reciprocal))).abs+mass)*
 (LPF.ar((Osc.ar(~wt.bufnum,freq3*oct9,phase:phasez+ph1,mul:level).abs*SinOsc.ar(freq3*oct9,phase:phasez+ph1)),freq3*heavy,amp3*oct9.reciprocal))).abs+mass)*
